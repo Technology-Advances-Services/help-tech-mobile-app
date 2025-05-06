@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helptechmobileapp/IAM/services/login_service.dart';
 
 class Login extends StatefulWidget {
 
@@ -9,6 +10,19 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  final LoginService _loginService = LoginService();
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +84,7 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 20),
                           TextField(
+                            controller: _usernameController,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.person),
                               labelText: 'Usuario',
@@ -80,6 +95,7 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 15),
                           TextField(
+                            controller: _passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.lock),
@@ -91,8 +107,14 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 25),
                           ElevatedButton(
-                            onPressed: () {
-                              // Acción iniciar sesión como técnico
+                            onPressed: () async {
+
+                              String username = _usernameController.text;
+                              String password = _passwordController.text;
+                              String role = 'TECNICO';
+
+                              var result = await _loginService.accessToApp(
+                                  username, password, role);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
@@ -105,8 +127,14 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 10),
                           ElevatedButton(
-                            onPressed: () {
-                              // Acción iniciar sesión como consumidor
+                            onPressed: () async {
+
+                              String username = _usernameController.text;
+                              String password = _passwordController.text;
+                              String role = 'CONSUMIDOR';
+
+                              var result = await _loginService.accessToApp(
+                                  username, password, role);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
