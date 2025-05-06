@@ -9,7 +9,7 @@ class LoginService {
 
   final storage = const FlutterSecureStorage();
 
-  Future<bool> accessToApp(String username, String password, String role) async{
+  Future<bool> accessToApp(String username, String password, String role) async {
 
     final response = await http.post(
       Uri.parse('${baseUrl}access/login'),
