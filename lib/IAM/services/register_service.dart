@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:helptechmobileapp/IAM/models/membership.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
@@ -16,7 +17,7 @@ class RegisterService {
   final String baseUrl = 'http://helptechservice.runasp.net/api/';
 
   Future<bool> registerTechnical
-      (Technical technical, File imageFile,String password) async {
+      (Technical technical, File imageFile) async {
 
     try {
 
@@ -24,7 +25,7 @@ class RegisterService {
         (technical.id, imageFile))!;
 
       final response = await http.post(
-        Uri.parse('$baseUrl/access/register-technical'),
+        Uri.parse('${baseUrl}access/register-technical'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,10 +40,7 @@ class RegisterService {
           'genre': technical.genre,
           'phone': technical.phone,
           'email': technical.email,
-          'code': technical.code,
-          'availability': technical.availability,
-          'state': 'ACTIVO',
-          'code': password
+          'code': technical.code
         }),
       );
 
@@ -54,7 +52,7 @@ class RegisterService {
   }
 
   Future<bool> registerConsumer
-      (Consumer consumer, File imageFile, String password) async {
+      (Consumer consumer, File imageFile) async {
 
     try {
 
@@ -62,7 +60,7 @@ class RegisterService {
         (consumer.id, imageFile))!;
 
       final response = await http.post(
-        Uri.parse('$baseUrl/access/register-consumer'),
+        Uri.parse('${baseUrl}access/register-consumer'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -76,16 +74,38 @@ class RegisterService {
           'genre': consumer.genre,
           'phone': consumer.phone,
           'email': consumer.email,
-          'code': consumer.code,
-          'state': 'ACTIVO',
-          'code': password,
+          'code': consumer.code
         }),
       );
 
-      return response.statusCode == 200;
+      return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       return false;
     }
+  }
+
+  Future<bool> registerMembership
+      (Membership membership, String personId, String role) async {
+
+    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract'
+        : 'contracts/create-consumer-contract';
+
+    final response = await http.post(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'id': membership.id,
+        if (role == 'TECNICO') 'technicalId': personId,
+        if (role == 'CONSUMIDOR') 'consumerId': personId,
+        'name': membership.name,
+        'price': membership.price,
+        'policies': membership.policies,
+      })
+    );
+
+    return response.statusCode >= 200 && response.statusCode < 300;
   }
 
   Future<String?> uploadProfileTechnical
