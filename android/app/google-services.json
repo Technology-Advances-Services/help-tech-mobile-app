@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "562711702986",
+    "project_id": "helptech-74d24",
+    "storage_bucket": "helptech-74d24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562711702986:android:3388c076890b5ced57f333",
+        "android_client_info": {
+          "package_name": "com.helptech.helptechmobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBglH78QsbP3A4YhEpYQaHZC-4i7v6fM9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
