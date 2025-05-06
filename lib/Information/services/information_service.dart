@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:helptechmobileapp/Location/models/department.dart';
-import 'package:helptechmobileapp/Location/models/district.dart';
+import 'package:helptechmobileapp/Information/models/department.dart';
+import 'package:helptechmobileapp/Information/models/district.dart';
+import 'package:helptechmobileapp/Information/models/specialty.dart';
 
 import 'package:http/http.dart' as http;
 
-class LocationService {
+class InformationService {
 
   final String baseUrl = 'http://helptechservice.runasp.net/api/';
 
@@ -53,6 +54,31 @@ class LocationService {
       )).toList();
 
       return districts;
+    }
+    else {
+      return [];
+    }
+  }
+
+  Future<List<Specialty>> getSpecialties() async {
+
+    final response = await http.get(
+      Uri.parse('${baseUrl}specialties/all-specialties'),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+
+      List<dynamic> data = json.decode(response.body);
+
+      List<Specialty> specialties = data.map((roomJson) => Specialty(
+        id: roomJson['id'],
+        name: roomJson['name'],
+      )).toList();
+
+      return specialties;
     }
     else {
       return [];
