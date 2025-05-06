@@ -8,8 +8,6 @@ import 'package:path/path.dart' as path;
 import 'dart:convert';
 
 import 'package:helptechmobileapp/IAM/models/technical.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../models/consumer.dart';
 
@@ -17,20 +15,13 @@ class RegisterService {
 
   final String baseUrl = 'http://helptechservice.runasp.net/api/';
 
-  Future<void> requestPermission() async {
-
-    PermissionStatus status = await Permission.photos.request();
-
-    if (status.isGranted) {
-      print("Permiso concedido para acceder a las fotos.");
-    } else {
-      print("Permiso denegado para acceder a las fotos.");
-    }
-  }
-
-  Future<bool> registerTechnical(Technical technical, String password) async {
+  Future<bool> registerTechnical
+      (Technical technical, File imageFile,String password) async {
 
     try {
+
+      technical.profileUrl = (await uploadProfileTechnical
+        (technical.id, imageFile))!;
 
       final response = await http.post(
         Uri.parse('$baseUrl/access/register-technical'),
@@ -62,9 +53,13 @@ class RegisterService {
     }
   }
 
-  Future<bool> registerConsumer(Consumer consumer, String password) async {
+  Future<bool> registerConsumer
+      (Consumer consumer, File imageFile, String password) async {
 
     try {
+
+      consumer.profileUrl = (await uploadProfileConsumer
+        (consumer.id, imageFile))!;
 
       final response = await http.post(
         Uri.parse('$baseUrl/access/register-consumer'),
@@ -93,21 +88,8 @@ class RegisterService {
     }
   }
 
-  Future<String?> uploadProfileTechnical(int technicalId) async {
-
-    await requestPermission();
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    File imageFile;
-
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-    }
-    else {
-      return null;
-    }
+  Future<String?> uploadProfileTechnical
+      (String technicalId, File imageFile) async {
 
     String extension = path.extension(imageFile.path);
 
@@ -124,21 +106,8 @@ class RegisterService {
     return profileUrl;
   }
 
-  Future<String?> uploadProfileConsumer(int consumerId) async {
-
-    await requestPermission();
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    File imageFile;
-
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-    }
-    else {
-      return null;
-    }
+  Future<String?> uploadProfileConsumer
+      (String consumerId, File imageFile) async {
 
     String extension = path.extension(imageFile.path);
 
@@ -155,7 +124,8 @@ class RegisterService {
     return profileUrl;
   }
 
-  Future<String?> uploadCriminalRecordTechnical(int technicalId) async {
+  Future<String?> uploadCriminalRecordTechnical
+      (String technicalId) async {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
