@@ -1,24 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:helptechmobileapp/IAM/components/add_membership.dart';
+import 'package:helptechmobileapp/IAM/models/technical.dart';
+import 'package:helptechmobileapp/IAM/services/register_service.dart';
 import 'package:helptechmobileapp/Information/models/specialty.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Information/models/department.dart';
 import '../../Information/models/district.dart';
 import '../../Information/services/information_service.dart';
+import '../models/consumer.dart';
+import 'login.dart';
 
 class Register extends StatefulWidget {
 
   const Register({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
 
-  final InformationService _locationService = InformationService();
+  final InformationService _informationService = InformationService();
+  final RegisterService _registerService = RegisterService();
 
   List<Department> _departments = [];
   List<District> _districts = [];
@@ -53,14 +59,14 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> _loadDepartments() async {
-    final departments = await _locationService.getDepartments();
+    final departments = await _informationService.getDepartments();
     setState(() {
       _departments = departments;
     });
   }
 
   Future<void> _loadDistrictsByDepartment(int departmentId) async {
-    final districts = await _locationService
+    final districts = await _informationService
         .getDistrictsByDepartment(departmentId);
     setState(() {
       _districts = districts;
@@ -69,7 +75,7 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> _loadSpecialties() async {
-    final specialties = await _locationService.getSpecialties();
+    final specialties = await _informationService.getSpecialties();
     setState(() {
       _specialties = specialties;
     });
@@ -167,8 +173,61 @@ class _RegisterState extends State<Register> {
 
                           const SizedBox(height: 25),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
 
+                              String personId = idController.text.toString();
+                              String role = selectedRole;
+
+                              bool result = false;
+
+                              if (role == 'TECNICO') {
+                                Technical technical = Technical(
+                                  id: idController.text,
+                                  specialtyId: _selectedSpecialty!.id,
+                                  districtId: _selectedDistrict!.id,
+                                  firstname: firstnameController.text,
+                                  lastname: lastnameController.text,
+                                  age: int.parse(ageController.text),
+                                  genre: genreController.text,
+                                  phone: int.parse(phoneController.text),
+                                  email: emailController.text,
+                                  code: codeController.text
+                                );
+
+                                result = await _registerService.registerTechnical
+                                  (technical, _selectedImage!);
+                              }
+                              else if (role == 'CONSUMIDOR') {
+                                Consumer consumer = Consumer(
+                                    id: idController.text,
+                                    districtId: _selectedDistrict!.id,
+                                    firstname: firstnameController.text,
+                                    lastname: lastnameController.text,
+                                    age: int.parse(ageController.text),
+                                    genre: genreController.text,
+                                    phone: int.parse(phoneController.text),
+                                    email: emailController.text,
+                                    code: codeController.text
+                                );
+
+                                result = await _registerService.registerConsumer
+                                  (consumer, _selectedImage!);
+                              }
+
+                              showDialog(
+                                context: context,
+                                builder: (context) => AddMembership(
+                                  personId: personId,
+                                  role: role,
+                                ),
+                              ).then((result) {
+                                if (result == true) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const Login()),
+                                  );
+                                }
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
