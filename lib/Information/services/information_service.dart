@@ -6,6 +6,8 @@ import 'package:helptechmobileapp/Information/models/specialty.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../../IAM/models/membership.dart';
+
 class InformationService {
 
   final String baseUrl = 'http://helptechservice.runasp.net/api/';
@@ -79,6 +81,33 @@ class InformationService {
       )).toList();
 
       return specialties;
+    }
+    else {
+      return [];
+    }
+  }
+
+  Future<List<Membership>> getMemberships() async {
+
+    final response = await http.get(
+      Uri.parse('${baseUrl}memberships/all-memberships'),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+
+      List<dynamic> data = json.decode(response.body);
+
+      List<Membership> memberships = data.map((roomJson) => Membership(
+        id: roomJson['id'],
+        name: roomJson['name'],
+        price: roomJson['price'],
+        policies: roomJson['policies']
+      )).toList();
+
+      return memberships;
     }
     else {
       return [];
