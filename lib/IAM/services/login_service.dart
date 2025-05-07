@@ -6,14 +6,14 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LoginService {
 
-  final String baseUrl = 'http://helptechservice.runasp.net/api/';
+  final String _baseUrl = 'http://helptechservice.runasp.net/api/';
 
-  final storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
 
   Future<bool> accessToApp(String username, String password, String role) async {
 
     final response = await http.post(
-      Uri.parse('${baseUrl}access/login'),
+      Uri.parse('${_baseUrl}access/login'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -28,7 +28,7 @@ class LoginService {
 
       String token = response.body;
 
-      await storage.write(key: 'token', value: token);
+      await _storage.write(key: 'token', value: token);
 
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
@@ -40,8 +40,8 @@ class LoginService {
       ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid']
           .toString();
 
-      await storage.write(key: 'role', value: role);
-      await storage.write(key: 'username', value: username);
+      await _storage.write(key: 'role', value: role);
+      await _storage.write(key: 'username', value: username);
 
       return true;
     }
@@ -52,14 +52,14 @@ class LoginService {
 
   Future<bool> isAuthenticated() async {
 
-    final token = await storage.read(key: 'token');
+    final token = await _storage.read(key: 'token');
 
     return token == null? false: true;
   }
 
   Future<void> logout() async{
-    await storage.delete(key: 'token');
-    await storage.delete(key: 'role');
-    await storage.delete(key: 'username');
+    await _storage.delete(key: 'token');
+    await _storage.delete(key: 'role');
+    await _storage.delete(key: 'username');
   }
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:helptechmobileapp/IAM/models/membership.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
@@ -14,7 +13,7 @@ import '../models/consumer.dart';
 
 class RegisterService {
 
-  final String baseUrl = 'http://helptechservice.runasp.net/api/';
+  final String _baseUrl = 'http://helptechservice.runasp.net/api/';
 
   Future<bool> registerTechnical
       (Technical technical, File imageFile) async {
@@ -25,7 +24,7 @@ class RegisterService {
         (technical.id, imageFile))!;
 
       final response = await http.post(
-        Uri.parse('${baseUrl}access/register-technical'),
+        Uri.parse('${_baseUrl}access/register-technical'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,7 +59,7 @@ class RegisterService {
         (consumer.id, imageFile))!;
 
       final response = await http.post(
-        Uri.parse('${baseUrl}access/register-consumer'),
+        Uri.parse('${_baseUrl}access/register-consumer'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -83,30 +82,6 @@ class RegisterService {
     catch (e) {
       return false;
     }
-  }
-
-  Future<bool> registerMembership
-      (Membership membership, String personId, String role) async {
-
-    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract'
-        : 'contracts/create-consumer-contract';
-
-    final response = await http.post(
-      Uri.parse('$baseUrl$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'id': membership.id,
-        if (role == 'TECNICO') 'technicalId': personId,
-        if (role == 'CONSUMIDOR') 'consumerId': personId,
-        'name': membership.name,
-        'price': membership.price,
-        'policies': membership.policies,
-      })
-    );
-
-    return response.statusCode >= 200 && response.statusCode < 300;
   }
 
   Future<String?> uploadProfileTechnical

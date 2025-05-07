@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/IAM/components/add_membership.dart';
+import 'package:helptechmobileapp/Subscription/components/add_membership.dart';
 import 'package:helptechmobileapp/IAM/models/technical.dart';
 import 'package:helptechmobileapp/IAM/services/register_service.dart';
 import 'package:helptechmobileapp/Information/models/specialty.dart';
@@ -10,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../Information/models/department.dart';
 import '../../Information/models/district.dart';
 import '../../Information/services/information_service.dart';
+import '../../Shared/widgets/error_dialog.dart';
 import '../models/consumer.dart';
+import 'login.dart';
 
 class Register extends StatefulWidget {
 
@@ -37,18 +39,17 @@ class _RegisterState extends State<Register> {
   File? _selectedImage;
   String? selectedGenre;
 
-  final TextEditingController idController = TextEditingController();
-  final TextEditingController districtIdController = TextEditingController();
-  final TextEditingController specialtyIdController = TextEditingController();
-  final TextEditingController profileUrlController = TextEditingController();
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController genreController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController codeController = TextEditingController();
-  final TextEditingController availabilityController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _districtIdController = TextEditingController();
+  final TextEditingController _specialtyIdController = TextEditingController();
+  final TextEditingController _profileUrlController = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _genreController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
 
   @override
   void initState() {
@@ -60,18 +61,17 @@ class _RegisterState extends State<Register> {
   @override
   void dispose() {
 
-    idController.dispose();
-    districtIdController.dispose();
-    specialtyIdController.dispose();
-    profileUrlController.dispose();
-    firstnameController.dispose();
-    lastnameController.dispose();
-    ageController.dispose();
-    genreController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    codeController.dispose();
-    availabilityController.dispose();
+    _idController.dispose();
+    _districtIdController.dispose();
+    _specialtyIdController.dispose();
+    _profileUrlController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _ageController.dispose();
+    _genreController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _codeController.dispose();
 
     super.dispose();
   }
@@ -180,7 +180,7 @@ class _RegisterState extends State<Register> {
                           ),
                           const SizedBox(height: 15),
 
-                          _buildTextField(controller: idController, label: 'DNI'),
+                          _buildTextField(controller: _idController, label: 'DNI'),
                           _buildDropdownDepartment(),
                           _buildDropdownDistrictsByDepartment(),
 
@@ -189,21 +189,21 @@ class _RegisterState extends State<Register> {
 
                           _buildImagePicker(),
 
-                          _buildTextField(controller: firstnameController, label: 'Nombres'),
-                          _buildTextField(controller: lastnameController, label: 'Apellidos'),
-                          _buildTextField(controller: ageController, label: 'Edad', isNumber: true),
+                          _buildTextField(controller: _firstnameController, label: 'Nombres'),
+                          _buildTextField(controller: _lastnameController, label: 'Apellidos'),
+                          _buildTextField(controller: _ageController, label: 'Edad', isNumber: true),
 
                           _buildDropdownGenre(),
 
-                          _buildTextField(controller: phoneController, label: 'Telefono', isNumber: true),
-                          _buildTextField(controller: emailController, label: 'Email'),
-                          _buildTextField(controller: codeController, label: 'Contraseña', isPassword: true),
+                          _buildTextField(controller: _phoneController, label: 'Telefono', isNumber: true),
+                          _buildTextField(controller: _emailController, label: 'Email'),
+                          _buildTextField(controller: _codeController, label: 'Contraseña', isPassword: true),
 
                           const SizedBox(height: 25),
                           ElevatedButton(
                             onPressed: () async {
 
-                              String personId = idController.text.toString();
+                              String personId = _idController.text.toString();
                               String role = selectedRole;
 
                               bool result = false;
@@ -211,16 +211,16 @@ class _RegisterState extends State<Register> {
                               if (role == 'TECNICO') {
 
                                 Technical technical = Technical(
-                                  id: idController.text,
+                                  id: _idController.text,
                                   specialtyId: _selectedSpecialty!.id,
                                   districtId: _selectedDistrict!.id,
-                                  firstname: firstnameController.text,
-                                  lastname: lastnameController.text,
-                                  age: int.parse(ageController.text),
-                                  genre: genreController.text,
-                                  phone: int.parse(phoneController.text),
-                                  email: emailController.text,
-                                  code: codeController.text
+                                  firstname: _firstnameController.text,
+                                  lastname: _lastnameController.text,
+                                  age: int.parse(_ageController.text),
+                                  genre: _genreController.text,
+                                  phone: int.parse(_phoneController.text),
+                                  email: _emailController.text,
+                                  code: _codeController.text
                                 );
 
                                 result = await _registerService.registerTechnical
@@ -229,32 +229,45 @@ class _RegisterState extends State<Register> {
                               else if (role == 'CONSUMIDOR') {
 
                                 Consumer consumer = Consumer(
-                                    id: idController.text,
+                                    id: _idController.text,
                                     districtId: _selectedDistrict!.id,
-                                    firstname: firstnameController.text,
-                                    lastname: lastnameController.text,
-                                    age: int.parse(ageController.text),
-                                    genre: genreController.text,
-                                    phone: int.parse(phoneController.text),
-                                    email: emailController.text,
-                                    code: codeController.text
+                                    firstname: _firstnameController.text,
+                                    lastname: _lastnameController.text,
+                                    age: int.parse(_ageController.text),
+                                    genre: _genreController.text,
+                                    phone: int.parse(_phoneController.text),
+                                    email: _emailController.text,
+                                    code: _codeController.text
                                 );
 
                                 result = await _registerService.registerConsumer
                                   (consumer, _selectedImage!);
                               }
 
-                              showDialog(
-                                context: context,
-                                builder: (context) => AddMembership(
-                                  personId: personId,
-                                  role: role,
-                                ),
-                              ).then((result) {
-                                if (result == true) {
-                                  Navigator.pushReplacementNamed(context, '/login');
-                                }
-                              });
+                              if (result == true) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AddMembership(
+                                    personId: personId,
+                                    role: role,
+                                  ),
+                                ).then((task) {
+                                  if (task == true) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const Login()),
+                                          (route) => false,
+                                    );
+                                  }
+                                });
+                              }
+                              else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => const ErrorDialog
+                                    (message: 'Error al registrarse.'),
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
