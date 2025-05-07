@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 
+import '../../Shared/widgets/base_layout.dart';
+
 class Login extends StatefulWidget {
 
   const Login({super.key});
@@ -21,6 +23,7 @@ class _LoginState extends State<Login> {
 
     _usernameController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -115,6 +118,10 @@ class _LoginState extends State<Login> {
 
                               var result = await _loginService.accessToApp(
                                   username, password, role);
+
+                              if (result == true) {
+                                Navigator.pushReplacementNamed(context, '/technical');
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
