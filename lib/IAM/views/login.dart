@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/terms_and_conditions.dart';
+import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
+import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
 import '../../Shared/widgets/base_layout.dart';
 
@@ -117,11 +119,28 @@ class _LoginState extends State<Login> {
                               String password = _passwordController.text;
                               String role = 'TECNICO';
 
-                              var result = await _loginService.accessToApp(
-                                  username, password, role);
+                              if (username != "" &&
+                                  password != "" &&
+                                  role != "") {
 
-                              if (result == true) {
-                                Navigator.pushReplacementNamed(context, '/technical');
+                                var result = await _loginService.accessToApp(
+                                    username, password, role);
+
+                                if (result == true) {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>
+                                    const InterfaceTechnical()),
+                                        (route) => false,
+                                  );
+                                }
+                              }
+                              else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => const ErrorDialog
+                                    (message: 'Credenciales inválidas')
+                                );
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -141,8 +160,24 @@ class _LoginState extends State<Login> {
                               String password = _passwordController.text;
                               String role = 'CONSUMIDOR';
 
-                              var result = await _loginService.accessToApp(
-                                  username, password, role);
+                              if (username != "" &&
+                                  password != "" &&
+                                  role != "") {
+
+                                var result = await _loginService.accessToApp(
+                                    username, password, role);
+
+                                if (result == true) {
+
+                                }
+                              }
+                              else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => const ErrorDialog
+                                      (message: 'Credenciales inválidas')
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
