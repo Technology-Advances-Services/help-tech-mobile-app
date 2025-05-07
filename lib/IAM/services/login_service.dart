@@ -50,6 +50,13 @@ class LoginService {
     }
   }
 
+  Future<bool> isAuthenticated() async {
+
+    final token = await storage.read(key: 'token');
+
+    return token == null? false: true;
+  }
+
   Future<void> logout() async{
     await storage.delete(key: 'token');
     await storage.delete(key: 'role');
