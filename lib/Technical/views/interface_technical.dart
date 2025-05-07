@@ -24,7 +24,9 @@ class _InterfaceTechnical extends State<InterfaceTechnical> {
   }
 
   Future<void> _loadDashboardData() async {
+
     await Future.delayed(const Duration(seconds: 1));
+
     setState(() {
       income = 100;
       consumersServed = 5;

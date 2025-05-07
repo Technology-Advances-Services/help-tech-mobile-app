@@ -6,16 +6,16 @@ import 'package:helptechmobileapp/Information/models/specialty.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../../IAM/models/membership.dart';
+import '../../Subscription/models/membership.dart';
 
 class InformationService {
 
-  final String baseUrl = 'http://helptechservice.runasp.net/api/';
+  final String _baseUrl = 'http://helptechservice.runasp.net/api/';
 
   Future<List<Department>> getDepartments() async {
 
     final response = await http.get(
-      Uri.parse('${baseUrl}locations/all-departments'),
+      Uri.parse('${_baseUrl}locations/all-departments'),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -40,7 +40,7 @@ class InformationService {
   Future<List<District>> getDistrictsByDepartment(int departmentId) async {
 
     final response = await http.get(
-      Uri.parse('${baseUrl}locations/districts-by-department?departmentId=$departmentId'),
+      Uri.parse('${_baseUrl}locations/districts-by-department?departmentId=$departmentId'),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -65,7 +65,7 @@ class InformationService {
   Future<List<Specialty>> getSpecialties() async {
 
     final response = await http.get(
-      Uri.parse('${baseUrl}specialties/all-specialties'),
+      Uri.parse('${_baseUrl}specialties/all-specialties'),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -90,7 +90,7 @@ class InformationService {
   Future<List<Membership>> getMemberships() async {
 
     final response = await http.get(
-      Uri.parse('${baseUrl}memberships/all-memberships'),
+      Uri.parse('${_baseUrl}memberships/all-memberships'),
       headers:{
         'Content-Type': 'application/json'
       }
