@@ -11,7 +11,6 @@ import '../../Information/models/department.dart';
 import '../../Information/models/district.dart';
 import '../../Information/services/information_service.dart';
 import '../models/consumer.dart';
-import 'login.dart';
 
 class Register extends StatefulWidget {
 
@@ -58,16 +57,39 @@ class _RegisterState extends State<Register> {
     _loadSpecialties();
   }
 
+  @override
+  void dispose() {
+
+    idController.dispose();
+    districtIdController.dispose();
+    specialtyIdController.dispose();
+    profileUrlController.dispose();
+    firstnameController.dispose();
+    lastnameController.dispose();
+    ageController.dispose();
+    genreController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    codeController.dispose();
+    availabilityController.dispose();
+
+    super.dispose();
+  }
+
   Future<void> _loadDepartments() async {
+
     final departments = await _informationService.getDepartments();
+
     setState(() {
       _departments = departments;
     });
   }
 
   Future<void> _loadDistrictsByDepartment(int departmentId) async {
+
     final districts = await _informationService
         .getDistrictsByDepartment(departmentId);
+
     setState(() {
       _districts = districts;
       _selectedDistrict = null;
@@ -75,13 +97,16 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> _loadSpecialties() async {
+
     final specialties = await _informationService.getSpecialties();
+
     setState(() {
       _specialties = specialties;
     });
   }
 
   Future<void> _pickImage() async {
+
     final pickedFile = await ImagePicker()
         .pickImage(source: ImageSource.gallery);
 
@@ -163,10 +188,13 @@ class _RegisterState extends State<Register> {
                             _buildDropdownSpecialties(),
 
                           _buildImagePicker(),
+
                           _buildTextField(controller: firstnameController, label: 'Nombres'),
                           _buildTextField(controller: lastnameController, label: 'Apellidos'),
                           _buildTextField(controller: ageController, label: 'Edad', isNumber: true),
+
                           _buildDropdownGenre(),
+
                           _buildTextField(controller: phoneController, label: 'Telefono', isNumber: true),
                           _buildTextField(controller: emailController, label: 'Email'),
                           _buildTextField(controller: codeController, label: 'Contraseña', isPassword: true),
@@ -181,6 +209,7 @@ class _RegisterState extends State<Register> {
                               bool result = false;
 
                               if (role == 'TECNICO') {
+
                                 Technical technical = Technical(
                                   id: idController.text,
                                   specialtyId: _selectedSpecialty!.id,
@@ -198,6 +227,7 @@ class _RegisterState extends State<Register> {
                                   (technical, _selectedImage!);
                               }
                               else if (role == 'CONSUMIDOR') {
+
                                 Consumer consumer = Consumer(
                                     id: idController.text,
                                     districtId: _selectedDistrict!.id,
@@ -222,10 +252,7 @@ class _RegisterState extends State<Register> {
                                 ),
                               ).then((result) {
                                 if (result == true) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const Login()),
-                                  );
+                                  Navigator.pushReplacementNamed(context, '/login');
                                 }
                               });
                             },

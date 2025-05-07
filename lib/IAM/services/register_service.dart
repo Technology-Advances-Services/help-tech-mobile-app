@@ -44,7 +44,7 @@ class RegisterService {
         }),
       );
 
-      return response.statusCode == 200;
+      return response.statusCode >= 200 && response.statusCode < 300;
     }
     catch(e) {
       return false;
@@ -79,7 +79,8 @@ class RegisterService {
       );
 
       return response.statusCode >= 200 && response.statusCode < 300;
-    } catch (e) {
+    }
+    catch (e) {
       return false;
     }
   }
@@ -169,7 +170,8 @@ class RegisterService {
       String fileUrl = await snapshot.ref.getDownloadURL();
 
       return fileUrl;
-    } else {
+    }
+    else {
       return null;
     }
   }
