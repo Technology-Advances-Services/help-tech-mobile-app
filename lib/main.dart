@@ -26,10 +26,10 @@ class MyHomePage extends StatelessWidget {
     return MaterialApp(
       title: 'Help Tech',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Home(),
+      home: Home(),
       initialRoute: '/home',
       routes: {
-        '/home': (context) => const Home(),
+        '/home': (context) => Home(),
         '/login': (context) => const Login(),
         '/technical': (context) => const InterfaceTechnical()
       },
