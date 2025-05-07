@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
+import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
 import 'IAM/views/home.dart';
 import 'firebase_options.dart';
@@ -29,7 +30,8 @@ class MyHomePage extends StatelessWidget {
       initialRoute: '/home',
       routes: {
         '/home': (context) => const Home(),
-        '/login': (context) => const Login()
+        '/login': (context) => const Login(),
+        '/technical': (context) => const InterfaceTechnical()
       },
     );
   }
