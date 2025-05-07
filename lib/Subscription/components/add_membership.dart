@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/IAM/services/register_service.dart';
+import 'package:helptechmobileapp/Subscription/services/membership_service.dart';
 
 import '../../Information/services/information_service.dart';
+import '../../Shared/widgets/error_dialog.dart';
 import '../models/membership.dart';
 
 class AddMembership extends StatefulWidget {
@@ -25,16 +26,16 @@ class _AddMembership extends State<AddMembership> {
   late String role;
 
   final InformationService _informationService = InformationService();
-  final RegisterService _registerService = RegisterService();
+  final MembershipService _membershipService = MembershipService();
 
   List<Membership> _memberships = [];
   Membership? _selectedMembership;
 
   bool _isLoading = false;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController policiesController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _policiesController = TextEditingController();
 
   @override
   void initState() {
@@ -45,9 +46,9 @@ class _AddMembership extends State<AddMembership> {
   @override
   void dispose() {
 
-    nameController.dispose();
-    priceController.dispose();
-    policiesController.dispose();
+    _nameController.dispose();
+    _priceController.dispose();
+    _policiesController.dispose();
 
     super.dispose();
   }
@@ -69,9 +70,9 @@ class _AddMembership extends State<AddMembership> {
     if (selected != null) {
       setState(() {
         _selectedMembership = selected;
-        nameController.text = selected.name;
-        priceController.text = selected.price.toStringAsFixed(2);
-        policiesController.text = selected.policies;
+        _nameController.text = selected.name;
+        _priceController.text = selected.price.toStringAsFixed(2);
+        _policiesController.text = selected.policies;
       });
     }
   }
@@ -103,7 +104,7 @@ class _AddMembership extends State<AddMembership> {
             ),
             const SizedBox(height: 15),
             TextField(
-              controller: nameController,
+              controller: _nameController,
               readOnly: true,
               decoration: const InputDecoration(
                 labelText: 'Nombre',
@@ -112,7 +113,7 @@ class _AddMembership extends State<AddMembership> {
             ),
             const SizedBox(height: 15),
             TextField(
-              controller: priceController,
+              controller: _priceController,
               readOnly: true,
               decoration: const InputDecoration(
                 labelText: 'Precio',
@@ -121,7 +122,7 @@ class _AddMembership extends State<AddMembership> {
             ),
             const SizedBox(height: 15),
             TextField(
-              controller: policiesController,
+              controller: _policiesController,
               readOnly: true,
               maxLines: 3,
               decoration: const InputDecoration(
@@ -145,7 +146,7 @@ class _AddMembership extends State<AddMembership> {
               _isLoading = true;
             });
 
-            final result = await _registerService.registerMembership(
+            final result = await _membershipService.registerMembership(
               _selectedMembership!, personId, role,
             );
 
@@ -157,8 +158,10 @@ class _AddMembership extends State<AddMembership> {
               Navigator.of(context).pop(true);
             }
             else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Error al registrar la membresia')),
+              showDialog(
+                context: context,
+                builder: (context) => const ErrorDialog
+                  (message: 'Error al registrar membresia.'),
               );
             }
           },
