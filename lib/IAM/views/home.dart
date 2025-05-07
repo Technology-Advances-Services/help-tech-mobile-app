@@ -9,7 +9,6 @@ import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 class Home extends StatelessWidget {
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
   final LoginService _loginService = LoginService();
 
   Home({super.key});
@@ -77,10 +76,11 @@ class Home extends StatelessWidget {
                           String? storedRole = await _storage.read(key: 'role');
 
                           if (storedRole == 'TECNICO') {
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (context) =>
                               const InterfaceTechnical()),
+                                  (route) => false,
                             );
                           }
                           else if (storedRole == 'CONSUMIDOR'){
