@@ -42,8 +42,21 @@ class _AddMembership extends State<AddMembership> {
     _loadMemberships();
   }
 
+  @override
+  void dispose() {
+
+    nameController.dispose();
+    priceController.dispose();
+    policiesController.dispose();
+
+    super.dispose();
+  }
+
+
   Future<void> _loadMemberships() async {
+
     final memberships = await _informationService.getMemberships();
+
     setState(() {
       personId = widget.personId;
       role = widget.role;
@@ -52,6 +65,7 @@ class _AddMembership extends State<AddMembership> {
   }
 
   void _onMembershipSelected(Membership? selected) {
+
     if (selected != null) {
       setState(() {
         _selectedMembership = selected;
@@ -141,7 +155,8 @@ class _AddMembership extends State<AddMembership> {
 
             if (result) {
               Navigator.of(context).pop(true);
-            } else {
+            }
+            else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Error al registrar la membresia')),
               );
