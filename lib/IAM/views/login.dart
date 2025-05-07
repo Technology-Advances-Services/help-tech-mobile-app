@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
+import 'package:helptechmobileapp/IAM/views/terms_and_conditions.dart';
 
 import '../../Shared/widgets/base_layout.dart';
 
@@ -152,6 +153,24 @@ class _LoginState extends State<Login> {
                             ),
                             child: const Text('Consumidor'),
                           ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) =>
+                                const TermsAndConditions()),
+                              );
+                            },
+                            child: const Text(
+                              'Ver Términos y Condiciones',
+                              style: TextStyle(
+                                color: Colors.teal,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+
                         ],
                       ),
                     ),
