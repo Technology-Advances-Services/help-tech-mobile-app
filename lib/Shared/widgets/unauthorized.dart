@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../IAM/views/login.dart';
+
 class Unauthorized extends StatelessWidget {
 
   const Unauthorized({super.key});
@@ -45,8 +47,11 @@ class Unauthorized extends StatelessWidget {
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Redirige a login o a otra pantalla
-                      Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                            (route) => false,
+                      );
                     },
                     icon: const Icon(Icons.login),
                     label: const Text('Ir a Iniciar Sesion'),
