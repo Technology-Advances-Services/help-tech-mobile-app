@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/IAM/views/register.dart';
+import 'package:helptechmobileapp/Shared/widgets/unauthorized.dart';
+import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
 class Home extends StatelessWidget {
 
-  const Home({super.key});
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  final LoginService _loginService = LoginService();
+
+  Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +70,37 @@ class Home extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const Login()),
-                        );
+                      onPressed: () async {
+
+                        if (await _loginService.isAuthenticated() == true){
+
+                          String? storedRole = await _storage.read(key: 'role');
+
+                          if (storedRole == 'TECNICO') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>
+                              const InterfaceTechnical()),
+                            );
+                          }
+                          else if (storedRole == 'CONSUMIDOR'){
+
+                          }
+                          else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>
+                              const Unauthorized()),
+                            );
+                          }
+                        }
+                        else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>
+                            const Login()),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
@@ -82,7 +116,8 @@ class Home extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const Register()),
+                          MaterialPageRoute(builder: (context) =>
+                          const Register()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
