@@ -25,7 +25,6 @@ class _AddMembership extends State<AddMembership> {
   late String personId;
   late String role;
 
-  final InformationService _informationService = InformationService();
   final MembershipService _membershipService = MembershipService();
 
   List<Membership> _memberships = [];
@@ -56,7 +55,7 @@ class _AddMembership extends State<AddMembership> {
 
   Future<void> _loadMemberships() async {
 
-    final memberships = await _informationService.getMemberships();
+    final memberships = await _membershipService.getMemberships();
 
     setState(() {
       personId = widget.personId;
