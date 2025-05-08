@@ -4,6 +4,7 @@ import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
 import 'IAM/views/home.dart';
+import 'Statistic/views/statistical_graph.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -31,7 +32,8 @@ class MyHomePage extends StatelessWidget {
       routes: {
         '/home': (context) => Home(),
         '/login': (context) => const Login(),
-        '/technical': (context) => const InterfaceTechnical()
+        '/technical': (context) => const InterfaceTechnical(),
+        '/statistic': (context) => const StatisticalGraph()
       },
     );
   }
