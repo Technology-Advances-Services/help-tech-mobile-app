@@ -31,4 +31,31 @@ class MembershipService {
 
     return response.statusCode >= 200 && response.statusCode < 300;
   }
+
+  Future<List<Membership>> getMemberships() async {
+
+    final response = await http.get(
+      Uri.parse('${_baseUrl}memberships/all-memberships'),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+
+      List<dynamic> data = json.decode(response.body);
+
+      List<Membership> memberships = data.map((parameter) => Membership(
+        id: parameter['id'],
+        name: parameter['name'],
+        price: parameter['price'],
+        policies: parameter['policies']
+      )).toList();
+
+      return memberships;
+    }
+    else {
+      return [];
+    }
+  }
 }
