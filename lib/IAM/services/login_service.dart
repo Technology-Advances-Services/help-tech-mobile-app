@@ -30,7 +30,7 @@ class LoginService {
 
       await _storage.write(key: 'token', value: token);
 
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      final decodedToken = JwtDecoder.decode(token);
 
       String role = decodedToken
       ['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
@@ -46,7 +46,7 @@ class LoginService {
       return true;
     }
     else {
-      throw Exception('Error ${response.statusCode}: ${response.body}');
+      return false;
     }
   }
 
@@ -57,7 +57,8 @@ class LoginService {
     return token == null? false: true;
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
+
     await _storage.delete(key: 'token');
     await _storage.delete(key: 'role');
     await _storage.delete(key: 'username');
