@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:helptechmobileapp/Attentions/views/job_of_technical.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/Statistic/views/statistical_graph.dart';
@@ -25,7 +26,7 @@ class _BaseLayout extends State<BaseLayout> {
   final Map<String, List<Widget>> _pagesByRole = {
     'TECNICO': [
       const SizedBox(),
-      const Text('Atenciones'),
+      const JobOfTechnical(),
       const StatisticalGraph(),
       const Text('Logout'),
     ],
