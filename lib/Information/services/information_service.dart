@@ -25,9 +25,9 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Department> departments = data.map((roomJson) => Department(
-        id: roomJson['id'],
-        name: roomJson['name'],
+      List<Department> departments = data.map((parameter) => Department(
+        id: parameter['id'],
+        name: parameter['name'],
       )).toList();
 
       return departments;
@@ -50,9 +50,9 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<District> districts = data.map((roomJson) => District(
-        id: roomJson['id'],
-        name: roomJson['name'],
+      List<District> districts = data.map((parameter) => District(
+        id: parameter['id'],
+        name: parameter['name'],
       )).toList();
 
       return districts;
@@ -75,9 +75,9 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Specialty> specialties = data.map((roomJson) => Specialty(
-        id: roomJson['id'],
-        name: roomJson['name'],
+      List<Specialty> specialties = data.map((parameter) => Specialty(
+        id: parameter['id'],
+        name: parameter['name'],
       )).toList();
 
       return specialties;
@@ -100,11 +100,11 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Membership> memberships = data.map((roomJson) => Membership(
-        id: roomJson['id'],
-        name: roomJson['name'],
-        price: roomJson['price'],
-        policies: roomJson['policies']
+      List<Membership> memberships = data.map((parameter) => Membership(
+        id: parameter['id'],
+        name: parameter['name'],
+        price: parameter['price'],
+        policies: parameter['policies']
       )).toList();
 
       return memberships;
