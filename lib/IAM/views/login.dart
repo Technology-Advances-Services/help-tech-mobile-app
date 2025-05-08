@@ -134,12 +134,19 @@ class _LoginState extends State<Login> {
                                         (route) => false,
                                   );
                                 }
+                                else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => const ErrorDialog
+                                        (message: 'Credenciales inválidas')
+                                  );
+                                }
                               }
                               else {
                                 showDialog(
-                                  context: context,
-                                  builder: (context) => const ErrorDialog
-                                    (message: 'Credenciales inválidas')
+                                    context: context,
+                                    builder: (context) => const ErrorDialog
+                                      (message: 'Credenciales inválidas')
                                 );
                               }
                             },
@@ -169,6 +176,13 @@ class _LoginState extends State<Login> {
 
                                 if (result == true) {
 
+                                }
+                                else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => const ErrorDialog
+                                        (message: 'Credenciales inválidas')
+                                  );
                                 }
                               }
                               else {
