@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
+import 'package:helptechmobileapp/Statistic/views/statistical_graph.dart';
 
 class BaseLayout extends StatefulWidget {
 
@@ -25,7 +26,7 @@ class _BaseLayout extends State<BaseLayout> {
     'TECNICO': [
       const SizedBox(),
       const Text('Atenciones'),
-      const Text('Reportes'),
+      const StatisticalGraph(),
       const Text('Logout'),
     ],
     'CONSUMIDOR': [
