@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helptechmobileapp/Statistic/services/statistic_service.dart';
 
 import '../../Shared/widgets/base_layout.dart';
 
@@ -12,10 +13,12 @@ class InterfaceTechnical extends StatefulWidget {
 
 class _InterfaceTechnical extends State<InterfaceTechnical> {
 
-  int income = 0;
-  int consumersServed = 0;
-  int workingTime = 0;
-  int pendingWork = 0;
+  final StatisticService _statisticService = StatisticService();
+
+  double totalIncome = 0;
+  int totalConsumersServed = 0;
+  int totalWorkTime = 0;
+  int totalPendingsJobs = 0;
 
   @override
   void initState() {
@@ -25,14 +28,24 @@ class _InterfaceTechnical extends State<InterfaceTechnical> {
 
   Future<void> _loadDashboardData() async {
 
-    await Future.delayed(const Duration(seconds: 1));
+    var generalStatistic = await _statisticService.generalTechnicalStatistic();
 
-    setState(() {
-      income = 100;
-      consumersServed = 5;
-      workingTime = 8;
-      pendingWork = 2;
-    });
+    if (generalStatistic == null) {
+      setState(() {
+        totalIncome = 0;
+        totalConsumersServed = 0;
+        totalWorkTime = 0;
+        totalPendingsJobs = 0;
+      });
+    }
+    else {
+      setState(() {
+        totalIncome = generalStatistic.totalIncome;
+        totalConsumersServed = generalStatistic.totalConsumersServed;
+        totalWorkTime = generalStatistic.totalWorkTime;
+        totalPendingsJobs = generalStatistic.totalPendingsJobs;
+      });
+    }
   }
 
   Widget _buildCard(String title, String value, IconData icon, Color color) {
@@ -77,11 +90,11 @@ class _InterfaceTechnical extends State<InterfaceTechnical> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          _buildCard('Ingresos', '\$$income', Icons.attach_money, Colors.green),
-          _buildCard('Consumidores Atendidos', '$consumersServed',
+          _buildCard('Ingresos', '\$$totalIncome', Icons.attach_money, Colors.green),
+          _buildCard('Consumidores Atendidos', '$totalConsumersServed',
               Icons.person_outline, Colors.lightBlue),
-          _buildCard('Tiempo de Trabajo', '$workingTime h', Icons.access_time, Colors.orange),
-          _buildCard('Trabajos Pendientes', '$pendingWork',
+          _buildCard('Tiempo de Trabajo', '$totalWorkTime h', Icons.access_time, Colors.orange),
+          _buildCard('Trabajos Pendientes', '$totalPendingsJobs',
               Icons.assignment_late_outlined, Colors.redAccent),
         ],
       ),
