@@ -19,8 +19,8 @@ class StatisticService {
     token = token?.replaceAll('"', '');
 
     final response = await http.get(
-        Uri.parse('${_baseUrl}statistics/'
-            'general-technical-statistic?technicalId=$username'),
+      Uri.parse('${_baseUrl}statistics/'
+          'general-technical-statistic?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -29,11 +29,11 @@ class StatisticService {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
 
-      final List<Map<String, dynamic>> dataList = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      List<dynamic> dataList = jsonDecode(response.body);
 
       if (dataList.isEmpty) return null;
 
-      final Map<String, dynamic> data = dataList.first;
+      final data = dataList.first;
 
       dynamic generalStatistic = (
         agendasId: data['AgendasId'],
@@ -70,11 +70,11 @@ class StatisticService {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
 
-      final List<Map<String, dynamic>> dataList = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      List<dynamic> dataList = jsonDecode(response.body);
 
       if (dataList.isEmpty) return null;
 
-      final Map<String, dynamic> data = dataList.first;
+      final data = dataList.first;
 
       dynamic detailedStatistic = (
         agendasId: data['AgendasId'],
@@ -112,7 +112,8 @@ class StatisticService {
 
     if (response.statusCode == 200) {
 
-      final List<Map<String, dynamic>> dataList = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final dataList = List<Map<String, dynamic>>
+          .from(jsonDecode(response.body));
 
       if (dataList.isEmpty) return [];
 
