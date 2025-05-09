@@ -56,14 +56,30 @@ class TermsAndConditions extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Estos términos y condiciones, así como cualquier disputa relacionada con la Aplicación, se regirán por las leyes de la República del Perú. En caso de controversias, las partes acuerdan someterse a la jurisdicción exclusiva de los tribunales peruanos.',
+                      'Para cualquier consulta, queja o solicitud relacionada con estos términos y condiciones, los usuarios pueden contactarnos mediante el correo electrónico technologyadvancesservices@gmail.com.',
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Para cualquier consulta, queja o solicitud relacionada con estos términos y condiciones, los usuarios pueden contactarnos mediante el correo electrónico technologyadvancesservices@gmail.com.',
-                      textAlign: TextAlign.justify,
+                      'Derechos de Autor y Propiedad Intelectual',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Esta aplicación y la idea original del proyecto son propiedad del INGENIERO AARON ELIAS ACUÑA ALARCON, el cual es el único titular legal de todos los derechos de autor, propiedad intelectual y responsabilidad comercial vinculados a la presente plataforma. Cualquier uso no autorizado de su contenido, diseño o funcionalidades será considerado una violación a la ley de propiedad intelectual.',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(height: 16),
                   ],
                 ),
               ),
