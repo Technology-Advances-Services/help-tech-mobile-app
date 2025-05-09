@@ -46,7 +46,7 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     const Text(
-                      'HelpTechAppMobile',
+                      'HelpTechMobileApp',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
