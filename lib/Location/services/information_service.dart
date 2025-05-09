@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:helptechmobileapp/Information/models/department.dart';
-import 'package:helptechmobileapp/Information/models/district.dart';
-import 'package:helptechmobileapp/Information/models/specialty.dart';
+import 'package:helptechmobileapp/Location/models/department.dart';
+import 'package:helptechmobileapp/Location/models/district.dart';
+import 'package:helptechmobileapp/Location/models/specialty.dart';
 
 import 'package:http/http.dart' as http;
 
