@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Attentions/views/job_of_technical.dart';
+import 'package:helptechmobileapp/Attention/views/job_of_technical.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
