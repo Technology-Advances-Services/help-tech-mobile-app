@@ -81,12 +81,15 @@ class _JobResponse extends State<JobResponse> {
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(24),
-              child: Form(
+              child:
+              Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const Icon(Icons.work, size: 60, color: Colors.brown),
+                      const SizedBox(height: 16),
                       InkWell(
                         onTap: _pickDate,
                         child: InputDecorator(
