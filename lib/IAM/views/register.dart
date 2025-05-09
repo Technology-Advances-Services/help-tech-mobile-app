@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Subscription/components/add_membership.dart';
 import 'package:helptechmobileapp/IAM/models/technical.dart';
 import 'package:helptechmobileapp/IAM/services/register_service.dart';
-import 'package:helptechmobileapp/Information/models/specialty.dart';
+import 'package:helptechmobileapp/Location/models/specialty.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../Information/models/department.dart';
-import '../../Information/models/district.dart';
-import '../../Information/services/information_service.dart';
+import '../../Location/models/department.dart';
+import '../../Location/models/district.dart';
+import '../../Location/services/information_service.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../models/consumer.dart';
 import 'login.dart';
