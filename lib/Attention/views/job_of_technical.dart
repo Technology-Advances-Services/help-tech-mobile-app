@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Attention/components/job_detail.dart';
+import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
+import 'package:helptechmobileapp/Shared/widgets/success_dialog.dart';
 import 'package:intl/intl.dart';
 import '../components/job_response.dart';
 import '../services/job_service.dart';
@@ -179,6 +181,7 @@ class _JobOfTechnical extends State<JobOfTechnical> {
 
 class JobDataSource extends DataTableSource {
 
+  final JobService _jobService = JobService();
   final List<Job> _jobs;
   final BuildContext context;
   final DateFormat _fmt = DateFormat('dd/MM/yyyy HH:mm');
@@ -216,7 +219,9 @@ class JobDataSource extends DataTableSource {
       DataCell(IconButton(
         icon: const Icon(Icons.chat, color: Colors.green),
         tooltip: 'Chat',
-        onPressed: () {},
+        onPressed: () {
+
+        },
       )),
     ]);
 
@@ -224,20 +229,58 @@ class JobDataSource extends DataTableSource {
       cells.add(DataCell(IconButton(
         icon: const Icon(Icons.check_circle, color: Colors.orange),
         tooltip: 'Completar',
-        onPressed: () {},
+        onPressed: () async {
+
+          final Job tmpJob = Job(
+            id: job.id,
+            jobState: job.jobState,
+          );
+
+          var result = await _jobService.completeJob(job);
+
+          if (result == true) {
+
+            showDialog(
+              context: context,
+              builder: (context) =>
+              const SuccessDialog(message: 'Trabajo completado.')
+            );
+
+            if (context.mounted) {
+              final state = context.findAncestorStateOfType<_JobOfTechnical>();
+              state?._loadJobs();
+            }
+          }
+          else {
+
+            showDialog(
+              context: context,
+              builder: (context) =>
+              const ErrorDialog(message: 'No se completo el trabajo.')
+            );
+          }
+        },
       )));
     }
     else if (job.jobState != 'COMPLETADO') {
       cells.add(DataCell(IconButton(
         icon: const Icon(Icons.reply, color: Colors.deepPurple),
         tooltip: 'Responder',
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => JobResponse(jobId: job.id),
             ),
           );
+
+          if (result == true) {
+            if (context.mounted) {
+              final state = context.findAncestorStateOfType<_JobOfTechnical>();
+              state?._loadJobs();
+            }
+          }
         },
       )));
     }
