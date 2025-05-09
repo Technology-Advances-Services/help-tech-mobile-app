@@ -1,6 +1,7 @@
 class Job {
 
   int id;
+  int agendaId;
   int chatRoomId;
   String personId;
   String firstName;
@@ -18,6 +19,7 @@ class Job {
 
   Job({
     this.id = 0,
+    this.agendaId = 0,
     this.chatRoomId = 0,
     this.personId = '',
     this.firstName = '',
