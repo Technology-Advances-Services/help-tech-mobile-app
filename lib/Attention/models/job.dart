@@ -1,6 +1,3 @@
-import 'package:helptechmobileapp/IAM/models/consumer.dart';
-import 'package:helptechmobileapp/IAM/models/technical.dart';
-
 class Job {
 
   int id;
@@ -18,9 +15,6 @@ class Job {
   double? materialBudget;
   double? amountFinal;
   String jobState;
-
-  Technical? technical;
-  Consumer? consumer;
 
   Job({
     this.id = 0,

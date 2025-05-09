@@ -18,13 +18,12 @@ class JobService {
 
     token = token?.replaceAll('"', '');
 
-    final jobsUrl = '${_baseUrl}jobs/'
-        'jobs-by-technical?technicalId=$username';
     /*final chatsMembersUrl = '${_baseUrl}chatsmembers/'
         'chats-members-by-technical?technicalId=$username';*/
 
-    final jobsResponse = await http.get(
-      Uri.parse(jobsUrl),
+    final response = await http.get(
+      Uri.parse('${_baseUrl}jobs/'
+          'jobs-by-technical?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -39,26 +38,17 @@ class JobService {
       }
     );*/
 
-    if (jobsResponse.statusCode >= 200 &&
-        jobsResponse.statusCode < 300) {
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
 
-      final jobsList = List<dynamic>.from(json.decode(jobsResponse.body));
+      final jobsList = List<dynamic>.from(json.decode(response.body));
       //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
 
       final jobResults = <Job>[];
 
       for (var jobJson in jobsList) {
 
-        final consumerResponse = await http.get(
-          Uri.parse('${_baseUrl}informations/'
-              'consumer-by-id?id=${jobJson['consumerId']}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-          }
-        );
-
-        final consumerJson = json.decode(consumerResponse.body);
+        final consumerJson = jobJson['consumer'];
 
         DateTime? workDate;
 
