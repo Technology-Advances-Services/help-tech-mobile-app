@@ -10,8 +10,8 @@ class Technical {
   String genre;
   int phone;
   String email;
-  String code;
   String availability;
+  String code;
 
   Technical({
     this.id = '',
@@ -24,7 +24,7 @@ class Technical {
     this.genre = '',
     this.phone = 0,
     this.email = '',
-    this.code = '',
     this.availability = '',
+    this.code = ''
   });
 }
