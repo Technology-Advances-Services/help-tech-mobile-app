@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:helptechmobileapp/Consumer/view/interface_consumer.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/terms_and_conditions.dart';
 import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
 import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
-
-import '../../Shared/widgets/base_layout.dart';
 
 class Login extends StatefulWidget {
 
@@ -176,7 +175,12 @@ class _LoginState extends State<Login> {
                                     username, password, role);
 
                                 if (result == true) {
-
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>
+                                    const InterfaceConsumer()),
+                                        (route) => false,
+                                  );
                                 }
                                 else {
                                   showDialog(
