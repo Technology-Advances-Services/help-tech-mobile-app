@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:helptechmobileapp/Consumer/view/interface_consumer.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/IAM/views/register.dart';
@@ -85,6 +86,12 @@ class Home extends StatelessWidget {
                           }
                           else if (storedRole == 'CONSUMIDOR'){
 
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) =>
+                              const InterfaceConsumer()),
+                                  (route) => false,
+                            );
                           }
                           else {
                             Navigator.push(
