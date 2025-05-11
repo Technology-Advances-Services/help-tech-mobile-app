@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../IAM/models/technical.dart';
 import '../models/job.dart';
 
 class JobService {
@@ -196,5 +197,130 @@ class JobService {
     }
 
     return [];
+  }
+
+  Future<List<Job>> jobsByConsumer() async {
+
+    var token = await _storage.read(key: 'token');
+    final username = await _storage.read(key: 'username');
+
+    token = token?.replaceAll('"', '');
+
+    /*final chatsMembersUrl = '${_baseUrl}chatsmembers/'
+        'chats-members-by-technical?technicalId=$username';*/
+
+    final response = await http.get(
+        Uri.parse('${_baseUrl}jobs/'
+            'jobs-by-consumer?consumerId=$username'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        }
+    );
+
+    /*final chatsMembersResponse = await http.get(
+      Uri.parse(chatsMembersUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      }
+    );*/
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+
+      final jobsList = List<dynamic>.from(json.decode(response.body));
+      //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
+
+      final jobResults = <Job>[];
+
+      for (var jobJson in jobsList) {
+
+        final technicalJson = jobJson['technical'];
+
+        DateTime? workDate;
+
+        try {
+          workDate = DateTime.parse(jobJson['workDate']);
+        }
+        catch (e) {
+          workDate = null;
+        }
+
+        final job = Job(
+          id: jobJson['id'],
+          agendaId: jobJson['agendaId'],
+          registrationDate: DateTime.parse(jobJson['registrationDate']),
+          personId: technicalJson['id'],
+          firstName: technicalJson['firstname'],
+          lastName: technicalJson['lastname'],
+          phone: technicalJson['phone'],
+          workDate: workDate,
+          address: jobJson['address'],
+          description: jobJson['description'],
+          time: jobJson['time'],
+          laborBudget: jobJson['laborBudget'],
+          materialBudget: jobJson['materialBudget'],
+          amountFinal: jobJson['amountFinal'],
+          jobState: jobJson['jobState'],
+        );
+
+        /*final chatMember = chatsMembersList
+            .firstWhere((chat) => chat['consumerId'] == jobJson['consumerId'],
+            orElse: () => null);
+
+        if (chatMember != null) {
+          job.chatRoomId = chatMember['chatRoomId'];
+        }*/
+
+        jobResults.add(job);
+      }
+
+      jobResults.sort((a, b) => b.registrationDate!.compareTo(a.registrationDate!));
+
+      return jobResults;
+    }
+
+    return [];
+  }
+
+  Future<List<Technical>> technicalsByAvailability() async {
+
+    var token = await _storage.read(key: 'token');
+
+    token = token?.replaceAll('"', '');
+
+    final response = await http.get(
+      Uri.parse('${_baseUrl}informations/technicals-by-availability?'
+          'availability=DISPONIBLE'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+
+      List<dynamic> data = json.decode(response.body);
+
+      List<Technical> technical = data.map((parameter) => Technical(
+        id: parameter['id'],
+        specialtyId: parameter['specialtyId'],
+        districtId: parameter['districtId'],
+        profileUrl: parameter['profileUrl'],
+        firstname: parameter['firstname'],
+        lastname: parameter['lastname'],
+        age: parameter['age'],
+        genre: parameter['genre'],
+        phone: parameter['phone'],
+        email: parameter['email'],
+        availability: parameter['availability'],
+      )).toList();
+
+      return technical;
+    }
+    else {
+      return [];
+    }
   }
 }
