@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:helptechmobileapp/Attention/views/job_of_consumer.dart';
 import 'package:helptechmobileapp/Attention/views/job_of_technical.dart';
+import 'package:helptechmobileapp/Consumer/view/interface_consumer.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
 import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
@@ -35,7 +37,9 @@ class MyHomePage extends StatelessWidget {
         '/login': (context) => const Login(),
         '/technical': (context) => const InterfaceTechnical(),
         '/statistic': (context) => const StatisticalGraph(),
-        '/job_technical': (context) => const JobOfTechnical()
+        '/job_technical': (context) => const JobOfTechnical(),
+        '/consumer': (context) => const InterfaceConsumer(),
+        '/job_consumer': (context) => const JobOfConsumer()
       },
     );
   }
