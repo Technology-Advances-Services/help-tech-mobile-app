@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:helptechmobileapp/Attention/views/job_of_consumer.dart';
 import 'package:helptechmobileapp/Attention/views/job_of_technical.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/login.dart';
@@ -32,7 +33,7 @@ class _BaseLayout extends State<BaseLayout> {
     ],
     'CONSUMIDOR': [
       const SizedBox(),
-      const Text('Atenciones'),
+      const JobOfConsumer(),
       const Text('Logout'),
     ],
   };
@@ -97,7 +98,7 @@ class _BaseLayout extends State<BaseLayout> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.brown,
-        title: const Text('Bienvenido, exitos en tu trabajo.'),
+        title: Text('Bienvenido, $_role'),
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(8),
