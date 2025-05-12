@@ -11,7 +11,7 @@ class ReviewService {
 
   final _storage = const FlutterSecureStorage();
 
-  Future<bool> registerReview(Review review) async {
+  Future<bool> addReviewToJob(Review review) async {
 
     var token = await _storage.read(key: 'token');
 

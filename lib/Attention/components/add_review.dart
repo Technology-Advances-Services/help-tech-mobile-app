@@ -36,7 +36,7 @@ class _AddReview extends State<AddReview> {
       opinion: _opinionController.text.trim(),
     );
 
-    final result = await _reviewService.registerReview(review);
+    final result = await _reviewService.addReviewToJob(review);
 
     setState(() => isLoading = false);
 
