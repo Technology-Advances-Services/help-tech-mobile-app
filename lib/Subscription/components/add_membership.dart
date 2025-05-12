@@ -21,15 +21,12 @@ class AddMembership extends StatefulWidget {
 
 class _AddMembership extends State<AddMembership> {
 
-  late String personId;
-  late String role;
-
   final MembershipService _membershipService = MembershipService();
 
-  List<Membership> _memberships = [];
-  Membership? _selectedMembership;
+  List<Membership> memberships = [];
+  Membership? selectedMembership;
 
-  bool _isLoading = false;
+  bool isLoading = false;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -54,12 +51,10 @@ class _AddMembership extends State<AddMembership> {
 
   Future<void> _loadMemberships() async {
 
-    final memberships = await _membershipService.getMemberships();
+    final tmpMemberships = await _membershipService.getMemberships();
 
     setState(() {
-      personId = widget.personId;
-      role = widget.role;
-      _memberships = memberships;
+      memberships = tmpMemberships;
     });
   }
 
@@ -67,7 +62,7 @@ class _AddMembership extends State<AddMembership> {
 
     if (selected != null) {
       setState(() {
-        _selectedMembership = selected;
+        selectedMembership = selected;
         _nameController.text = selected.name;
         _priceController.text = selected.price.toStringAsFixed(2);
         _policiesController.text = selected.policies;
@@ -87,8 +82,8 @@ class _AddMembership extends State<AddMembership> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<Membership>(
-              value: _selectedMembership,
-              items: _memberships.map((m) {
+              value: selectedMembership,
+              items: memberships.map((m) {
                 return DropdownMenuItem(
                   value: m,
                   child: Text(m.name),
@@ -137,19 +132,18 @@ class _AddMembership extends State<AddMembership> {
           child: const Text('Cancelar'),
         ),
         ElevatedButton(
-          onPressed: _isLoading
-              ? null
-              : () async {
+          onPressed: isLoading ? null : () async {
+
             setState(() {
-              _isLoading = true;
+              isLoading = true;
             });
 
             final result = await _membershipService.registerMembership(
-              _selectedMembership!, personId, role,
+              selectedMembership!, widget.personId, widget.role,
             );
 
             setState(() {
-              _isLoading = false;
+              isLoading = false;
             });
 
             if (result) {
@@ -163,7 +157,7 @@ class _AddMembership extends State<AddMembership> {
               );
             }
           },
-          child: _isLoading
+          child: isLoading
               ? const SizedBox(
             width: 20,
             height: 20,
