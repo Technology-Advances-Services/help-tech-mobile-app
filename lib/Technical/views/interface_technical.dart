@@ -17,7 +17,7 @@ class _InterfaceTechnical extends State<InterfaceTechnical> {
 
   double totalIncome = 0;
   int totalConsumersServed = 0;
-  int totalWorkTime = 0;
+  double totalWorkTime = 0;
   int totalPendingsJobs = 0;
 
   @override
