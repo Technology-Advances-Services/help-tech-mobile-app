@@ -16,8 +16,6 @@ class _JobDetail extends State<JobDetail> {
   @override
   Widget build(BuildContext context) {
 
-    final job = widget.job;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalle del Trabajo'),
@@ -45,20 +43,20 @@ class _JobDetail extends State<JobDetail> {
                 children: [
                   const Icon(Icons.description, size: 60, color: Colors.indigo),
                   const SizedBox(height: 20),
-                  _infoRow('Dirección', job.address ?? 'No disponible'),
-                  _infoRow('Descripción', job.description ?? 'No disponible'),
-                  _infoRow('Tiempo estimado', job.time.toString() ?? 'No definido'),
-                  _infoRow(
+                  infoRow('Dirección', widget.job.address ?? 'No disponible'),
+                  infoRow('Descripción', widget.job.description ?? 'No disponible'),
+                  infoRow('Tiempo estimado', widget.job.time.toString() ?? 'No definido'),
+                  infoRow(
                     'Mano de obra',
-                    job.laborBudget != null ? 'S/ ${job.laborBudget!.toStringAsFixed(2)}' : 'No asignado',
+                    widget.job.laborBudget != 0 ? 'S/ ${widget.job.laborBudget!.toStringAsFixed(2)}' : 'No asignado',
                   ),
-                  _infoRow(
+                  infoRow(
                     'Materiales',
-                    job.materialBudget != null ? 'S/ ${job.materialBudget!.toStringAsFixed(2)}' : 'No asignado',
+                    widget.job.materialBudget != 0 ? 'S/ ${widget.job.materialBudget!.toStringAsFixed(2)}' : 'No asignado',
                   ),
-                  _infoRow(
+                  infoRow(
                     'Monto final',
-                    job.amountFinal != null ? 'S/ ${job.amountFinal!.toStringAsFixed(2)}' : 'No asignado',
+                    widget.job.amountFinal != 0 ? 'S/ ${widget.job.amountFinal!.toStringAsFixed(2)}' : 'No asignado',
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
@@ -81,7 +79,7 @@ class _JobDetail extends State<JobDetail> {
     );
   }
 
-  Widget _infoRow(String title, String value) {
+  Widget infoRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Attention/services/job_service.dart';
-import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
-import 'package:helptechmobileapp/Shared/widgets/success_dialog.dart';
 import 'package:intl/intl.dart';
-
 import '../models/job.dart';
 
 class JobResponse extends StatefulWidget {
-
   final int jobId;
 
   const JobResponse({super.key, required this.jobId});
@@ -17,77 +13,72 @@ class JobResponse extends StatefulWidget {
 }
 
 class _JobResponse extends State<JobResponse> {
-
   final _formKey = GlobalKey<FormState>();
-
   final JobService _jobService = JobService();
 
-  DateTime? _workDate;
+  DateTime? workDate;
   final _timeController = TextEditingController();
   final _laborBudgetController = TextEditingController();
   final _materialBudgetController = TextEditingController();
-  String? _selectedStatus;
+  String? selectedStatus;
 
-  Future<void> _pickDate() async {
+  bool isLoading = false;
 
+  Future<void> pickDate() async {
     final now = DateTime.now();
 
-    final picked = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
-      initialDate: _workDate ?? now,
+      initialDate: workDate ?? now,
       firstDate: now,
       lastDate: now.add(const Duration(days: 365)),
     );
 
-    if (picked != null) {
-      setState(() => _workDate = picked);
-    }
+    if (pickedDate == null) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(workDate ?? now),
+    );
+
+    if (pickedTime == null) return;
+
+    final fullDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
+    setState(() {
+      workDate = fullDateTime;
+    });
   }
 
-  Future<void> _submit() async {
+  Future<void> _submitRequest() async {
 
-    if (_formKey.currentState!.validate() &&
-        _workDate != null && _selectedStatus != null) {
+    if (!_formKey.currentState!.validate() || workDate == null || selectedStatus == null) {
 
-      final Job job = Job(
-        id: widget.jobId,
-        workDate: _workDate,
-        time: double.tryParse(_timeController.text) ?? 0.0,
-        laborBudget: double.tryParse(_laborBudgetController.text) ?? 0.0,
-        jobState: _selectedStatus!
-      );
-
-      var result = await _jobService.assignJobDetail(job);
-
-      if (result == true){
-
-        showDialog(
-          context: context,
-          builder: (context) =>
-          const SuccessDialog(message: 'Respuesta registrada.')
-        );
-
-        Navigator.of(context).pop(true);
-      }
-      else {
-
-        showDialog(
-          context: context,
-          builder: (context) =>
-          const ErrorDialog(message: 'No se registro su respuesta.')
-        );
-      }
-    }
-    else if (_workDate == null && _selectedStatus == null) {
-
-      showDialog(
-        context: context,
-        builder: (context) =>
-        const ErrorDialog(message: 'Campos vacios.')
-      );
+      Navigator.of(context).pop(false);
     }
 
-    Navigator.of(context).pop(false);
+    setState(() => isLoading = true);
+
+    final Job job = Job(
+      id: widget.jobId,
+      workDate: workDate,
+      time: double.tryParse(_timeController.text) ?? 0.0,
+      laborBudget: double.tryParse(_laborBudgetController.text) ?? 0.0,
+      materialBudget: double.tryParse(_materialBudgetController.text) ?? 0.0,
+      jobState: selectedStatus!,
+    );
+
+    final result = await _jobService.assignJobDetail(job);
+
+    setState(() => isLoading = false);
+
+    Navigator.of(context).pop(result);
   }
 
   @override
@@ -95,7 +86,7 @@ class _JobResponse extends State<JobResponse> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Responder al trabajo'),
-        backgroundColor: Colors.brown
+        backgroundColor: Colors.brown,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -112,30 +103,28 @@ class _JobResponse extends State<JobResponse> {
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(24),
-              child:
-              Form(
+              child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-
                       const Icon(Icons.work, size: 60, color: Colors.brown),
                       const SizedBox(height: 16),
 
                       InkWell(
-                        onTap: _pickDate,
+                        onTap: pickDate,
                         child: InputDecorator(
                           decoration: InputDecoration(
                             labelText: 'Fecha de trabajo',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                           child: Text(
-                            _workDate != null
-                                ? DateFormat('dd/MM/yyyy').format(_workDate!)
+                            workDate != null
+                                ? DateFormat('dd/MM/yyyy HH:mm').format(workDate!)
                                 : 'Seleccionar fecha',
                             style: TextStyle(
-                              color: _workDate != null ? Colors.black87 : Colors.grey,
+                              color: workDate != null ? Colors.black87 : Colors.grey,
                             ),
                           ),
                         ),
@@ -178,7 +167,7 @@ class _JobResponse extends State<JobResponse> {
                       const SizedBox(height: 24),
 
                       DropdownButtonFormField<String>(
-                        value: _selectedStatus,
+                        value: selectedStatus,
                         decoration: InputDecoration(
                           labelText: 'Estado',
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -189,7 +178,7 @@ class _JobResponse extends State<JobResponse> {
                         ],
                         onChanged: (value) {
                           setState(() {
-                            _selectedStatus = value;
+                            selectedStatus = value;
                           });
                         },
                         validator: (value) =>
@@ -197,17 +186,20 @@ class _JobResponse extends State<JobResponse> {
                       ),
                       const SizedBox(height: 16),
 
+                      isLoading ? const CircularProgressIndicator() :
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: _submit,
+                          onPressed: _submitRequest,
                           icon: const Icon(Icons.send),
                           label: const Text('Enviar respuesta'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4FB6B3),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),

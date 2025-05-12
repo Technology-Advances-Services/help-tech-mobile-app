@@ -18,6 +18,8 @@ class JobService {
 
     token = token?.replaceAll('"', '');
 
+    var username = await _storage.read(key: 'username');
+
     final response = await http.post(
       Uri.parse('${_baseUrl}jobs/register-request-job'),
       headers: {
@@ -26,7 +28,7 @@ class JobService {
       },
       body: json.encode({
         'agendaId': job.agendaId,
-        'consumerId': job.personId,
+        'consumerId': username,
         'address': job.address,
         'description': job.description
       }),
@@ -55,7 +57,7 @@ class JobService {
       },
       body: json.encode({
         'id': job.id,
-        'workDate': job.workDate,
+        'workDate': job.workDate?.toIso8601String(),
         'time': job.time,
         'laborBudget': job.laborBudget,
         'materialBudget': job.materialBudget
@@ -100,8 +102,8 @@ class JobService {
         'Authorization': 'Bearer $token'
       },
       body: json.encode({
-        'id': job.agendaId,
-        'jobState': job.jobState
+        'id': job.id,
+        'jobState': 'COMPLETADO'
       }),
     );
 
@@ -112,6 +114,34 @@ class JobService {
     }
 
     return false;
+  }
+
+  Future<int> getAgendaId(String technicalId) async {
+
+    var token = await _storage.read(key: 'token');
+
+    token = token?.replaceAll('"', '');
+
+    final response = await http.get(
+      Uri.parse('${_baseUrl}agendas/agenda-by-technical?'
+          'technicalId=$technicalId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+
+      dynamic data = json.decode(response.body);
+
+      String agendaId = data['id'].toString();
+
+      return int.parse(agendaId);
+    }
+
+    return 0;
   }
 
   Future<List<Job>> jobsByTechnical() async {
@@ -147,7 +177,7 @@ class JobService {
       final jobsList = List<dynamic>.from(json.decode(response.body));
       //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
 
-      final jobResults = <Job>[];
+      final jobs = <Job>[];
 
       for (var jobJson in jobsList) {
 
@@ -188,12 +218,12 @@ class JobService {
           job.chatRoomId = chatMember['chatRoomId'];
         }*/
 
-        jobResults.add(job);
+        jobs.add(job);
       }
 
-      jobResults.sort((a, b) => b.registrationDate!.compareTo(a.registrationDate!));
+      jobs.sort((a, b) => b.registrationDate!.compareTo(a.registrationDate!));
 
-      return jobResults;
+      return jobs;
     }
 
     return [];
@@ -232,7 +262,7 @@ class JobService {
       final jobsList = List<dynamic>.from(json.decode(response.body));
       //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
 
-      final jobResults = <Job>[];
+      final jobs = <Job>[];
 
       for (var jobJson in jobsList) {
 
@@ -273,12 +303,12 @@ class JobService {
           job.chatRoomId = chatMember['chatRoomId'];
         }*/
 
-        jobResults.add(job);
+        jobs.add(job);
       }
 
-      jobResults.sort((a, b) => b.registrationDate!.compareTo(a.registrationDate!));
+      jobs.sort((a, b) => b.registrationDate!.compareTo(a.registrationDate!));
 
-      return jobResults;
+      return jobs;
     }
 
     return [];
@@ -303,7 +333,7 @@ class JobService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Technical> technical = data.map((parameter) => Technical(
+      List<Technical> technicals = data.map((parameter) => Technical(
         id: parameter['id'],
         specialtyId: parameter['specialtyId'],
         districtId: parameter['districtId'],
@@ -317,10 +347,9 @@ class JobService {
         availability: parameter['availability'],
       )).toList();
 
-      return technical;
+      return technicals;
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 }

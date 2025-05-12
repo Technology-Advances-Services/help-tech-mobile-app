@@ -27,16 +27,16 @@ class _RegisterState extends State<Register> {
   final InformationService _informationService = InformationService();
   final RegisterService _registerService = RegisterService();
 
-  List<Department> _departments = [];
-  List<District> _districts = [];
-  List<Specialty> _specialties = [];
+  List<Department> departments = [];
+  List<District> districts = [];
+  List<Specialty> specialties = [];
 
-  Department? _selectedDepartment;
-  District? _selectedDistrict;
-  Specialty? _selectedSpecialty;
+  Department? selectedDepartment;
+  District? selectedDistrict;
+  Specialty? selectedSpecialty;
 
   String selectedRole = 'TECNICO';
-  File? _selectedImage;
+  File? selectedImage;
   String? selectedGenre;
 
   final TextEditingController _idController = TextEditingController();
@@ -78,30 +78,30 @@ class _RegisterState extends State<Register> {
 
   Future<void> _loadDepartments() async {
 
-    final departments = await _informationService.getDepartments();
+    final tmpDepartments = await _informationService.getDepartments();
 
     setState(() {
-      _departments = departments;
+      departments = tmpDepartments;
     });
   }
 
   Future<void> _loadDistrictsByDepartment(int departmentId) async {
 
-    final districts = await _informationService
+    final tmpDistricts = await _informationService
         .getDistrictsByDepartment(departmentId);
 
     setState(() {
-      _districts = districts;
-      _selectedDistrict = null;
+      districts = tmpDistricts;
+      selectedDistrict = null;
     });
   }
 
   Future<void> _loadSpecialties() async {
 
-    final specialties = await _informationService.getSpecialties();
+    final tmpSpecialties = await _informationService.getSpecialties();
 
     setState(() {
-      _specialties = specialties;
+      specialties = tmpSpecialties;
     });
   }
 
@@ -112,7 +112,7 @@ class _RegisterState extends State<Register> {
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        selectedImage = File(pickedFile.path);
       });
     }
   }
@@ -212,8 +212,8 @@ class _RegisterState extends State<Register> {
 
                                 Technical technical = Technical(
                                   id: _idController.text,
-                                  specialtyId: _selectedSpecialty!.id,
-                                  districtId: _selectedDistrict!.id,
+                                  specialtyId: selectedSpecialty!.id,
+                                  districtId: selectedDistrict!.id,
                                   firstname: _firstnameController.text,
                                   lastname: _lastnameController.text,
                                   age: int.parse(_ageController.text),
@@ -224,13 +224,13 @@ class _RegisterState extends State<Register> {
                                 );
 
                                 result = await _registerService.registerTechnical
-                                  (technical, _selectedImage!);
+                                  (technical, selectedImage!);
                               }
                               else if (role == 'CONSUMIDOR') {
 
                                 Consumer consumer = Consumer(
                                     id: _idController.text,
-                                    districtId: _selectedDistrict!.id,
+                                    districtId: selectedDistrict!.id,
                                     firstname: _firstnameController.text,
                                     lastname: _lastnameController.text,
                                     age: int.parse(_ageController.text),
@@ -241,7 +241,7 @@ class _RegisterState extends State<Register> {
                                 );
 
                                 result = await _registerService.registerConsumer
-                                  (consumer, _selectedImage!);
+                                  (consumer, selectedImage!);
                               }
 
                               if (result == true) {
@@ -311,14 +311,14 @@ class _RegisterState extends State<Register> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),
-                image: _selectedImage != null
+                image: selectedImage != null
                     ? DecorationImage(
-                  image: FileImage(_selectedImage!),
+                  image: FileImage(selectedImage!),
                   fit: BoxFit.cover,
                 )
                     : null,
               ),
-              child: _selectedImage == null
+              child: selectedImage == null
                   ? const Center(
                 child: Icon(Icons.add_a_photo, color: Colors.grey, size: 40),
               )
@@ -333,12 +333,12 @@ class _RegisterState extends State<Register> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<Department>(
-        value: _selectedDepartment,
+        value: selectedDepartment,
         decoration: InputDecoration(
           labelText: 'Departamento',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        items: _departments.map((dep) {
+        items: departments.map((dep) {
           return DropdownMenuItem(
             value: dep,
             child: Text(dep.name),
@@ -346,7 +346,7 @@ class _RegisterState extends State<Register> {
         }).toList(),
         onChanged: (dep) {
           setState(() {
-            _selectedDepartment = dep;
+            selectedDepartment = dep;
             _loadDistrictsByDepartment(dep!.id);
           });
         },
@@ -357,12 +357,12 @@ class _RegisterState extends State<Register> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<District>(
-        value: _selectedDistrict,
+        value: selectedDistrict,
         decoration: InputDecoration(
           labelText: 'Distrito',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        items: _districts.map((dist) {
+        items: districts.map((dist) {
           return DropdownMenuItem(
             value: dist,
             child: Text(dist.name),
@@ -370,7 +370,7 @@ class _RegisterState extends State<Register> {
         }).toList(),
         onChanged: (dist) {
           setState(() {
-            _selectedDistrict = dist;
+            selectedDistrict = dist;
           });
         },
       ),
@@ -380,14 +380,14 @@ class _RegisterState extends State<Register> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<Specialty>(
-        value: _selectedSpecialty,
+        value: selectedSpecialty,
         decoration: InputDecoration(
           labelText: 'Especialidad',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        items: _specialties.map((spe) {
+        items: specialties.map((spe) {
           return DropdownMenuItem(
             value: spe,
             child: Text(spe.name),
@@ -395,7 +395,7 @@ class _RegisterState extends State<Register> {
         }).toList(),
         onChanged: (spe) {
           setState(() {
-            _selectedSpecialty = spe;
+            selectedSpecialty = spe;
           });
         },
       ),
