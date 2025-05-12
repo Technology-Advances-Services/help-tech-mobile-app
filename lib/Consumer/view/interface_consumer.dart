@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../Attention/components/job_request.dart';
 import '../../Attention/services/job_service.dart';
 import '../../IAM/models/technical.dart';
 import '../../Location/models/department.dart';
 import '../../Location/models/district.dart';
 import '../../Location/models/specialty.dart';
 import '../../Location/services/information_service.dart';
+import '../../Shared/widgets/error_dialog.dart';
+import '../../Shared/widgets/success_dialog.dart';
 import '../../shared/widgets/base_layout.dart';
 
 class InterfaceConsumer extends StatefulWidget {
+
   const InterfaceConsumer({super.key});
 
   @override
@@ -15,21 +19,22 @@ class InterfaceConsumer extends StatefulWidget {
 }
 
 class _InterfaceConsumer extends State<InterfaceConsumer> {
+
   final InformationService _informationService = InformationService();
   final JobService _jobService = JobService();
 
-  List<Department> _departments = [];
-  List<District> _districts = [];
-  List<Specialty> _specialties = [];
+  List<Department> departments = [];
+  List<District> districts = [];
+  List<Specialty> specialties = [];
 
-  Department? _selectedDepartment;
-  District? _selectedDistrict;
-  Specialty? _selectedSpecialty;
+  Department? selectedDepartment;
+  District? selectedDistrict;
+  Specialty? selectedSpecialty;
 
-  List<Technical> _allTechnicals = [];
-  List<Technical> _filteredTechnicals = [];
+  List<Technical> allTechnicals = [];
+  List<Technical> filteredTechnicals = [];
 
-  bool _isLoading = true;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -39,38 +44,38 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
 
   Future<void> _loadInitialData() async {
 
-    final departments = await _informationService.getDepartments();
-    final specialties = await _informationService.getSpecialties();
-    final technicals = await _jobService.technicalsByAvailability();
+    final tmpDepartments = await _informationService.getDepartments();
+    final tmpSpecialties = await _informationService.getSpecialties();
+    final tmpTechnicals = await _jobService.technicalsByAvailability();
 
     setState(() {
-      _departments = departments;
-      _specialties = specialties;
-      _allTechnicals = technicals;
-      _isLoading = false;
+      departments = tmpDepartments;
+      specialties = tmpSpecialties;
+      allTechnicals = tmpTechnicals;
+      isLoading = false;
     });
   }
 
   Future<void> _onDepartmentSelected(Department? department) async {
 
     setState(() {
-      _selectedDepartment = department;
-      _selectedDistrict = null;
-      _districts = [];
+      selectedDepartment = department;
+      selectedDistrict = null;
+      districts = [];
     });
 
     if (department != null) {
-      final districts = await _informationService.getDistrictsByDepartment(department.id);
-      setState(() => _districts = districts);
+      final tmpDistricts = await _informationService.getDistrictsByDepartment(department.id);
+      setState(() => districts = tmpDistricts);
     }
   }
 
   void _onDistrictOrSpecialtyChanged() {
 
     setState(() {
-      _filteredTechnicals = _allTechnicals.where((tech) {
-        final matchesDistrict = _selectedDistrict == null || tech.districtId == _selectedDistrict!.id;
-        final matchesSpecialty = _selectedSpecialty == null || tech.specialtyId == _selectedSpecialty!.id;
+      filteredTechnicals = allTechnicals.where((tech) {
+        final matchesDistrict = tech.districtId == selectedDistrict!.id;
+        final matchesSpecialty = tech.specialtyId == selectedSpecialty!.id;
         return matchesDistrict && matchesSpecialty;
       }).toList();
     });
@@ -79,7 +84,7 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-      child: _isLoading
+      child: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
         padding: const EdgeInsets.all(12.0),
@@ -88,8 +93,8 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
 
             DropdownButtonFormField<Department>(
               decoration: const InputDecoration(labelText: 'Departamento'),
-              value: _selectedDepartment,
-              items: _departments.map((d) {
+              value: selectedDepartment,
+              items: departments.map((d) {
                 return DropdownMenuItem(
                   value: d,
                   child: Text(d.name),
@@ -101,15 +106,15 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
 
             DropdownButtonFormField<District>(
               decoration: const InputDecoration(labelText: 'Distrito'),
-              value: _selectedDistrict,
-              items: _districts.map((d) {
+              value: selectedDistrict,
+              items: districts.map((d) {
                 return DropdownMenuItem(
                   value: d,
                   child: Text(d.name),
                 );
               }).toList(),
               onChanged: (val) {
-                setState(() => _selectedDistrict = val);
+                setState(() => selectedDistrict = val);
                 _onDistrictOrSpecialtyChanged();
               },
             ),
@@ -117,50 +122,82 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
 
             DropdownButtonFormField<Specialty>(
               decoration: const InputDecoration(labelText: 'Especialidad'),
-              value: _selectedSpecialty,
-              items: _specialties.map((s) {
+              value: selectedSpecialty,
+              items: specialties.map((s) {
                 return DropdownMenuItem(
                   value: s,
                   child: Text(s.name),
                 );
               }).toList(),
               onChanged: (val) {
-                setState(() => _selectedSpecialty = val);
+                setState(() => selectedSpecialty = val);
                 _onDistrictOrSpecialtyChanged();
               },
             ),
             const SizedBox(height: 20),
 
             Expanded(
-              child: _filteredTechnicals.isEmpty
+              child: filteredTechnicals.isEmpty
                   ? const Center(child: Text("No hay técnicos disponibles."))
                   : ListView.builder(
-                itemCount: _filteredTechnicals.length,
+                itemCount: filteredTechnicals.length,
                 itemBuilder: (context, index) {
-                  final tech = _filteredTechnicals[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(tech.profileUrl),
-                        child:const Icon(Icons.person),
+                  final tech = filteredTechnicals[index];
+                  return InkWell(
+                    onTap: () async {
+
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JobRequest(
+                            specialtyName: selectedSpecialty?.name ?? '',
+                            technical: tech
+                          ),
+                        ),
+                      );
+
+                      if (result == true){
+
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                            const SuccessDialog(message: 'Respuesta registrada.')
+                        );
+                      }
+                      else {
+
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                            const ErrorDialog(message: 'No se registro su respuesta.')
+                        );
+                      }
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(tech.profileUrl),
+                          child: const Icon(Icons.person),
+                        ),
+                        title: Text('${tech.firstname} ${tech.lastname}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Especialidad: ${selectedSpecialty?.name ?? "N/A"}'),
+                            Text('Contacto: ${tech.phone}'),
+                          ],
+                        ),
+                        trailing: tech.availability == 'DISPONIBLE'
+                            ? const Icon(Icons.circle, color: Colors.green, size: 12)
+                            : const Icon(Icons.circle, color: Colors.red, size: 12),
                       ),
-                      title: Text('${tech.firstname} ${tech.lastname}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Especialidad: ${_selectedSpecialty?.name ?? "N/A"}'),
-                          Text('Contacto: ${tech.phone}'),
-                        ],
-                      ),
-                      trailing: tech.availability == 'DISPONIBLE'
-                          ? const Icon(Icons.circle, color: Colors.green, size: 12)
-                          : const Icon(Icons.circle, color: Colors.red, size: 12),
                     ),
                   );
                 },
               ),
             ),
+
           ],
         ),
       ),
