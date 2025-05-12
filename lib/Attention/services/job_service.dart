@@ -164,7 +164,7 @@ class JobService {
 
         final job = Job(
           id: jobJson['id'],
-          agendaId: jobJson['agendasId'],
+          agendaId: jobJson['agendaId'],
           registrationDate: DateTime.parse(jobJson['registrationDate']),
           personId: consumerJson['id'],
           firstName: consumerJson['firstname'],
