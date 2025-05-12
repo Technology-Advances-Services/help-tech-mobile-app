@@ -19,7 +19,7 @@ class ComplaintService {
     var role = await _storage.read(key: 'role');
 
     final response = await http.post(
-      Uri.parse('${_baseUrl}complaints/register-complaint'),
+      Uri.parse('${_baseUrl}reports/register-complaint'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
