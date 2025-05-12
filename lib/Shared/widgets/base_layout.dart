@@ -102,7 +102,7 @@ class _BaseLayout extends State<BaseLayout> {
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(8),
-          child: Image.asset('assets/IAM/home_logo.PNG'),
+          child: Image.asset('assets/IAM/home_logo.png'),
         ),
       ),
       body: Center(child: updatedPages[_selectedIndex]),
