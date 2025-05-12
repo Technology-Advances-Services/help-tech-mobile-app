@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Image.asset(
-                      'assets/IAM/home_logo.PNG',
+                      'assets/IAM/home_logo.png',
                       width: 100,
                       height: 100,
                     ),
