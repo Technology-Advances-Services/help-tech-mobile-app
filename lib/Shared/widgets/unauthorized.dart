@@ -49,10 +49,8 @@ class Unauthorized extends StatelessWidget {
 
                   ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Login()),
-                            (route) => false
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (context) => const Login()), (route) => false
                       );
                     },
                     icon: const Icon(Icons.login),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../Interaction/services/chat_member_service.dart';
+import '../../Interaction/views/chat_page.dart';
 import '../../Report/components/register_complaint.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
@@ -191,6 +193,8 @@ class _JobOfConsumerState extends State<JobOfConsumer> {
 
 class JobDataSource extends DataTableSource {
 
+  final ChatMemberService _chatMemberService = ChatMemberService();
+
   final List<Job> _jobs;
   final BuildContext context;
   final DateFormat _fmt = DateFormat('dd/MM/yyyy HH:mm');
@@ -220,15 +224,25 @@ class JobDataSource extends DataTableSource {
         tooltip: 'Detalle',
         onPressed: () {
           Navigator.push(context,
-            MaterialPageRoute(builder: (context) => JobDetail(job: job))
+            MaterialPageRoute(builder: (context) =>
+              JobDetail(job: job)
+            )
           );
         }
       )),
       DataCell(IconButton(
         icon: const Icon(Icons.chat, color: Colors.green),
         tooltip: 'Chat',
-        onPressed: () {
+        onPressed: () async {
 
+          final chatMember = await _chatMemberService
+              .chatsMembersByConsumer(job.personId);
+
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+              ChatPage(chatMember: chatMember!, role: 'CONSUMIDOR')
+            )
+          );
         }
       ))
     ]);
@@ -241,7 +255,8 @@ class JobDataSource extends DataTableSource {
 
           final result = await Navigator.push(context,
             MaterialPageRoute(builder: (context) =>
-                AddReview(technicalId: job.personId))
+              AddReview(technicalId: job.personId)
+            )
           );
 
           if (result == true) {
@@ -263,7 +278,8 @@ class JobDataSource extends DataTableSource {
 
           var result = await Navigator.push(context,
             MaterialPageRoute(builder: (context) =>
-                RegisterComplaint(jobId: job.id))
+              RegisterComplaint(jobId: job.id)
+            )
           );
 
           if (result == true) {

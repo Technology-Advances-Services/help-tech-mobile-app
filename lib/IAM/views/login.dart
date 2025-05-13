@@ -52,8 +52,7 @@ class _LoginState extends State<Login> {
           : const InterfaceConsumer();
 
       Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => nextScreen),
-              (route) => false
+        MaterialPageRoute(builder: (context) => nextScreen), (route) => false
       );
     }
     else {
@@ -205,7 +204,7 @@ class _LoginState extends State<Login> {
                             onTap: () {
                               Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
-                                    const TermsAndConditions()
+                                  const TermsAndConditions()
                                 )
                               );
                             },

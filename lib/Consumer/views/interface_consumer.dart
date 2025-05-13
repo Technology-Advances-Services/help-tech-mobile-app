@@ -149,8 +149,7 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
                   return InkWell(
                     onTap: () async {
 
-                      final result = await Navigator.push(
-                        context,
+                      final result = await Navigator.push(context,
                         MaterialPageRoute(
                           builder: (context) => JobRequest(
                             specialtyName: selectedSpecialty?.name ?? '',

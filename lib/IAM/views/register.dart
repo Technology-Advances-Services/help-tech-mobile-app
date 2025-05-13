@@ -103,9 +103,8 @@ class _RegisterState extends State<Register> {
         ),
       ).then((task) {
         if (task == true) {
-          Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => const Login()),
-                  (route) => false
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) => const Login()),(route) => false
           );
         }
         else {

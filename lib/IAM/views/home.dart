@@ -83,16 +83,14 @@ class Home extends StatelessWidget {
                           if (storedRole == 'TECNICO') {
                             Navigator.pushAndRemoveUntil(context,
                               MaterialPageRoute(builder: (context) =>
-                              const InterfaceTechnical()),
-                                  (route) => false
+                              const InterfaceTechnical()), (route) => false
                             );
                           }
                           else if (storedRole == 'CONSUMIDOR'){
 
                             Navigator.pushAndRemoveUntil(context,
                               MaterialPageRoute(builder: (context) =>
-                              const InterfaceConsumer()),
-                                  (route) => false
+                              const InterfaceConsumer()), (route) => false
                             );
                           }
                           else {

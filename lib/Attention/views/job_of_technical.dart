@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../Interaction/services/chat_member_service.dart';
+import '../../Interaction/views/chat_page.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
 import '../components/job_detail.dart';
@@ -190,6 +192,8 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
 class JobDataSource extends DataTableSource {
 
   final JobService _jobService = JobService();
+  final ChatMemberService _chatMemberService = ChatMemberService();
+
   final List<Job> _jobs;
   final BuildContext context;
   final DateFormat _fmt = DateFormat('dd/MM/yyyy HH:mm');
@@ -226,8 +230,16 @@ class JobDataSource extends DataTableSource {
       DataCell(IconButton(
         icon: const Icon(Icons.chat, color: Colors.green),
         tooltip: 'Chat',
-        onPressed: () {
+        onPressed: () async {
 
+          final chatMember = await _chatMemberService
+              .chatsMembersByTechnical(job.personId);
+
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+              ChatPage(chatMember: chatMember!, role: 'TECNICO')
+            )
+          );
         }
       ))
     ]);
@@ -266,8 +278,8 @@ class JobDataSource extends DataTableSource {
 
           final result = await Navigator.push(context,
             MaterialPageRoute(
-              builder: (context) => JobResponse(jobId: job.id),
-            ),
+              builder: (context) => JobResponse(jobId: job.id)
+            )
           );
 
           if (result == true){

@@ -122,10 +122,8 @@ class _BaseLayoutState extends State<BaseLayout> {
 
             _loginService.logout();
 
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const Login()),
-                  (route) => false
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (context) => const Login()), (route) => false
             );
           }
           else {
