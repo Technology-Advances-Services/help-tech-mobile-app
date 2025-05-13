@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:helptechmobileapp/Attention/views/job_of_consumer.dart';
-import 'package:helptechmobileapp/Attention/views/job_of_technical.dart';
-import 'package:helptechmobileapp/IAM/services/login_service.dart';
-import 'package:helptechmobileapp/IAM/views/login.dart';
-import 'package:helptechmobileapp/Statistic/views/statistical_graph.dart';
+
+import '../../Attention/views/job_of_consumer.dart';
+import '../../Attention/views/job_of_technical.dart';
+import '../../IAM/services/login_service.dart';
+import '../../IAM/views/login.dart';
+import '../../Statistic/views/statistical_graph.dart';
 
 class BaseLayout extends StatefulWidget {
 

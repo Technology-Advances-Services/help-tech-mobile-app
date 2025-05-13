@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:helptechmobileapp/Report/models/type_complaint.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/type_complaint.dart';
 
 class TypeComplaintService {
 

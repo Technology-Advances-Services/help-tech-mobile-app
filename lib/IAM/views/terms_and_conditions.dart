@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Shared/widgets/unauthorized.dart';
+
+import '../../Shared/widgets/unauthorized.dart';
 
 class TermsAndConditions extends StatelessWidget {
 

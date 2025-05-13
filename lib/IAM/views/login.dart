@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Consumer/views/interface_consumer.dart';
-import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/terms_and_conditions.dart';
-import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
-import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
+
+import '../../Consumer/views/interface_consumer.dart';
+import '../../Shared/widgets/error_dialog.dart';
+import '../../Technical/views/interface_technical.dart';
+import '../services/login_service.dart';
 
 class Login extends StatefulWidget {
 

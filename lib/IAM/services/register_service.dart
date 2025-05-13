@@ -7,9 +7,8 @@ import 'package:path/path.dart' as path;
 
 import 'dart:convert';
 
-import 'package:helptechmobileapp/IAM/models/technical.dart';
-
 import '../models/consumer.dart';
+import '../models/technical.dart';
 
 class RegisterService {
 
@@ -40,7 +39,7 @@ class RegisterService {
           'phone': technical.phone,
           'email': technical.email,
           'code': technical.code
-        }),
+        })
       );
 
       return response.statusCode >= 200 && response.statusCode < 300;
@@ -74,7 +73,7 @@ class RegisterService {
           'phone': consumer.phone,
           'email': consumer.email,
           'code': consumer.code
-        }),
+        })
       );
 
       return response.statusCode >= 200 && response.statusCode < 300;

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Attention/components/job_detail.dart';
-import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
-import 'package:helptechmobileapp/Shared/widgets/success_dialog.dart';
 import 'package:intl/intl.dart';
+
+import '../../Shared/widgets/error_dialog.dart';
+import '../../Shared/widgets/success_dialog.dart';
+import '../components/job_detail.dart';
 import '../components/job_response.dart';
-import '../services/job_service.dart';
 import '../models/job.dart';
+import '../services/job_service.dart';
 
 class JobOfTechnical extends StatefulWidget {
 
   const JobOfTechnical({super.key});
 
   @override
-  _JobOfTechnical createState() => _JobOfTechnical();
+  _JobOfTechnicalState createState() => _JobOfTechnicalState();
 }
 
-class _JobOfTechnical extends State<JobOfTechnical> {
+class _JobOfTechnicalState extends State<JobOfTechnical> {
 
   final JobService _jobService = JobService();
 
@@ -245,7 +246,7 @@ class JobDataSource extends DataTableSource {
             const SuccessDialog(message: 'Trabajo completado.'));
 
             if (context.mounted) {
-              final state = context.findAncestorStateOfType<_JobOfTechnical>();
+              final state = context.findAncestorStateOfType<_JobOfTechnicalState>();
               state?.loadJobs();
             }
           }
@@ -275,7 +276,7 @@ class JobDataSource extends DataTableSource {
             const SuccessDialog(message: 'Respuesta registrada.'));
 
             if (context.mounted) {
-              final state = context.findAncestorStateOfType<_JobOfTechnical>();
+              final state = context.findAncestorStateOfType<_JobOfTechnicalState>();
               state?.loadJobs();
             }
           }

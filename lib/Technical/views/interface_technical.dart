@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Statistic/services/statistic_service.dart';
 
 import '../../Shared/widgets/base_layout.dart';
+import '../../Statistic/services/statistic_service.dart';
 
 class InterfaceTechnical extends StatefulWidget {
 

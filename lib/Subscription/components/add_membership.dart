@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Subscription/services/membership_service.dart';
 
 import '../../Shared/widgets/error_dialog.dart';
 import '../models/membership.dart';
+import '../services/membership_service.dart';
 
 class AddMembership extends StatefulWidget {
 

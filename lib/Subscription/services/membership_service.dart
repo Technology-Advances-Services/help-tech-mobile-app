@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import '../models/membership.dart';
-
 import 'package:http/http.dart' as http;
+
+import '../models/membership.dart';
 
 class MembershipService {
 
@@ -17,7 +17,7 @@ class MembershipService {
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: jsonEncode({
         'id': membership.id,
@@ -25,7 +25,7 @@ class MembershipService {
         if (role == 'CONSUMIDOR') 'consumerId': personId,
         'name': membership.name,
         'price': membership.price,
-        'policies': membership.policies,
+        'policies': membership.policies
       })
     );
 

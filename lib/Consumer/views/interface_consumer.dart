@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../Attention/components/job_request.dart';
 import '../../Attention/services/job_service.dart';
 import '../../IAM/models/technical.dart';
@@ -6,9 +7,9 @@ import '../../Location/models/department.dart';
 import '../../Location/models/district.dart';
 import '../../Location/models/specialty.dart';
 import '../../Location/services/information_service.dart';
+import '../../Shared/widgets/base_layout.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
-import '../../shared/widgets/base_layout.dart';
 
 class InterfaceConsumer extends StatefulWidget {
 

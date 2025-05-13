@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Attention/services/job_service.dart';
 import 'package:intl/intl.dart';
+
 import '../models/job.dart';
+import '../services/job_service.dart';
 
 class JobResponse extends StatefulWidget {
 

@@ -40,7 +40,7 @@ class StatisticService {
         totalIncome: data['TotalIncome'],
         totalConsumersServed: data['TotalConsumersServed'],
         totalWorkTime: data['TotalWorkTime'],
-        totalPendingsJobs: data['TotalPendingsJobs'],
+        totalPendingsJobs: data['TotalPendingsJobs']
       );
 
       return generalStatistic;
@@ -63,7 +63,7 @@ class StatisticService {
           'typeStatistic=$typeStatistic'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $token'
         }
     );
 
@@ -104,7 +104,7 @@ class StatisticService {
         'review-statistic?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $token'
       }
     );
 

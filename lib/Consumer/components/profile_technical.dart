@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/IAM/models/technical.dart';
+
+import '../../IAM/models/technical.dart';
 
 class ProfileTechnical extends StatefulWidget {
 

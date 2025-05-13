@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Attention/components/review_of_technical.dart';
-import 'package:helptechmobileapp/Attention/models/job.dart';
-import 'package:helptechmobileapp/Attention/services/job_service.dart';
-import 'package:helptechmobileapp/IAM/models/technical.dart';
+
 import '../../Consumer/components/profile_technical.dart';
+import '../../IAM/models/technical.dart';
+import '../models/job.dart';
+import '../services/job_service.dart';
 
 class JobRequest extends StatefulWidget {
 

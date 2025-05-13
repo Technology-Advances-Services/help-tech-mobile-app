@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Attention/models/review.dart';
-import 'package:helptechmobileapp/Attention/services/review_service.dart';
+
+import '../models/review.dart';
+import '../services/review_service.dart';
 
 class AddReview extends StatefulWidget {
 

@@ -30,7 +30,7 @@ class ReviewService {
         'consumerId': username,
         'score': review.score,
         'opinion': review.opinion
-      }),
+      })
     );
 
     return response.statusCode >= 200 && response.statusCode < 300;

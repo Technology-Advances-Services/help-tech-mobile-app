@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Attention/components/add_review.dart';
-import 'package:helptechmobileapp/Attention/components/job_detail.dart';
-import 'package:helptechmobileapp/Report/components/register_complaint.dart';
 import 'package:intl/intl.dart';
+
+import '../../Report/components/register_complaint.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
-import '../services/job_service.dart';
+import '../components/add_review.dart';
+import '../components/job_detail.dart';
 import '../models/job.dart';
+import '../services/job_service.dart';
 
 class JobOfConsumer extends StatefulWidget {
 
   const JobOfConsumer({super.key});
 
   @override
-  _JobOfConsumer createState() => _JobOfConsumer();
+  _JobOfConsumerState createState() => _JobOfConsumerState();
 }
 
-class _JobOfConsumer extends State<JobOfConsumer> {
+class _JobOfConsumerState extends State<JobOfConsumer> {
 
   final JobService _jobService = JobService();
 

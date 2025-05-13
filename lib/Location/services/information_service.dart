@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:helptechmobileapp/Location/models/department.dart';
-import 'package:helptechmobileapp/Location/models/district.dart';
-import 'package:helptechmobileapp/Location/models/specialty.dart';
-
 import 'package:http/http.dart' as http;
+
+import '../models/department.dart';
+import '../models/district.dart';
+import '../models/specialty.dart';
 
 class InformationService {
 
@@ -25,7 +25,7 @@ class InformationService {
 
       List<Department> departments = data.map((parameter) => Department(
         id: parameter['id'],
-        name: parameter['name'],
+        name: parameter['name']
       )).toList();
 
       return departments;
@@ -50,7 +50,7 @@ class InformationService {
 
       List<District> districts = data.map((parameter) => District(
         id: parameter['id'],
-        name: parameter['name'],
+        name: parameter['name']
       )).toList();
 
       return districts;
@@ -74,7 +74,7 @@ class InformationService {
 
       List<Specialty> specialties = data.map((parameter) => Specialty(
         id: parameter['id'],
-        name: parameter['name'],
+        name: parameter['name']
       )).toList();
 
       return specialties;

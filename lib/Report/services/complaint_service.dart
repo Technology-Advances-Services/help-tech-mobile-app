@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:helptechmobileapp/Report/models/complaint.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/complaint.dart';
 
 class ComplaintService {
 
@@ -29,7 +30,7 @@ class ComplaintService {
         'jobId': complaint.jobId,
         'sender': role,
         'description': complaint.description
-      }),
+      })
     );
 
     return response.statusCode >= 200 && response.statusCode < 300;

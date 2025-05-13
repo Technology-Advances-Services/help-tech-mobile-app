@@ -31,7 +31,7 @@ class JobService {
         'consumerId': username,
         'address': job.address,
         'description': job.description
-      }),
+      })
     );
 
     return response.statusCode >= 200 && response.statusCode < 300;
@@ -55,7 +55,7 @@ class JobService {
         'time': job.time,
         'laborBudget': job.laborBudget,
         'materialBudget': job.materialBudget
-      }),
+      })
     );
 
     if (response.statusCode >= 200 &&
@@ -70,7 +70,7 @@ class JobService {
         body: json.encode({
           'id': job.id,
           'jobState': job.jobState
-        }),
+        })
       );
 
       return response.statusCode >= 200 && response.statusCode < 300;
@@ -94,7 +94,7 @@ class JobService {
       body: json.encode({
         'id': job.id,
         'jobState': 'COMPLETADO'
-      }),
+      })
     );
 
     return response.statusCode >= 200 && response.statusCode < 300;
@@ -135,9 +135,6 @@ class JobService {
 
     token = token?.replaceAll('"', '');
 
-    /*final chatsMembersUrl = '${_baseUrl}chatsmembers/'
-        'chats-members-by-technical?technicalId=$username';*/
-
     final response = await http.get(
       Uri.parse('${_baseUrl}jobs/'
         'jobs-by-technical?technicalId=$username'),
@@ -147,19 +144,10 @@ class JobService {
       }
     );
 
-    /*final chatsMembersResponse = await http.get(
-      Uri.parse(chatsMembersUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      }
-    );*/
-
     if (response.statusCode >= 200 &&
         response.statusCode < 300) {
 
       final jobsList = List<dynamic>.from(json.decode(response.body));
-      //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
 
       final jobs = <Job>[];
 
@@ -191,16 +179,8 @@ class JobService {
           laborBudget: jobJson['laborBudget'],
           materialBudget: jobJson['materialBudget'],
           amountFinal: jobJson['amountFinal'],
-          jobState: jobJson['jobState'],
+          jobState: jobJson['jobState']
         );
-
-        /*final chatMember = chatsMembersList
-            .firstWhere((chat) => chat['consumerId'] == jobJson['consumerId'],
-            orElse: () => null);
-
-        if (chatMember != null) {
-          job.chatRoomId = chatMember['chatRoomId'];
-        }*/
 
         jobs.add(job);
       }
@@ -220,31 +200,19 @@ class JobService {
 
     token = token?.replaceAll('"', '');
 
-    /*final chatsMembersUrl = '${_baseUrl}chatsmembers/'
-        'chats-members-by-technical?technicalId=$username';*/
-
     final response = await http.get(
-        Uri.parse('${_baseUrl}jobs/'
-          'jobs-by-consumer?consumerId=$username'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        }
-    );
-
-    /*final chatsMembersResponse = await http.get(
-      Uri.parse(chatsMembersUrl),
+      Uri.parse('${_baseUrl}jobs/'
+        'jobs-by-consumer?consumerId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
       }
-    );*/
+    );
 
     if (response.statusCode >= 200 &&
         response.statusCode < 300) {
 
       final jobsList = List<dynamic>.from(json.decode(response.body));
-      //final chatsMembersList = List<dynamic>.from(json.decode(chatsMembersResponse.body));
 
       final jobs = <Job>[];
 
@@ -276,16 +244,8 @@ class JobService {
           laborBudget: jobJson['laborBudget'],
           materialBudget: jobJson['materialBudget'],
           amountFinal: jobJson['amountFinal'],
-          jobState: jobJson['jobState'],
+          jobState: jobJson['jobState']
         );
-
-        /*final chatMember = chatsMembersList
-            .firstWhere((chat) => chat['consumerId'] == jobJson['consumerId'],
-            orElse: () => null);
-
-        if (chatMember != null) {
-          job.chatRoomId = chatMember['chatRoomId'];
-        }*/
 
         jobs.add(job);
       }
@@ -328,7 +288,7 @@ class JobService {
         genre: parameter['genre'],
         phone: parameter['phone'],
         email: parameter['email'],
-        availability: parameter['availability'],
+        availability: parameter['availability']
       )).toList();
 
       return technicals;

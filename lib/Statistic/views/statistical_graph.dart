@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../services/statistic_service.dart';
+
 import '../models/review_statistic.dart';
+import '../services/statistic_service.dart';
 
 class StatisticalGraph extends StatefulWidget {
 
