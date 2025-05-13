@@ -108,17 +108,21 @@ class _RegisterState extends State<Register> {
                   (route) => false
           );
         }
+        else {
+          showDialog(context: context, builder: (context) =>
+          const ErrorDialog(message: 'Error al registrarse.')
+          );
+        }
       });
     }
-
-    showDialog(
-      context: context,
-      builder: (context) => const ErrorDialog
-        (message: 'Error al registrarse.')
-    );
+    else {
+      showDialog(context: context, builder: (context) =>
+      const ErrorDialog(message: 'Error al registrarse.')
+      );
+    }
   }
 
-  Future<void> _loadDepartments() async {
+  Future<void> loadDepartments() async {
 
     final tmpDepartments = await _informationService.getDepartments();
 
@@ -127,7 +131,7 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  Future<void> _loadDistrictsByDepartment(int departmentId) async {
+  Future<void> loadDistrictsByDepartment(int departmentId) async {
 
     final tmpDistricts = await _informationService
         .getDistrictsByDepartment(departmentId);
@@ -180,7 +184,7 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     super.initState();
-    _loadDepartments();
+    loadDepartments();
     _loadSpecialties();
   }
 
@@ -360,7 +364,7 @@ class _RegisterState extends State<Register> {
         onChanged: (dep) {
           setState(() {
             selectedDepartment = dep;
-            _loadDistrictsByDepartment(dep!.id);
+            loadDistrictsByDepartment(dep!.id);
           });
         }
       )

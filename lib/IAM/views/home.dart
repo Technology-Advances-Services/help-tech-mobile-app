@@ -94,17 +94,19 @@ class Home extends StatelessWidget {
                                   (route) => false
                             );
                           }
-
+                          else {
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (context) =>
+                              const Unauthorized())
+                            );
+                          }
+                        }
+                        else {
                           Navigator.push(context,
                             MaterialPageRoute(builder: (context) =>
-                            const Unauthorized())
+                            const Login())
                           );
                         }
-
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) =>
-                          const Login())
-                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,

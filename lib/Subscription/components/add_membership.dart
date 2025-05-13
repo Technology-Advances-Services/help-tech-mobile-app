@@ -49,12 +49,11 @@ class _AddMembershipState extends State<AddMembership> {
     if (result) {
       Navigator.of(context).pop(result);
     }
-
-    showDialog(
-      context: context,
-      builder: (context) => const ErrorDialog
+    else {
+      showDialog(context: context, builder: (context) => const ErrorDialog
         (message: 'Error al registrar membresía.')
-    );
+      );
+    }
   }
 
   Future<void> loadMemberships() async {

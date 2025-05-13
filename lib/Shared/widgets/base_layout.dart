@@ -127,8 +127,9 @@ class _BaseLayoutState extends State<BaseLayout> {
                   (route) => false
             );
           }
-
-          setState(() => selectedIndex = index);
+          else {
+            setState(() => selectedIndex = index);
+          }
         }
       )
     );
