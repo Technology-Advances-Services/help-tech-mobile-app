@@ -55,6 +55,11 @@ class _LoginState extends State<Login> {
               (route) => false
       );
     }
+    else {
+
+      showDialog(context: context, builder: (context) =>
+      const ErrorDialog(message: 'Credenciales inválidas'));
+    }
 
     setState(() {
       isLoading = false;
