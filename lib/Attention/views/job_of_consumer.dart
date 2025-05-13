@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Attention/components/add_review.dart';
 import 'package:helptechmobileapp/Attention/components/job_detail.dart';
+import 'package:helptechmobileapp/Report/components/register_complaint.dart';
 import 'package:intl/intl.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
@@ -216,8 +217,29 @@ class JobDataSource extends DataTableSource {
       DataCell(IconButton(
         icon: const Icon(Icons.warning, color: Colors.red),
         tooltip: 'Queja',
-        onPressed: () {
+        onPressed: () async {
 
+          var result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RegisterComplaint(jobId: job.id)),
+          );
+
+          if (result == true) {
+
+            showDialog(
+                context: context,
+                builder: (context) =>
+                const SuccessDialog(message: 'Trabajo completado.')
+            );
+          }
+          else {
+
+            showDialog(
+                context: context,
+                builder: (context) =>
+                const ErrorDialog(message: 'No se completo el trabajo.')
+            );
+          }
         },
       )),
       DataCell(IconButton(

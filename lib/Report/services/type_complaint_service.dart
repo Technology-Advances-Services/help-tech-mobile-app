@@ -7,7 +7,7 @@ class TypeComplaintService {
 
   final String _baseUrl = 'http://helptechservice.runasp.net/api/';
 
-  Future<List<TypeComplaint>> getTypesComplaints() async {
+  Future<List<TypeComplaint>> getTypeComplaints() async {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}reports/all-types-complaints'),
