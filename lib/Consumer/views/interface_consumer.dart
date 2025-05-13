@@ -15,10 +15,10 @@ class InterfaceConsumer extends StatefulWidget {
   const InterfaceConsumer({super.key});
 
   @override
-  _InterfaceConsumer createState() => _InterfaceConsumer();
+  _InterfaceConsumerState createState() => _InterfaceConsumerState();
 }
 
-class _InterfaceConsumer extends State<InterfaceConsumer> {
+class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
   final InformationService _informationService = InformationService();
   final JobService _jobService = JobService();
@@ -36,13 +36,7 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
 
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadInitialData();
-  }
-
-  Future<void> _loadInitialData() async {
+  Future<void> loadInitialData() async {
 
     final tmpDepartments = await _informationService.getDepartments();
     final tmpSpecialties = await _informationService.getSpecialties();
@@ -56,7 +50,7 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
     });
   }
 
-  Future<void> _onDepartmentSelected(Department? department) async {
+  Future<void> onDepartmentSelected(Department? department) async {
 
     setState(() {
       selectedDepartment = department;
@@ -70,7 +64,7 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
     }
   }
 
-  void _onDistrictOrSpecialtyChanged() {
+  void onDistrictOrSpecialtyChanged() {
 
     setState(() {
       filteredTechnicals = allTechnicals.where((tech) {
@@ -82,11 +76,17 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadInitialData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BaseLayout(
-      child: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
+      child: isLoading ?
+      const Center(child: CircularProgressIndicator()) :
+      Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
@@ -97,10 +97,10 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
               items: departments.map((d) {
                 return DropdownMenuItem(
                   value: d,
-                  child: Text(d.name),
+                  child: Text(d.name)
                 );
               }).toList(),
-              onChanged: _onDepartmentSelected,
+              onChanged: onDepartmentSelected
             ),
             const SizedBox(height: 10),
 
@@ -110,13 +110,13 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
               items: districts.map((d) {
                 return DropdownMenuItem(
                   value: d,
-                  child: Text(d.name),
+                  child: Text(d.name)
                 );
               }).toList(),
               onChanged: (val) {
                 setState(() => selectedDistrict = val);
-                _onDistrictOrSpecialtyChanged();
-              },
+                onDistrictOrSpecialtyChanged();
+              }
             ),
             const SizedBox(height: 10),
 
@@ -126,23 +126,25 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
               items: specialties.map((s) {
                 return DropdownMenuItem(
                   value: s,
-                  child: Text(s.name),
+                  child: Text(s.name)
                 );
               }).toList(),
               onChanged: (val) {
                 setState(() => selectedSpecialty = val);
-                _onDistrictOrSpecialtyChanged();
-              },
+                onDistrictOrSpecialtyChanged();
+              }
             ),
             const SizedBox(height: 20),
 
             Expanded(
-              child: filteredTechnicals.isEmpty
-                  ? const Center(child: Text("No hay técnicos disponibles."))
-                  : ListView.builder(
+              child: filteredTechnicals.isEmpty ?
+              const Center(child: Text("No hay técnicos disponibles.")) :
+              ListView.builder(
                 itemCount: filteredTechnicals.length,
                 itemBuilder: (context, index) {
+
                   final tech = filteredTechnicals[index];
+
                   return InkWell(
                     onTap: () async {
 
@@ -152,8 +154,8 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
                           builder: (context) => JobRequest(
                             specialtyName: selectedSpecialty?.name ?? '',
                             technical: tech
-                          ),
-                        ),
+                          )
+                        )
                       );
 
                       if (result == true){
@@ -169,7 +171,8 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
                         showDialog(
                             context: context,
                             builder: (context) =>
-                            const ErrorDialog(message: 'No se registro su respuesta.')
+                            const ErrorDialog(
+                                message: 'No se registro su respuesta.')
                         );
                       }
                     },
@@ -178,29 +181,31 @@ class _InterfaceConsumer extends State<InterfaceConsumer> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(tech.profileUrl),
-                          child: const Icon(Icons.person),
+                          child: const Icon(Icons.person)
                         ),
                         title: Text('${tech.firstname} ${tech.lastname}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Especialidad: ${selectedSpecialty?.name ?? "N/A"}'),
-                            Text('Contacto: ${tech.phone}'),
-                          ],
+                            Text('Especialidad: ${selectedSpecialty?.name ??
+                                "N/A"}'),
+                            Text('Contacto: ${tech.phone}')
+                          ]
                         ),
                         trailing: tech.availability == 'DISPONIBLE'
-                            ? const Icon(Icons.circle, color: Colors.green, size: 12)
-                            : const Icon(Icons.circle, color: Colors.red, size: 12),
-                      ),
-                    ),
+                            ? const Icon(Icons.circle,
+                            color:Colors.green, size: 12)
+                            : const Icon(Icons.circle,
+                            color: Colors.red, size: 12)
+                      )
+                    )
                   );
-                },
-              ),
-            ),
-
-          ],
-        ),
-      ),
+                }
+              )
+            )
+          ]
+        )
+      )
     );
   }
 }

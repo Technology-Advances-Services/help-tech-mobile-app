@@ -45,9 +45,8 @@ class LoginService {
 
       return true;
     }
-    else {
-      return false;
-    }
+
+    return false;
   }
 
   Future<bool> isAuthenticated() async {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:helptechmobileapp/Consumer/view/interface_consumer.dart';
+import 'package:helptechmobileapp/Consumer/views/interface_consumer.dart';
 import 'package:helptechmobileapp/IAM/services/login_service.dart';
 import 'package:helptechmobileapp/IAM/views/terms_and_conditions.dart';
 import 'package:helptechmobileapp/Shared/widgets/error_dialog.dart';
 import 'package:helptechmobileapp/Technical/views/interface_technical.dart';
 
 class Login extends StatefulWidget {
+
   const Login({super.key});
 
   @override
@@ -13,66 +14,63 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
   final LoginService _loginService = LoginService();
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
+
+  bool isLoading = false;
+
+  Future<void> handleLogin(String role) async {
+
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    if (username.isEmpty || password.isEmpty || role.isEmpty) {
+
+      showDialog(context: context, builder: (context) =>
+      const ErrorDialog(message: 'Credenciales inválidas'));
+
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    var result = await _loginService.accessToApp(username, password, role);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (result == true) {
+      Widget nextScreen = role == 'TECNICO'
+          ? const InterfaceTechnical()
+          : const InterfaceConsumer();
+
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => nextScreen),
+              (route) => false
+      );
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+
+    showDialog(context: context, builder: (context) =>
+    const ErrorDialog(message: 'Credenciales inválidas'));
+
+    return;
+  }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> handleLogin(String role) async {
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-
-    if (username != "" && password != "" && role != "") {
-
-      var result = await _loginService.accessToApp(username, password, role);
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (result == true) {
-        Widget nextScreen = role == 'TECNICO'
-            ? const InterfaceTechnical()
-            : const InterfaceConsumer();
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => nextScreen),
-              (route) => false,
-        );
-      }
-      else {
-        showDialog(
-          context: context,
-          builder: (context) =>
-          const ErrorDialog(message: 'Credenciales inválidas'),
-        );
-      }
-    }
-    else {
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      showDialog(
-        context: context,
-        builder: (context) =>
-        const ErrorDialog(message: 'Credenciales inválidas'),
-      );
-    }
   }
 
   @override
@@ -83,8 +81,8 @@ class _LoginState extends State<Login> {
           Positioned.fill(
             child: Image.asset(
               'assets/IAM/home_wallpaper.PNG',
-              fit: BoxFit.cover,
-            ),
+              fit: BoxFit.cover
+            )
           ),
           SafeArea(
             child: Center(
@@ -104,48 +102,53 @@ class _LoginState extends State<Login> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+
                           const Text(
                             'Help Tech',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                              color: Colors.black87
+                            )
                           ),
                           const Text(
                             'HelpTechAppMobile',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
-                            ),
+                              color: Colors.black54
+                            )
                           ),
                           const SizedBox(height: 20),
+
                           Image.asset(
-                            'assets/IAM/home_logo.png',
+                            'assets/IAM/home_logo.PNG',
                             width: 100,
-                            height: 100,
+                            height: 100
                           ),
                           const SizedBox(height: 30),
+
                           const Text(
                             'Iniciar sesión',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
+                              color: Colors.black87
+                            )
                           ),
                           const SizedBox(height: 20),
+
                           TextField(
                             controller: _usernameController,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.person),
                               labelText: 'Usuario',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(8)
+                              )
+                            )
                           ),
                           const SizedBox(height: 15),
+
                           TextField(
                             controller: _passwordController,
                             obscureText: true,
@@ -153,13 +156,13 @@ class _LoginState extends State<Login> {
                               prefixIcon: const Icon(Icons.lock),
                               labelText: 'Contraseña',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(8)
+                              )
+                            )
                           ),
                           const SizedBox(height: 25),
 
-                          if (_isLoading)
+                          if (isLoading)
                             const CircularProgressIndicator()
                           else ...[
                             ElevatedButton(
@@ -172,12 +175,13 @@ class _LoginState extends State<Login> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 50, vertical: 15),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                  borderRadius: BorderRadius.circular(8)
+                                )
                               ),
-                              child: const Text('Técnico'),
+                              child: const Text('Técnico')
                             ),
                             const SizedBox(height: 10),
+
                             ElevatedButton(
                               onPressed: () async {
                                 await handleLogin('CONSUMIDOR');
@@ -189,39 +193,39 @@ class _LoginState extends State<Login> {
                                     horizontal: 50, vertical: 15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                ),
+                                )
                               ),
-                              child: const Text('Consumidor'),
-                            ),
+                              child: const Text('Consumidor')
+                            )
                           ],
-
                           const SizedBox(height: 20),
+
                           GestureDetector(
                             onTap: () {
                               Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
                                     const TermsAndConditions()
-                                ),
+                                )
                               );
                             },
                             child: const Text(
                               'Ver Términos y Condiciones',
                               style: TextStyle(
                                 color: Colors.teal,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+                                decoration: TextDecoration.underline
+                              )
+                            )
+                          )
+                        ]
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ]
+      )
     );
   }
 }

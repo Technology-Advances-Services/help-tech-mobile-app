@@ -20,7 +20,7 @@ class StatisticService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'
-          'general-technical-statistic?technicalId=$username'),
+        'general-technical-statistic?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -45,9 +45,8 @@ class StatisticService {
 
       return generalStatistic;
     }
-    else {
-      return null;
-    }
+
+    return null;
   }
 
   Future<dynamic> detailedTechnicalStatistic
@@ -89,9 +88,8 @@ class StatisticService {
 
       return detailedStatistic;
     }
-    else {
-      return null;
-    }
+
+    return null;
   }
 
   Future<List<ReviewStatistic>> reviewStatistic() async {
@@ -103,7 +101,7 @@ class StatisticService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'
-          'review-statistic?technicalId=$username'),
+        'review-statistic?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -119,8 +117,7 @@ class StatisticService {
 
       return dataList.map((e) => ReviewStatistic.fromJson(e)).toList();
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 }

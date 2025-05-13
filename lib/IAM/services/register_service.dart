@@ -146,8 +146,7 @@ class RegisterService {
 
       return fileUrl;
     }
-    else {
-      return null;
-    }
+
+    return null;
   }
 }

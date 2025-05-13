@@ -17,35 +17,39 @@ class ErrorDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             const Icon(Icons.error_outline, size: 50, color: Colors.redAccent),
             const SizedBox(height: 12),
+
             const Text(
-              '¡Ha ocurrido un error!',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              '¡Ocurrió un imprevisto!',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
             ),
             const SizedBox(height: 10),
+
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15)
             ),
             const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                    borderRadius: BorderRadius.circular(12)
+                  )
                 ),
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cerrar', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-          ],
-        ),
-      ),
+                child: const Text('Cerrar', style: TextStyle(color: Colors.white))
+              )
+            )
+          ]
+        )
+      )
     );
   }
 }

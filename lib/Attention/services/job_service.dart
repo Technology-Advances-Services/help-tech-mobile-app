@@ -34,13 +34,7 @@ class JobService {
       }),
     );
 
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-
-      return true;
-    }
-
-    return false;
+    return response.statusCode >= 200 && response.statusCode < 300;
   }
 
   Future<bool> assignJobDetail(Job job) async {
@@ -79,11 +73,7 @@ class JobService {
         }),
       );
 
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-
-        return true;
-      }
+      return response.statusCode >= 200 && response.statusCode < 300;
     }
 
     return false;
@@ -107,13 +97,7 @@ class JobService {
       }),
     );
 
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-
-      return true;
-    }
-
-    return false;
+    return response.statusCode >= 200 && response.statusCode < 300;
   }
 
   Future<int> getAgendaId(String technicalId) async {
@@ -124,7 +108,7 @@ class JobService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}agendas/agenda-by-technical?'
-          'technicalId=$technicalId'),
+        'technicalId=$technicalId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -156,7 +140,7 @@ class JobService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}jobs/'
-          'jobs-by-technical?technicalId=$username'),
+        'jobs-by-technical?technicalId=$username'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -241,7 +225,7 @@ class JobService {
 
     final response = await http.get(
         Uri.parse('${_baseUrl}jobs/'
-            'jobs-by-consumer?consumerId=$username'),
+          'jobs-by-consumer?consumerId=$username'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -322,7 +306,7 @@ class JobService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}informations/technicals-by-availability?'
-          'availability=DISPONIBLE'),
+        'availability=DISPONIBLE'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'

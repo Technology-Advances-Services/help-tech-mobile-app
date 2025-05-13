@@ -33,13 +33,7 @@ class ReviewService {
       }),
     );
 
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-
-      return true;
-    }
-
-    return false;
+    return response.statusCode >= 200 && response.statusCode < 300;
   }
 
   Future<List<Review>> reviewsByTechnical(String technicalId) async {
@@ -50,7 +44,7 @@ class ReviewService {
 
     final response = await http.get(
       Uri.parse('${_baseUrl}reviews/reviews-by-technical?'
-          'technicalId=$technicalId'),
+        'technicalId=$technicalId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'

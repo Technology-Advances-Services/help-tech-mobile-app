@@ -4,15 +4,17 @@ import 'package:intl/intl.dart';
 import '../models/job.dart';
 
 class JobResponse extends StatefulWidget {
+
   final int jobId;
 
   const JobResponse({super.key, required this.jobId});
 
   @override
-  _JobResponse createState() => _JobResponse();
+  _JobResponseState createState() => _JobResponseState();
 }
 
-class _JobResponse extends State<JobResponse> {
+class _JobResponseState extends State<JobResponse> {
+
   final _formKey = GlobalKey<FormState>();
   final JobService _jobService = JobService();
 
@@ -23,6 +25,33 @@ class _JobResponse extends State<JobResponse> {
   String? selectedStatus;
 
   bool isLoading = false;
+
+  Future<void> submitRequest() async {
+
+    if (!_formKey.currentState!.validate() || workDate == null ||
+        _timeController.text.isEmpty || _laborBudgetController.text.isEmpty ||
+        _materialBudgetController.text.isEmpty || selectedStatus == null) {
+
+      Navigator.of(context).pop(false);
+    }
+
+    setState(() => isLoading = true);
+
+    final Job job = Job(
+      id: widget.jobId,
+      workDate: workDate,
+      time: double.tryParse(_timeController.text) ?? 0.0,
+      laborBudget: double.tryParse(_laborBudgetController.text) ?? 0.0,
+      materialBudget: double.tryParse(_materialBudgetController.text) ?? 0.0,
+      jobState: selectedStatus!,
+    );
+
+    final result = await _jobService.assignJobDetail(job);
+
+    setState(() => isLoading = false);
+
+    Navigator.of(context).pop(result);
+  }
 
   Future<void> pickDate() async {
     final now = DateTime.now();
@@ -56,29 +85,12 @@ class _JobResponse extends State<JobResponse> {
     });
   }
 
-  Future<void> _submitRequest() async {
-
-    if (!_formKey.currentState!.validate() || workDate == null || selectedStatus == null) {
-
-      Navigator.of(context).pop(false);
-    }
-
-    setState(() => isLoading = true);
-
-    final Job job = Job(
-      id: widget.jobId,
-      workDate: workDate,
-      time: double.tryParse(_timeController.text) ?? 0.0,
-      laborBudget: double.tryParse(_laborBudgetController.text) ?? 0.0,
-      materialBudget: double.tryParse(_materialBudgetController.text) ?? 0.0,
-      jobState: selectedStatus!,
-    );
-
-    final result = await _jobService.assignJobDetail(job);
-
-    setState(() => isLoading = false);
-
-    Navigator.of(context).pop(result);
+  @override
+  void dispose() {
+    _timeController.dispose();
+    _laborBudgetController.dispose();
+    _materialBudgetController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,19 +99,21 @@ class _JobResponse extends State<JobResponse> {
       appBar: AppBar(
         title: const Text('Responder al trabajo'),
         backgroundColor: Colors.brown,
+        foregroundColor: Colors.white
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFE8B782), Color(0xFFAD745D)],
             begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+            end: Alignment.bottomRight
+          )
         ),
         child: Center(
           child: Card(
             margin: const EdgeInsets.all(24),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -117,17 +131,18 @@ class _JobResponse extends State<JobResponse> {
                         child: InputDecorator(
                           decoration: InputDecoration(
                             labelText: 'Fecha de trabajo',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12))
                           ),
-                          child: Text(
-                            workDate != null
-                                ? DateFormat('dd/MM/yyyy HH:mm').format(workDate!)
-                                : 'Seleccionar fecha',
+                          child: Text(workDate != null
+                                ? DateFormat('dd/MM/yyyy HH:mm')
+                              .format(workDate!) : 'Seleccionar fecha',
                             style: TextStyle(
-                              color: workDate != null ? Colors.black87 : Colors.grey,
-                            ),
-                          ),
-                        ),
+                              color: workDate != null ?
+                              Colors.black87 : Colors.grey
+                            )
+                          )
+                        )
                       ),
                       const SizedBox(height: 16),
 
@@ -135,34 +150,41 @@ class _JobResponse extends State<JobResponse> {
                         controller: _timeController,
                         decoration: InputDecoration(
                           labelText: 'Tiempo estimado',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12))
                         ),
                         validator: (value) =>
-                        value == null || value.isEmpty ? 'Este campo es requerido' : null,
+                        value == null || value.isEmpty ?
+                        'Este campo es requerido' : null
                       ),
                       const SizedBox(height: 16),
 
                       TextFormField(
                         controller: _laborBudgetController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType
+                            .numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                           labelText: 'Presupuesto Mano de Obra',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12))
                         ),
                         validator: (value) =>
-                        value == null || value.isEmpty ? 'Este campo es requerido' : null,
+                        value == null || value.isEmpty ?
+                        'Este campo es requerido' : null
                       ),
                       const SizedBox(height: 16),
 
                       TextFormField(
                         controller: _materialBudgetController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType
+                            .numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                           labelText: 'Presupuesto Materiales',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12))
                         ),
                         validator: (value) =>
-                        value == null || value.isEmpty ? 'Este campo es requerido' : null,
+                        value == null || value.isEmpty ? 'Este campo es requerido' : null
                       ),
                       const SizedBox(height: 24),
 
@@ -170,11 +192,14 @@ class _JobResponse extends State<JobResponse> {
                         value: selectedStatus,
                         decoration: InputDecoration(
                           labelText: 'Estado',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12))
                         ),
                         items: const [
-                          DropdownMenuItem(value: 'PENDIENTE', child: Text('PENDIENTE')),
-                          DropdownMenuItem(value: 'DENEGADO', child: Text('DENEGADO')),
+                          DropdownMenuItem(value: 'PENDIENTE',
+                              child: Text('PENDIENTE')),
+                          DropdownMenuItem(value: 'DENEGADO',
+                              child: Text('DENEGADO'))
                         ],
                         onChanged: (value) {
                           setState(() {
@@ -182,7 +207,8 @@ class _JobResponse extends State<JobResponse> {
                           });
                         },
                         validator: (value) =>
-                        value == null || value.isEmpty ? 'Seleccione un estado' : null,
+                        value == null || value.isEmpty ?
+                        'Seleccione un estado' : null
                       ),
                       const SizedBox(height: 16),
 
@@ -190,27 +216,27 @@ class _JobResponse extends State<JobResponse> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: _submitRequest,
+                          onPressed: submitRequest,
                           icon: const Icon(Icons.send),
                           label: const Text('Enviar respuesta'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4FB6B3),
+                            backgroundColor: Colors.teal,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+                              borderRadius: BorderRadius.circular(10)
+                            )
+                          )
+                        )
+                      )
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
     );
   }
 }

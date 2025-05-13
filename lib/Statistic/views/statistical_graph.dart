@@ -4,13 +4,14 @@ import '../services/statistic_service.dart';
 import '../models/review_statistic.dart';
 
 class StatisticalGraph extends StatefulWidget {
+
   const StatisticalGraph({super.key});
 
   @override
-  _StatisticalGraph createState() => _StatisticalGraph();
+  _StatisticalGraphState createState() => _StatisticalGraphState();
 }
 
-class _StatisticalGraph extends State<StatisticalGraph> {
+class _StatisticalGraphState extends State<StatisticalGraph> {
 
   final StatisticService _statisticService = StatisticService();
 
@@ -22,13 +23,7 @@ class _StatisticalGraph extends State<StatisticalGraph> {
 
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadGraph();
-  }
-
-  Future<void> _loadGraph() async {
+  Future<void> loadGraph() async {
 
     setState(() => isLoading = true);
 
@@ -44,32 +39,7 @@ class _StatisticalGraph extends State<StatisticalGraph> {
     setState(() => isLoading = false);
   }
 
-  Widget _buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: ['TOTAL', 'MENSUAL', 'RESEÑAS'].map((type) {
-
-        final isSelected = selectedType == type;
-
-        return ElevatedButton(
-          onPressed: () {
-            if (selectedType != type) {
-              setState(() => selectedType = type);
-              _loadGraph();
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? Colors.teal : Colors.grey.shade300,
-            foregroundColor: isSelected ? Colors.white : Colors.black87,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          child: Text(type),
-        );
-      }).toList(),
-    );
-  }
-
-  List<BarChartGroupData> _buildBarData() {
+  List<BarChartGroupData> buildBarData() {
 
     if (selectedType == 'RESEÑAS' && reviews.isNotEmpty) {
 
@@ -83,9 +53,9 @@ class _StatisticalGraph extends State<StatisticalGraph> {
               toY: entry.value.toDouble(),
               color: Colors.teal,
               width: 18,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ],
+              borderRadius: BorderRadius.circular(4)
+            )
+          ]
         );
       }).toList();
     }
@@ -105,65 +75,20 @@ class _StatisticalGraph extends State<StatisticalGraph> {
         ]),
       ];
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 
-  List<String> _buildLabels() {
+  List<String> buildLabels() {
 
     if (selectedType == 'RESEÑAS') {
       return ['1', '2', '3', '4', '5', 'Promedio'];
-    } else {
-      return ['Ingresos', 'Clientes', 'Horas', 'Pendientes'];
     }
+
+    return ['Ingresos', 'Clientes', 'Horas', 'Pendientes'];
   }
 
-  Widget _buildChart() {
-
-    final barGroups = _buildBarData();
-    final labels = _buildLabels();
-
-    return AspectRatio(
-      aspectRatio: 1.2,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceAround,
-            maxY: _calculateMaxY(barGroups),
-            barTouchData: BarTouchData(enabled: true),
-            titlesData: FlTitlesData(
-              leftTitles: const AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 40,
-                ),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (value, meta) {
-                    int index = value.toInt();
-                    return Text(
-                      index < labels.length ? labels[index] : '',
-                      style: const TextStyle(fontSize: 12),
-                    );
-                  },
-                ),
-              ),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            ),
-            borderData: FlBorderData(show: false),
-            barGroups: barGroups,
-          ),
-        ),
-      ),
-    );
-  }
-
-  double _calculateMaxY(List<BarChartGroupData> groups) {
+  double calculateMaxY(List<BarChartGroupData> groups) {
 
     double max = 0;
 
@@ -172,27 +97,105 @@ class _StatisticalGraph extends State<StatisticalGraph> {
         if (rod.toY > max) max = rod.toY;
       }
     }
+
     return (max * 1.2).ceilToDouble();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadGraph();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      child: isLoading ? const Center(child: CircularProgressIndicator()) :
+      Column(
         children: [
+
           const Text(
             'Estadísticas Técnicas',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
           ),
           const SizedBox(height: 16),
-          _buildButtons(),
+
+          buildButtons(),
           const SizedBox(height: 20),
-          Expanded(child: _buildChart()),
-        ],
-      ),
+
+          Expanded(child: buildChart())
+        ]
+      )
+    );
+  }
+
+  Widget buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: ['TOTAL', 'MENSUAL', 'RESEÑAS'].map((type) {
+
+        final isSelected = selectedType == type;
+
+        return ElevatedButton(
+          onPressed: () {
+            if (selectedType != type) {
+              setState(() => selectedType = type);
+              loadGraph();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isSelected ? Colors.teal : Colors.grey.shade300,
+            foregroundColor: isSelected ? Colors.white : Colors.black87,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+          ),
+          child: Text(type)
+        );
+      }).toList(),
+    );
+  }
+
+  Widget buildChart() {
+
+    final barGroups = buildBarData();
+    final labels = buildLabels();
+
+    return AspectRatio(
+      aspectRatio: 1.2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: BarChart(
+          BarChartData(
+            alignment: BarChartAlignment.spaceAround,
+            maxY: calculateMaxY(barGroups),
+            barTouchData: BarTouchData(enabled: true),
+            titlesData: FlTitlesData(
+              leftTitles: const AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40
+                )
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (value, meta) {
+                    int index = value.toInt();
+                    return Text(
+                      index < labels.length ? labels[index] : '',
+                      style: const TextStyle(fontSize: 12)
+                    );
+                  }
+                )
+              ),
+              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false))
+            ),
+            borderData: FlBorderData(show: false),
+            barGroups: barGroups
+          )
+        )
+      )
     );
   }
 }

@@ -32,12 +32,6 @@ class ComplaintService {
       }),
     );
 
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-
-      return true;
-    }
-
-    return false;
+    return response.statusCode >= 200 && response.statusCode < 300;
   }
 }

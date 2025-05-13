@@ -30,12 +30,6 @@ class _JobOfConsumer extends State<JobOfConsumer> {
     'PENDIENTE','COMPLETADO','EN PROCESO','DENEGADO'
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    loadJobs();
-  }
-
   Future<void> loadJobs() async {
 
     setState(() => isLoading = true);
@@ -44,6 +38,23 @@ class _JobOfConsumer extends State<JobOfConsumer> {
       return job.jobState == selectedStatus;
     }).toList();
     setState(() => isLoading = false);
+  }
+
+  Future<void> pickDate() async {
+
+    final d = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365))
+    );
+
+    if (d != null) {
+      setState(() {
+        selectedDate = d;
+        applyFilters();
+      });
+    }
   }
 
   void applyFilters() {
@@ -70,21 +81,10 @@ class _JobOfConsumer extends State<JobOfConsumer> {
     }).toList();
   }
 
-  Future<void> pickDate() async {
-
-    final d = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-
-    if (d != null) {
-      setState(() {
-        selectedDate = d;
-        applyFilters();
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    loadJobs();
   }
 
   @override
@@ -104,11 +104,11 @@ class _JobOfConsumer extends State<JobOfConsumer> {
                   width: 200,
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 14)
                     ),
                     onPressed: pickDate,
                     icon: const Icon(Icons.calendar_today, size: 18),
-                    label: Text(DateFormat('dd/MM/yyyy').format(selectedDate)),
+                    label: Text(DateFormat('dd/MM/yyyy').format(selectedDate))
                   ),
                 ),
                 SizedBox(
@@ -119,8 +119,8 @@ class _JobOfConsumer extends State<JobOfConsumer> {
                       labelText: 'Estado',
                       isDense: true,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                        borderRadius: BorderRadius.circular(10)
+                      )
                     ),
                     items: _statuses.map((s) =>
                         DropdownMenuItem(value: s, child: Text(s))
@@ -128,11 +128,11 @@ class _JobOfConsumer extends State<JobOfConsumer> {
                     onChanged: (v) => setState(() {
                       selectedStatus = v!;
                       applyFilters();
-                    }),
-                  ),
-                ),
-              ],
-            ),
+                    })
+                  )
+                )
+              ]
+            )
           ),
           const SizedBox(height: 16),
           if (isLoading)
@@ -143,17 +143,17 @@ class _JobOfConsumer extends State<JobOfConsumer> {
             PaginatedDataTable(
               header: const Text(
                 'Tabla de trabajo',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
               ),
               columns: buildColumns(selectedStatus),
               source: JobDataSource(filteredJobs, context),
               rowsPerPage: 6,
               columnSpacing: 24,
               headingRowColor: WidgetStateColor.resolveWith(
-                      (states) => Colors.blue.shade50),
-            ),
-        ],
-      ),
+                      (states) => Colors.blue.shade50)
+            )
+        ]
+      )
     );
   }
 
@@ -161,13 +161,13 @@ class _JobOfConsumer extends State<JobOfConsumer> {
 
     final cols = <DataColumn>[
       const DataColumn(label: Text('ID')),
-      const DataColumn(label: Text('Emisión')),
+      const DataColumn(label: Text('Emisión'))
     ];
 
     if (state == 'PENDIENTE' || state == 'COMPLETADO') {
 
       cols.addAll([
-        const DataColumn(label: Text('Final')),
+        const DataColumn(label: Text('Final'))
       ]);
     }
 
@@ -177,7 +177,7 @@ class _JobOfConsumer extends State<JobOfConsumer> {
       const DataColumn(label: Text('Estado')),
       const DataColumn(label: Text('Queja')),
       const DataColumn(label: Text('Detalle')),
-      const DataColumn(label: Text('Chat')),
+      const DataColumn(label: Text('Chat'))
     ]);
 
     if (state == 'COMPLETADO') {
@@ -203,7 +203,7 @@ class JobDataSource extends DataTableSource {
 
     final List<DataCell> cells = [
       DataCell(Text(job.id.toString())),
-      DataCell(Text(_fmt.format(job.registrationDate!))),
+      DataCell(Text(_fmt.format(job.registrationDate!)))
     ];
 
     if (job.jobState == 'PENDIENTE' || job.jobState == 'COMPLETADO') {
@@ -219,46 +219,40 @@ class JobDataSource extends DataTableSource {
         tooltip: 'Queja',
         onPressed: () async {
 
-          var result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RegisterComplaint(jobId: job.id)),
+          var result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                RegisterComplaint(jobId: job.id))
           );
 
           if (result == true) {
 
-            showDialog(
-                context: context,
-                builder: (context) =>
-                const SuccessDialog(message: 'Trabajo completado.')
-            );
+            showDialog(context: context, builder: (context) =>
+            const SuccessDialog(message: 'Trabajo completado.'));
           }
           else {
 
-            showDialog(
-                context: context,
-                builder: (context) =>
-                const ErrorDialog(message: 'No se completo el trabajo.')
+            showDialog(context: context, builder: (context) =>
+            const ErrorDialog(message: 'No se completo el trabajo.')
             );
           }
-        },
+        }
       )),
       DataCell(IconButton(
         icon: const Icon(Icons.info, color: Colors.blue),
         tooltip: 'Detalle',
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => JobDetail(job: job)),
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => JobDetail(job: job))
           );
-        },
+        }
       )),
       DataCell(IconButton(
         icon: const Icon(Icons.chat, color: Colors.green),
         tooltip: 'Chat',
         onPressed: () {
 
-        },
-      )),
+        }
+      ))
     ]);
 
     if (job.jobState == 'COMPLETADO') {
@@ -267,28 +261,23 @@ class JobDataSource extends DataTableSource {
         tooltip: 'Calificar',
         onPressed: () async {
 
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddReview(technicalId: job.personId)),
+          final result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                AddReview(technicalId: job.personId))
           );
 
           if (result == true) {
 
-            showDialog(
-                context: context,
-                builder: (context) =>
-                const SuccessDialog(message: 'Trabajo completado.')
-            );
+            showDialog(context: context, builder: (context) =>
+            const SuccessDialog(message: 'Trabajo completado.'));
           }
           else {
 
-            showDialog(
-                context: context,
-                builder: (context) =>
-                const ErrorDialog(message: 'No se completo el trabajo.')
+            showDialog(context: context, builder: (context) =>
+            const ErrorDialog(message: 'No se completo el trabajo.')
             );
           }
-        },
+        }
       )));
     }
 

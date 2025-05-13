@@ -17,10 +17,10 @@ class JobRequest extends StatefulWidget {
   });
 
   @override
-  _JobRequest createState() => _JobRequest();
+  _JobRequestState createState() => _JobRequestState();
 }
 
-class _JobRequest extends State<JobRequest> {
+class _JobRequestState extends State<JobRequest> {
 
   final JobService _jobService = JobService();
 
@@ -52,12 +52,20 @@ class _JobRequest extends State<JobRequest> {
   }
 
   @override
+  void dispose() {
+    _addressController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       appBar: AppBar(
         title: const Text('Solicitar Servicio Técnico'),
         backgroundColor: Colors.brown,
+        foregroundColor: Colors.white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -67,21 +75,23 @@ class _JobRequest extends State<JobRequest> {
               children: [
                 CircleAvatar(
                   radius: 26,
-                  backgroundImage: NetworkImage(widget.technical.profileUrl),
+                  backgroundImage: NetworkImage(widget.technical.profileUrl)
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Usted escogió el servicio de:\n${widget.specialtyName}',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600)
+                  )
+                )
+              ]
             ),
             const SizedBox(height: 24),
 
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -90,8 +100,9 @@ class _JobRequest extends State<JobRequest> {
                       children: [
                         Icon(Icons.info_outline, color: Colors.orange),
                         SizedBox(width: 8),
-                        Text('Información general', style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
+                        Text('Información general', style: TextStyle(
+                            fontWeight: FontWeight.bold))
+                      ]
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -104,14 +115,15 @@ class _JobRequest extends State<JobRequest> {
                               MaterialPageRoute(
                                 builder: (context) => ProfileTechnical(
                                   specialtyName: widget.specialtyName,
-                                  technical: widget.technical,
-                                ),
-                              ),
+                                  technical: widget.technical
+                                )
+                              )
                             );
                           },
                           icon: const Icon(Icons.person),
                           label: const Text("Ver Perfil"),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange)
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
@@ -119,35 +131,39 @@ class _JobRequest extends State<JobRequest> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ReviewOfTechnical(
-                                  technical: widget.technical,
-                                ),
-                              ),
+                                  technical: widget.technical
+                                )
+                              )
                             );
                           },
                           icon: const Icon(Icons.reviews),
                           label: const Text("Ver Reseñas"),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue)
+                        )
+                      ]
+                    )
+                  ]
+                )
+              )
             ),
             const SizedBox(height: 20),
 
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
+
                     const Row(
                       children: [
                         Icon(Icons.build_circle_outlined, color: Colors.green),
                         SizedBox(width: 8),
-                        Text('Solicitar servicio', style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
+                        Text('Solicitar servicio', style: TextStyle(
+                            fontWeight: FontWeight.bold))
+                      ]
                     ),
                     const SizedBox(height: 16),
 
@@ -155,8 +171,8 @@ class _JobRequest extends State<JobRequest> {
                       controller: _addressController,
                       decoration: const InputDecoration(
                         labelText: 'Domicilio',
-                        border: OutlineInputBorder(),
-                      ),
+                        border: OutlineInputBorder()
+                      )
                     ),
                     const SizedBox(height: 16),
 
@@ -165,12 +181,12 @@ class _JobRequest extends State<JobRequest> {
                       maxLines: 3,
                       decoration: const InputDecoration(
                         labelText: 'Descripción',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                        border: OutlineInputBorder()
+                      )
+                    )
+                  ]
+                )
+              )
             ),
             const SizedBox(height: 24),
 
@@ -180,21 +196,21 @@ class _JobRequest extends State<JobRequest> {
               child: ElevatedButton(
                 onPressed: submitRequest,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.teal,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                    borderRadius: BorderRadius.circular(12)
+                  )
                 ),
                 child: const Text(
                   'Solicitar Servicio Técnico',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+                  style: TextStyle(fontSize: 16, color: Colors.white)
+                )
+              )
+            )
+          ]
+        )
+      )
     );
   }
 }

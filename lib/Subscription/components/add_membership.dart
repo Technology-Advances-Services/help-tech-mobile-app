@@ -16,10 +16,10 @@ class AddMembership extends StatefulWidget {
   });
 
   @override
-  _AddMembership createState() => _AddMembership();
+  _AddMembershipState createState() => _AddMembershipState();
 }
 
-class _AddMembership extends State<AddMembership> {
+class _AddMembershipState extends State<AddMembership> {
 
   final MembershipService _membershipService = MembershipService();
 
@@ -32,24 +32,32 @@ class _AddMembership extends State<AddMembership> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _policiesController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _loadMemberships();
+  Future<void> submitMembership() async {
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final result = await _membershipService.registerMembership(
+      selectedMembership!, widget.personId, widget.role,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (result) {
+      Navigator.of(context).pop(result);
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => const ErrorDialog
+        (message: 'Error al registrar membresía.')
+    );
   }
 
-  @override
-  void dispose() {
-
-    _nameController.dispose();
-    _priceController.dispose();
-    _policiesController.dispose();
-
-    super.dispose();
-  }
-
-
-  Future<void> _loadMemberships() async {
+  Future<void> loadMemberships() async {
 
     final tmpMemberships = await _membershipService.getMemberships();
 
@@ -58,7 +66,7 @@ class _AddMembership extends State<AddMembership> {
     });
   }
 
-  void _onMembershipSelected(Membership? selected) {
+  void onMembershipSelected(Membership? selected) {
 
     if (selected != null) {
       setState(() {
@@ -71,104 +79,95 @@ class _AddMembership extends State<AddMembership> {
   }
 
   @override
+  void dispose() {
+
+    _nameController.dispose();
+    _priceController.dispose();
+    _policiesController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadMemberships();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Registrar membresia'),
+      title: const Text('Registrar membresía'),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15)
       ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             DropdownButtonFormField<Membership>(
               value: selectedMembership,
               items: memberships.map((m) {
                 return DropdownMenuItem(
                   value: m,
-                  child: Text(m.name),
+                  child: Text(m.name)
                 );
               }).toList(),
-              onChanged: _onMembershipSelected,
+              onChanged: onMembershipSelected,
               decoration: const InputDecoration(
-                labelText: 'Selecciona una membresia',
-                border: OutlineInputBorder(),
-              ),
+                labelText: 'Selecciona una membresía',
+                border: OutlineInputBorder()
+              )
             ),
             const SizedBox(height: 15),
+
             TextField(
               controller: _nameController,
               readOnly: true,
               decoration: const InputDecoration(
                 labelText: 'Nombre',
-                border: OutlineInputBorder(),
-              ),
+                border: OutlineInputBorder()
+              )
             ),
             const SizedBox(height: 15),
+
             TextField(
               controller: _priceController,
               readOnly: true,
               decoration: const InputDecoration(
                 labelText: 'Precio',
-                border: OutlineInputBorder(),
-              ),
+                border: OutlineInputBorder()
+              )
             ),
             const SizedBox(height: 15),
+
             TextField(
               controller: _policiesController,
               readOnly: true,
               maxLines: 3,
               decoration: const InputDecoration(
                 labelText: 'Politicas',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
+                border: OutlineInputBorder()
+              )
+            )
+          ]
+        )
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
-        ),
         ElevatedButton(
-          onPressed: isLoading ? null : () async {
-
-            setState(() {
-              isLoading = true;
-            });
-
-            final result = await _membershipService.registerMembership(
-              selectedMembership!, widget.personId, widget.role,
-            );
-
-            setState(() {
-              isLoading = false;
-            });
-
-            if (result) {
-              Navigator.of(context).pop(true);
-            }
-            else {
-              showDialog(
-                context: context,
-                builder: (context) => const ErrorDialog
-                  (message: 'Error al registrar membresia.'),
-              );
-            }
-          },
-          child: isLoading
-              ? const SizedBox(
+          onPressed: isLoading ? null : () async => submitMembership,
+          child: isLoading ?
+          const SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          )
-              : const Text('Finalizar'),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white)
+            )
+          ) : const Text('Finalizar')
         )
-      ],
+      ]
     );
   }
 }

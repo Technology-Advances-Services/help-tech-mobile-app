@@ -8,10 +8,10 @@ class JobDetail extends StatefulWidget {
   const JobDetail({super.key, required this.job});
 
   @override
-  _JobDetail createState() => _JobDetail();
+  _JobDetailState createState() => _JobDetailState();
 }
 
-class _JobDetail extends State<JobDetail> {
+class _JobDetailState extends State<JobDetail> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,7 @@ class _JobDetail extends State<JobDetail> {
       appBar: AppBar(
         title: const Text('Detalle del Trabajo'),
         backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
         elevation: 4
       ),
       body: Container(
@@ -27,8 +28,8 @@ class _JobDetail extends State<JobDetail> {
           gradient: LinearGradient(
             colors: [Color(0xFFE8B782), Color(0xFFAD745D)],
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+            end: Alignment.bottomCenter
+          )
         ),
         padding: const EdgeInsets.all(24),
         child: Center(
@@ -43,20 +44,27 @@ class _JobDetail extends State<JobDetail> {
                 children: [
                   const Icon(Icons.description, size: 60, color: Colors.indigo),
                   const SizedBox(height: 20),
-                  infoRow('Dirección', widget.job.address ?? 'No disponible'),
-                  infoRow('Descripción', widget.job.description ?? 'No disponible'),
-                  infoRow('Tiempo estimado', widget.job.time.toString() ?? 'No definido'),
+                  infoRow('Dirección', widget.job.address ??
+                      'No disponible'),
+                  infoRow('Descripción', widget.job.description ??
+                      'No disponible'),
+                  infoRow('Tiempo estimado', widget.job.time.toString() != '0.0' ?
+                    '${widget.job.time.toString()} horas' : 'No asignado'),
                   infoRow(
-                    'Mano de obra',
-                    widget.job.laborBudget != 0 ? 'S/ ${widget.job.laborBudget!.toStringAsFixed(2)}' : 'No asignado',
+                    'Mano de obra', widget.job.laborBudget != 0 ?
+                    'S/ ${widget.job.laborBudget!
+                        .toStringAsFixed(2)}' : 'No asignado',
                   ),
                   infoRow(
                     'Materiales',
-                    widget.job.materialBudget != 0 ? 'S/ ${widget.job.materialBudget!.toStringAsFixed(2)}' : 'No asignado',
+                    widget.job.materialBudget != 0 ?
+                    'S/ ${widget.job.materialBudget!
+                        .toStringAsFixed(2)}' : 'No asignado',
                   ),
                   infoRow(
                     'Monto final',
-                    widget.job.amountFinal != 0 ? 'S/ ${widget.job.amountFinal!.toStringAsFixed(2)}' : 'No asignado',
+                    widget.job.amountFinal != 0 ? 'S/ ${widget.job.amountFinal!
+                        .toStringAsFixed(2)}' : 'No asignado',
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
@@ -66,16 +74,18 @@ class _JobDetail extends State<JobDetail> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12))
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        )
+      )
     );
   }
 
@@ -89,15 +99,15 @@ class _JobDetail extends State<JobDetail> {
             flex: 3,
             child: Text(
               '$title:',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+            )
           ),
           Expanded(
             flex: 5,
-            child: Text(value, style: const TextStyle(fontSize: 16)),
-          ),
-        ],
-      ),
+            child: Text(value, style: const TextStyle(fontSize: 16))
+          )
+        ]
+      )
     );
   }
 }

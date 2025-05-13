@@ -30,15 +30,15 @@ class InformationService {
 
       return departments;
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 
   Future<List<District>> getDistrictsByDepartment(int departmentId) async {
 
     final response = await http.get(
-      Uri.parse('${_baseUrl}locations/districts-by-department?departmentId=$departmentId'),
+      Uri.parse('${_baseUrl}locations/districts-by-department?'
+        'departmentId=$departmentId'),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -55,9 +55,8 @@ class InformationService {
 
       return districts;
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 
   Future<List<Specialty>> getSpecialties() async {
@@ -80,8 +79,7 @@ class InformationService {
 
       return specialties;
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 }

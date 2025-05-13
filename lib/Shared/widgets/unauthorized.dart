@@ -22,53 +22,55 @@ class Unauthorized extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+
                   const Icon(
                     Icons.lock_outline,
                     size: 80,
-                    color: Colors.redAccent,
+                    color: Colors.redAccent
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Acceso no autorizado',
+
+                  const Text('Acceso no autorizado',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.black87
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'No tienes permisos para acceder a esta seccion.'
-                        'Por favor inicia sesión con una cuenta válida.',
+
+                  const Text('No tienes permisos para acceder a esta sección.'
+                      'Por favor inicia sesión con una cuenta válida.',
                     style: TextStyle(fontSize: 16, color: Colors.black54),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center
                   ),
                   const SizedBox(height: 30),
+
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => const Login()),
-                            (route) => false,
+                            (route) => false
                       );
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Ir a Iniciar Sesion'),
+                    label: const Text('Ir a Iniciar Sesión'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        )
+      )
     );
   }
 }

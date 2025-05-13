@@ -19,21 +19,21 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.'
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.'
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.'
         );
       default:
         throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
+          'DefaultFirebaseOptions are not supported for this platform.'
         );
     }
   }
@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '180154492305',
     projectId: 'helptech-74d24',
     authDomain: 'helptech-74d24.firebaseapp.com',
-    storageBucket: 'helptech-74d24.appspot.com',
+    storageBucket: 'helptech-74d24.appspot.com'
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
     appId: '1:562711702986:android:3388c076890b5ced57f333',
     messagingSenderId: '562711702986',
     projectId: 'helptech-74d24',
-    storageBucket: 'helptech-74d24.appspot.com',
+    storageBucket: 'helptech-74d24.appspot.com'
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -61,6 +61,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '562711702986',
     projectId: 'helptech-74d24',
     storageBucket: 'helptech-74d24.appspot.com',
-    iosBundleId: 'com.helptech.helptechmobileapp',
+    iosBundleId: 'com.helptech.helptechmobileapp'
   );
 }

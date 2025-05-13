@@ -51,29 +51,71 @@ class _RegisterState extends State<Register> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _loadDepartments();
-    _loadSpecialties();
-  }
+  Future<void> submitPerson() async {
 
-  @override
-  void dispose() {
+    String personId = _idController.text.toString();
+    String role = selectedRole;
 
-    _idController.dispose();
-    _districtIdController.dispose();
-    _specialtyIdController.dispose();
-    _profileUrlController.dispose();
-    _firstnameController.dispose();
-    _lastnameController.dispose();
-    _ageController.dispose();
-    _genreController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _codeController.dispose();
+    bool result = false;
 
-    super.dispose();
+    if (role == 'TECNICO') {
+
+      Technical technical = Technical(
+        id: _idController.text,
+        specialtyId: selectedSpecialty!.id,
+        districtId: selectedDistrict!.id,
+        firstname: _firstnameController.text,
+        lastname: _lastnameController.text,
+        age: int.parse(_ageController.text),
+        genre: _genreController.text,
+        phone: int.parse(_phoneController.text),
+        email: _emailController.text,
+        code: _codeController.text
+      );
+
+      result = await _registerService.registerTechnical
+        (technical, selectedImage!);
+    }
+    else if (role == 'CONSUMIDOR') {
+
+      Consumer consumer = Consumer(
+        id: _idController.text,
+        districtId: selectedDistrict!.id,
+        firstname: _firstnameController.text,
+        lastname: _lastnameController.text,
+        age: int.parse(_ageController.text),
+        genre: _genreController.text,
+        phone: int.parse(_phoneController.text),
+        email: _emailController.text,
+        code: _codeController.text
+      );
+
+      result = await _registerService.registerConsumer
+        (consumer, selectedImage!);
+    }
+
+    if (result == true) {
+      showDialog(
+        context: context,
+        builder: (context) => AddMembership(
+          personId: personId,
+          role: role
+        ),
+      ).then((task) {
+        if (task == true) {
+          Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => const Login()),
+                  (route) => false
+          );
+        }
+      });
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => const ErrorDialog
+        (message: 'Error al registrarse.')
+    );
   }
 
   Future<void> _loadDepartments() async {
@@ -118,6 +160,31 @@ class _RegisterState extends State<Register> {
   }
 
   @override
+  void dispose() {
+
+    _idController.dispose();
+    _districtIdController.dispose();
+    _specialtyIdController.dispose();
+    _profileUrlController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _ageController.dispose();
+    _genreController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _codeController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDepartments();
+    _loadSpecialties();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -125,8 +192,8 @@ class _RegisterState extends State<Register> {
           Positioned.fill(
             child: Image.asset(
               'assets/IAM/home_wallpaper.PNG',
-              fit: BoxFit.cover,
-            ),
+              fit: BoxFit.cover
+            )
           ),
           SafeArea(
             child: Center(
@@ -136,7 +203,7 @@ class _RegisterState extends State<Register> {
                   child: Card(
                     elevation: 8,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20)
                     ),
                     margin: const EdgeInsets.symmetric(horizontal: 30),
                     color: Colors.white.withOpacity(0.95),
@@ -145,12 +212,13 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+
                           const Text(
                             'Registro de Usuario',
                             style: TextStyle(
                               fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
+                              fontWeight: FontWeight.bold
+                            )
                           ),
                           const SizedBox(height: 20),
 
@@ -163,8 +231,8 @@ class _RegisterState extends State<Register> {
                               ),
                               DropdownMenuItem(
                                 value: 'TECNICO',
-                                child: Text('TECNICO'),
-                              ),
+                                child: Text('TECNICO')
+                              )
                             ],
                             onChanged: (value) {
                               setState(() {
@@ -180,119 +248,65 @@ class _RegisterState extends State<Register> {
                           ),
                           const SizedBox(height: 15),
 
-                          _buildTextField(controller: _idController, label: 'DNI'),
-                          _buildDropdownDepartment(),
-                          _buildDropdownDistrictsByDepartment(),
+                          buildTextField(controller: _idController,
+                              label: 'DNI'),
+
+                          buildDropdownDepartment(),
+                          buildDropdownDistrictsByDepartment(),
 
                           if (selectedRole == 'TECNICO')
-                            _buildDropdownSpecialties(),
+                            buildDropdownSpecialties(),
 
-                          _buildImagePicker(),
+                          buildImagePicker(),
 
-                          _buildTextField(controller: _firstnameController, label: 'Nombres'),
-                          _buildTextField(controller: _lastnameController, label: 'Apellidos'),
-                          _buildTextField(controller: _ageController, label: 'Edad', isNumber: true),
+                          buildTextField(controller: _firstnameController,
+                              label: 'Nombres'),
 
-                          _buildDropdownGenre(),
+                          buildTextField(controller: _lastnameController,
+                              label: 'Apellidos'),
 
-                          _buildTextField(controller: _phoneController, label: 'Telefono', isNumber: true),
-                          _buildTextField(controller: _emailController, label: 'Email'),
-                          _buildTextField(controller: _codeController, label: 'Contraseña', isPassword: true),
+                          buildTextField(controller: _ageController,
+                              label: 'Edad', isNumber: true),
+
+                          buildDropdownGenre(),
+
+                          buildTextField(controller: _phoneController,
+                              label: 'Telefono', isNumber: true),
+
+                          buildTextField(controller: _emailController,
+                              label: 'Email'),
+
+                          buildTextField(controller: _codeController,
+                              label: 'Contraseña', isPassword: true),
 
                           const SizedBox(height: 25),
+
                           ElevatedButton(
-                            onPressed: () async {
-
-                              String personId = _idController.text.toString();
-                              String role = selectedRole;
-
-                              bool result = false;
-
-                              if (role == 'TECNICO') {
-
-                                Technical technical = Technical(
-                                  id: _idController.text,
-                                  specialtyId: selectedSpecialty!.id,
-                                  districtId: selectedDistrict!.id,
-                                  firstname: _firstnameController.text,
-                                  lastname: _lastnameController.text,
-                                  age: int.parse(_ageController.text),
-                                  genre: _genreController.text,
-                                  phone: int.parse(_phoneController.text),
-                                  email: _emailController.text,
-                                  code: _codeController.text
-                                );
-
-                                result = await _registerService.registerTechnical
-                                  (technical, selectedImage!);
-                              }
-                              else if (role == 'CONSUMIDOR') {
-
-                                Consumer consumer = Consumer(
-                                    id: _idController.text,
-                                    districtId: selectedDistrict!.id,
-                                    firstname: _firstnameController.text,
-                                    lastname: _lastnameController.text,
-                                    age: int.parse(_ageController.text),
-                                    genre: _genreController.text,
-                                    phone: int.parse(_phoneController.text),
-                                    email: _emailController.text,
-                                    code: _codeController.text
-                                );
-
-                                result = await _registerService.registerConsumer
-                                  (consumer, selectedImage!);
-                              }
-
-                              if (result == true) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AddMembership(
-                                    personId: personId,
-                                    role: role,
-                                  ),
-                                ).then((task) {
-                                  if (task == true) {
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const Login()),
-                                          (route) => false,
-                                    );
-                                  }
-                                });
-                              }
-                              else {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => const ErrorDialog
-                                    (message: 'Error al registrarse.'),
-                                );
-                              }
-                            },
+                            onPressed: () async => submitPerson,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
-                              ),
+                              )
                             ),
-                            child: const Text('Registrarse'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+                            child: const Text('Registrarse')
+                          )
+                        ]
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ]
+      )
     );
   }
 
-  Widget _buildImagePicker() {
+  Widget buildImagePicker() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -300,7 +314,7 @@ class _RegisterState extends State<Register> {
         children: [
           const Text(
             'Foto de Perfil',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)
           ),
           const SizedBox(height: 10),
           GestureDetector(
@@ -311,37 +325,36 @@ class _RegisterState extends State<Register> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),
-                image: selectedImage != null
-                    ? DecorationImage(
+                image: selectedImage != null ?
+                DecorationImage(
                   image: FileImage(selectedImage!),
-                  fit: BoxFit.cover,
-                )
-                    : null,
+                  fit: BoxFit.cover
+                ) : null
               ),
-              child: selectedImage == null
-                  ? const Center(
+              child: selectedImage == null ?
+              const Center(
                 child: Icon(Icons.add_a_photo, color: Colors.grey, size: 40),
-              )
-                  : null,
-            ),
-          ),
-        ],
-      ),
+              ) : null
+            )
+          )
+        ]
+      )
     );
   }
-  Widget _buildDropdownDepartment() {
+
+  Widget buildDropdownDepartment() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<Department>(
         value: selectedDepartment,
         decoration: InputDecoration(
           labelText: 'Departamento',
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))
         ),
         items: departments.map((dep) {
           return DropdownMenuItem(
             value: dep,
-            child: Text(dep.name),
+            child: Text(dep.name)
           );
         }).toList(),
         onChanged: (dep) {
@@ -349,34 +362,36 @@ class _RegisterState extends State<Register> {
             selectedDepartment = dep;
             _loadDistrictsByDepartment(dep!.id);
           });
-        },
-      ),
+        }
+      )
     );
   }
-  Widget _buildDropdownDistrictsByDepartment() {
+
+  Widget buildDropdownDistrictsByDepartment() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<District>(
         value: selectedDistrict,
         decoration: InputDecoration(
           labelText: 'Distrito',
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))
         ),
         items: districts.map((dist) {
           return DropdownMenuItem(
             value: dist,
-            child: Text(dist.name),
+            child: Text(dist.name)
           );
         }).toList(),
         onChanged: (dist) {
           setState(() {
             selectedDistrict = dist;
           });
-        },
-      ),
+        }
+      )
     );
   }
-  Widget _buildDropdownSpecialties() {
+
+  Widget buildDropdownSpecialties() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<Specialty>(
@@ -384,24 +399,25 @@ class _RegisterState extends State<Register> {
         decoration: InputDecoration(
           labelText: 'Especialidad',
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+            borderRadius: BorderRadius.circular(8)
+          )
         ),
         items: specialties.map((spe) {
           return DropdownMenuItem(
             value: spe,
-            child: Text(spe.name),
+            child: Text(spe.name)
           );
         }).toList(),
         onChanged: (spe) {
           setState(() {
             selectedSpecialty = spe;
           });
-        },
-      ),
+        }
+      )
     );
   }
-  Widget _buildDropdownGenre() {
+
+  Widget buildDropdownGenre() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DropdownButtonFormField<String>(
@@ -409,8 +425,8 @@ class _RegisterState extends State<Register> {
         decoration: InputDecoration(
           labelText: 'Genero',
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+            borderRadius: BorderRadius.circular(8)
+          )
         ),
         items: const [
           DropdownMenuItem(value: 'Masculino', child: Text('Masculino')),
@@ -420,15 +436,16 @@ class _RegisterState extends State<Register> {
           setState(() {
             selectedGenre = value;
           });
-        },
-      ),
+        }
+      )
     );
   }
-  Widget _buildTextField({
+
+  Widget buildTextField({
     required TextEditingController controller,
     required String label,
     bool isNumber = false,
-    bool isPassword = false,
+    bool isPassword = false
   }) {
     bool obscure = isPassword;
 
@@ -444,24 +461,23 @@ class _RegisterState extends State<Register> {
             decoration: InputDecoration(
               labelText: label,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8)
               ),
-              suffixIcon: isPassword
-                  ? IconButton(
+              suffixIcon: isPassword ?
+              IconButton(
                 icon: Icon(
-                  obscure ? Icons.visibility_off : Icons.visibility,
+                  obscure ? Icons.visibility_off : Icons.visibility
                 ),
                 onPressed: () {
                   setState(() {
                     obscure = !obscure;
                   });
-                },
-              )
-                  : null,
-            ),
-          ),
+                }
+              ) : null,
+            )
+          )
         );
-      },
+      }
     );
   }
 }

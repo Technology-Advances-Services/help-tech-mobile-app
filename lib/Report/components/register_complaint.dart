@@ -27,26 +27,6 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
 
   bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    loadTypeComplaints();
-  }
-
-  Future<void> loadTypeComplaints() async {
-
-    setState(() {
-      isLoading = true;
-    });
-
-    final tmpTypeComplaints = await _typeComplaintService.getTypeComplaints();
-
-    setState(() {
-      typeComplaints = tmpTypeComplaints;
-      isLoading = false;
-    });
-  }
-
   Future<void> submitComplaint() async {
 
     if (selectedType == null || _descriptionController.text.isEmpty) {
@@ -73,10 +53,30 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
     Navigator.of(context).pop(result);
   }
 
+  Future<void> loadTypeComplaints() async {
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final tmpTypeComplaints = await _typeComplaintService.getTypeComplaints();
+
+    setState(() {
+      typeComplaints = tmpTypeComplaints;
+      isLoading = false;
+    });
+  }
+
   @override
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadTypeComplaints();
   }
 
   @override
@@ -122,7 +122,8 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                       onChanged: (value) => setState(() => selectedType = value),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10)
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10)
                       ),
                       isExpanded: true
                     );
@@ -168,11 +169,11 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                     )
                   )
                 )
-              ],
-            ),
-          ),
-        ),
-      ),
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }

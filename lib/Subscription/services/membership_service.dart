@@ -11,8 +11,8 @@ class MembershipService {
   Future<bool> registerMembership
       (Membership membership, String personId, String role) async {
 
-    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract'
-        : 'contracts/create-consumer-contract';
+    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract' :
+    'contracts/create-consumer-contract';
 
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
@@ -54,8 +54,7 @@ class MembershipService {
 
       return memberships;
     }
-    else {
-      return [];
-    }
+
+    return [];
   }
 }
