@@ -97,7 +97,8 @@ class _AddReviewState extends State<AddReview> {
                   icon: const Icon(Icons.send),
                   label: const Text('Enviar Reseña'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade800,
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     textStyle: const TextStyle(fontSize: 16),
                     shape: RoundedRectangleBorder(

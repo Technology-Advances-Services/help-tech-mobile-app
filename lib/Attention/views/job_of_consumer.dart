@@ -175,13 +175,13 @@ class _JobOfConsumer extends State<JobOfConsumer> {
       const DataColumn(label: Text('Nombre')),
       const DataColumn(label: Text('Apellido')),
       const DataColumn(label: Text('Estado')),
-      const DataColumn(label: Text('Queja')),
       const DataColumn(label: Text('Detalle')),
       const DataColumn(label: Text('Chat'))
     ]);
 
     if (state == 'COMPLETADO') {
       cols.add(const DataColumn(label: Text('Calificar')));
+      cols.add(const DataColumn(label: Text('Queja')));
     }
 
     return cols;
@@ -215,29 +215,6 @@ class JobDataSource extends DataTableSource {
       DataCell(Text(job.lastName)),
       DataCell(Text(job.jobState)),
       DataCell(IconButton(
-        icon: const Icon(Icons.warning, color: Colors.red),
-        tooltip: 'Queja',
-        onPressed: () async {
-
-          var result = await Navigator.push(context,
-            MaterialPageRoute(builder: (context) =>
-                RegisterComplaint(jobId: job.id))
-          );
-
-          if (result == true) {
-
-            showDialog(context: context, builder: (context) =>
-            const SuccessDialog(message: 'Trabajo completado.'));
-          }
-          else {
-
-            showDialog(context: context, builder: (context) =>
-            const ErrorDialog(message: 'No se completo el trabajo.')
-            );
-          }
-        }
-      )),
-      DataCell(IconButton(
         icon: const Icon(Icons.info, color: Colors.blue),
         tooltip: 'Detalle',
         onPressed: () {
@@ -269,13 +246,34 @@ class JobDataSource extends DataTableSource {
           if (result == true) {
 
             showDialog(context: context, builder: (context) =>
-            const SuccessDialog(message: 'Trabajo completado.'));
+            const SuccessDialog(message: 'Reseña registrada.'));
           }
           else {
 
             showDialog(context: context, builder: (context) =>
-            const ErrorDialog(message: 'No se completo el trabajo.')
-            );
+            const ErrorDialog(message: 'No se registró la reseña.'));
+          }
+        }
+      )));
+      cells.add(DataCell(IconButton(
+        icon: const Icon(Icons.warning, color: Colors.red),
+        tooltip: 'Queja',
+        onPressed: () async {
+
+          var result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>
+                RegisterComplaint(jobId: job.id))
+          );
+
+          if (result == true) {
+
+            showDialog(context: context, builder: (context) =>
+            const SuccessDialog(message: 'Queja registrada.'));
+          }
+          else {
+
+            showDialog(context: context, builder: (context) =>
+            const ErrorDialog(message: 'No se registró la queja.'));
           }
         }
       )));

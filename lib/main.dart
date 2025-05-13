@@ -28,6 +28,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Help Tech',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Home(),

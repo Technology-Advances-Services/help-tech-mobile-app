@@ -161,8 +161,7 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
                       if (result == true){
 
                         showDialog(context: context, builder: (context) =>
-                        const SuccessDialog(message: 'Solicitud registrada.')
-                        );
+                        const SuccessDialog(message: 'Solicitud registrada.'));
                       }
                       else {
 

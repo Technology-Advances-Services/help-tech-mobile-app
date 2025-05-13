@@ -28,11 +28,13 @@ dependencies:
   fl_chart: ^0.69.0
   intl: ^0.17.0
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.10.0
 
 flutter:
 
@@ -42,3 +44,8 @@ flutter:
     - assets/IAM/
     - assets/IAM/home_logo.PNG
     - assets/IAM/home_wallpaper.PNG
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.ico"

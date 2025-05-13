@@ -45,9 +45,9 @@ class _StatisticalGraphState extends State<StatisticalGraph> {
 
       final review = reviews.first;
 
-      return review.scores.entries.map((entry) {
+      final barGroups = review.scores.entries.map((entry) {
         return BarChartGroupData(
-          x: entry.key,
+          x: entry.key - 1,
           barRods: [
             BarChartRodData(
               toY: entry.value.toDouble(),
@@ -58,6 +58,25 @@ class _StatisticalGraphState extends State<StatisticalGraph> {
           ]
         );
       }).toList();
+
+      final maxX = barGroups.isNotEmpty ? barGroups.map((b) => b.x)
+          .reduce((a, b) => a > b ? a : b) : 5;
+
+      barGroups.add(
+        BarChartGroupData(
+          x: maxX + 1,
+          barRods: [
+            BarChartRodData(
+              toY: review.averageScore.toDouble(),
+              color: Colors.grey,
+              width: 18,
+              borderRadius: BorderRadius.circular(4)
+            )
+          ]
+        )
+      );
+
+      return barGroups;
     }
     else if (statistic != null) {
       return [
@@ -72,7 +91,7 @@ class _StatisticalGraphState extends State<StatisticalGraph> {
         ]),
         BarChartGroupData(x: 3, barRods: [
           BarChartRodData(toY: statistic!.totalPendingsJobs.toDouble(), color: Colors.red, width: 18)
-        ]),
+        ])
       ];
     }
 
@@ -174,7 +193,7 @@ class _StatisticalGraphState extends State<StatisticalGraph> {
                 sideTitles: SideTitles(
                   showTitles: true,
                   reservedSize: 40
-                )
+                ),
               ),
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(

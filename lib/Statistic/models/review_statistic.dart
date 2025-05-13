@@ -10,18 +10,23 @@ class ReviewStatistic {
 
   factory ReviewStatistic.fromJson(Map<String, dynamic> json) {
 
-    int average = json['AverageScore'];
+    final int average = (json['AverageScore'] as num?)?.toInt() ?? 0;
 
-    Map<int, int> scoreMap = {};
+    final Map<int, int> scoreMap = {};
 
     json.forEach((key, value) {
       if (key != 'AverageScore') {
-        scoreMap[int.parse(key)] = value;
+        final intKey = int.tryParse(key);
+        final intValue = (value as num?)?.toInt() ?? 0;
+        if (intKey != null) {
+          scoreMap[intKey] = intValue;
+        }
       }
     });
 
     return ReviewStatistic(scores: scoreMap, averageScore: average);
   }
+
 
   Map<String, dynamic> toJson() {
 

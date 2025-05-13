@@ -162,6 +162,7 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                   const Text('Enviar Queja'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     textStyle: const TextStyle(fontSize: 16),
                     shape: RoundedRectangleBorder(

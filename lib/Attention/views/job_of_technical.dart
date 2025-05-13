@@ -242,8 +242,7 @@ class JobDataSource extends DataTableSource {
           if (result == true) {
 
             showDialog(context: context, builder: (context) =>
-            const SuccessDialog(message: 'Trabajo completado.')
-            );
+            const SuccessDialog(message: 'Trabajo completado.'));
 
             if (context.mounted) {
               final state = context.findAncestorStateOfType<_JobOfTechnical>();
@@ -253,8 +252,7 @@ class JobDataSource extends DataTableSource {
           else {
 
             showDialog(context: context, builder: (context) =>
-            const ErrorDialog(message: 'No se completo el trabajo.')
-            );
+            const ErrorDialog(message: 'No se completó el trabajo.'));
           }
         }
       )));
@@ -274,8 +272,7 @@ class JobDataSource extends DataTableSource {
           if (result == true){
 
             showDialog(context: context, builder: (context) =>
-            const SuccessDialog(message: 'Respuesta registrada.')
-            );
+            const SuccessDialog(message: 'Respuesta registrada.'));
 
             if (context.mounted) {
               final state = context.findAncestorStateOfType<_JobOfTechnical>();
@@ -285,8 +282,7 @@ class JobDataSource extends DataTableSource {
           else {
 
             showDialog(context: context, builder: (context) =>
-            const ErrorDialog(message: 'No se registro su respuesta.')
-            );
+            const ErrorDialog(message: 'No se registró su respuesta.'));
           }
         },
       )));

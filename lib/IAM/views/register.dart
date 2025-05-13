@@ -110,15 +110,13 @@ class _RegisterState extends State<Register> {
         }
         else {
           showDialog(context: context, builder: (context) =>
-          const ErrorDialog(message: 'Error al registrarse.')
-          );
+          const ErrorDialog(message: 'Error al registrarse.'));
         }
       });
     }
     else {
       showDialog(context: context, builder: (context) =>
-      const ErrorDialog(message: 'Error al registrarse.')
-      );
+      const ErrorDialog(message: 'Error al registrarse.'));
     }
   }
 
