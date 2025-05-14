@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:web_socket_channel/io.dart';
@@ -35,8 +34,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> loadMessages() async {
 
-    final tmpMessages = await _chatService.chatsByChatRoom
-      (widget.chatMember.chatRoomId);
+    final tmpMessages = await _chatService
+        .chatsByChatRoom(widget.chatMember.chatRoomId);
 
     setState(() {
       messages = tmpMessages;
@@ -62,7 +61,7 @@ class _ChatPageState extends State<ChatPage> {
     ));
 
     final payload = json.encode({
-      'room': widget.chatMember.chatRoomId,
+      'room': widget.chatMember.chatRoomId.toString(),
       'user': widget.role,
       'text': text,
     });
@@ -79,22 +78,25 @@ class _ChatPageState extends State<ChatPage> {
 
     final room = widget.chatMember.chatRoomId;
 
-    _channel = IOWebSocketChannel.connect
-      ('ws://helptechwebapp.runasp.net/chat?room=$room');
+    _channel = IOWebSocketChannel.connect(
+      Uri.parse('ws://helptechwebapp.runasp.net/chat?room=$room'),
+    );
 
     _channel.stream.listen((event) {
 
       final data = json.decode(event);
+      final isSenderTechnical = data['user'] == 'TECNICO';
 
-      if (data['room'] == room) {
+      if (data['room'].toString() == room.toString()) {
+
         final chat = Chat(
           chatRoomId: room,
-          technicalId: widget.chatMember.technicalId,
-          consumerId: widget.chatMember.consumerId,
+          technicalId: isSenderTechnical ? widget.chatMember.technicalId : null,
+          consumerId: !isSenderTechnical ? widget.chatMember.consumerId : null,
           shippingDate: DateTime.now(),
           message: data['text'] ?? '',
           technical: widget.chatMember.technical,
-          consumer: widget.chatMember.consumer,
+          consumer: widget.chatMember.consumer
         );
 
         setState(() => messages.add(chat));
@@ -136,64 +138,110 @@ class _ChatPageState extends State<ChatPage> {
 
     final isTechnical = widget.role == 'TECNICO';
 
-    final dynamic other = isTechnical ?
-    widget.chatMember.consumer! : widget.chatMember.technical!;
+    final dynamic other = isTechnical
+        ? widget.chatMember.consumer!
+        : widget.chatMember.technical!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(other.profileUrl),
-            ),
-            const SizedBox(width: 10),
-            Text('${other.firstname} ${other.lastname}'),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-              controller: _scrollController,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final chat = messages[index];
-                final isMe = (isTechnical && chat.technicalId == widget.chatMember.technicalId) ||
-                    (!isTechnical && chat.consumerId == widget.chatMember.consumerId);
-                return bubble(chat, isMe);
-              },
-            ),
-          ),
-          Container(
-            color: Colors.grey.shade100,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(
-                      hintText: 'Escribe un mensaje...',
-                      border: OutlineInputBorder(),
-                    ),
-                    onSubmitted: (context) => sendMessage(),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                isSending
-                    ? const CircularProgressIndicator()
-                    : IconButton(
-                  icon: const Icon(Icons.send, color: Colors.teal),
-                  onPressed: sendMessage,
-                ),
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFE8B782),
+                Color(0xFFAD745D)
               ],
-            ),
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight
+            )
+          )
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.brown,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            title: Row(
+              children: [
+
+                CircleAvatar(
+                  backgroundImage: NetworkImage(other.profileUrl)
+                ),
+                const SizedBox(width: 10),
+
+                Text('${other.firstname}')
+              ]
+            )
           ),
-        ],
-      ),
+          body: Column(
+            children: [
+              Expanded(
+                child: isLoading ?
+                const Center(child: CircularProgressIndicator()) :
+                ListView.builder(
+                  controller: _scrollController,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+
+                    final chat = messages[index];
+
+                    final isMe = (isTechnical && chat.technicalId ==
+                        widget.chatMember.technicalId) ||
+                        (!isTechnical && chat.consumerId ==
+                            widget.chatMember.consumerId);
+
+                    return bubble(chat, isMe);
+                  }
+                )
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2)
+                    )
+                  ]
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: const InputDecoration(
+                          hintText: 'Escribe un mensaje...',
+                          border: InputBorder.none,
+                        ),
+                        onSubmitted: (context) => sendMessage()
+                      )
+                    ),
+                    const SizedBox(width: 8),
+                    isSending ?
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2)
+                    ) :
+                    CircleAvatar(
+                      backgroundColor: Colors.teal,
+                      child: IconButton(
+                        icon: const Icon(Icons.send, color: Colors.white),
+                        onPressed: sendMessage
+                      )
+                    )
+                  ]
+                )
+              )
+            ]
+          )
+        )
+      ]
     );
   }
 
@@ -201,18 +249,13 @@ class _ChatPageState extends State<ChatPage> {
 
     final fmt = DateFormat('dd/MM/yyyy HH:mm');
     final align = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final bg = isMe ? Colors.teal[50] : Colors.grey[200];
+    final bg = isMe ? Colors.tealAccent.shade100 : Colors.blue.shade100;
 
-    final radius = isMe ?
-    const BorderRadius.only(
-      topLeft: Radius.circular(12),
-      topRight: Radius.circular(12),
-      bottomLeft: Radius.circular(12)
-    ) :
-    const BorderRadius.only(
-      topLeft: Radius.circular(12),
-      topRight: Radius.circular(12),
-      bottomRight: Radius.circular(12)
+    final radius = BorderRadius.only(
+      topLeft: const Radius.circular(18),
+      topRight: const Radius.circular(18),
+      bottomLeft: Radius.circular(isMe ? 18 : 0),
+      bottomRight: Radius.circular(isMe ? 0 : 18)
     );
 
     return Padding(
@@ -221,48 +264,69 @@ class _ChatPageState extends State<ChatPage> {
         crossAxisAlignment: align,
         children: [
           Row(
-            mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              if (!isMe) ...[
 
+              if (!isMe)
                 CircleAvatar(
-                  radius: 14,
+                  radius: 16,
                   backgroundImage: NetworkImage(
-                      widget.role == 'TECNICO' ? chat.consumer!.profileUrl :
-                      chat.technical!.profileUrl)
+                    widget.role == 'TECNICO'
+                        ? chat.consumer!.profileUrl
+                        : chat.technical!.profileUrl
+                  )
                 ),
-                const SizedBox(width: 8)
-              ],
+              if (!isMe)
+                const SizedBox(width: 8),
+
               Flexible(
                 child: Container(
-                  decoration: BoxDecoration(color: bg, borderRadius: radius),
-                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: bg,
+                    borderRadius: radius,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2)
+                      )
+                    ]
+                  ),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Column(
                     crossAxisAlignment: align,
                     children: [
 
-                      Text(chat.message),
+                      Text(
+                        chat.message,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500)
+                      ),
                       const SizedBox(height: 6),
 
                       Text(
                         fmt.format(chat.shippingDate!),
-                        style: const TextStyle(fontSize: 10,
-                            color: Colors.black54)
+                        style: const TextStyle(
+                            fontSize: 11, color: Colors.black54)
                       )
                     ]
                   )
                 )
               ),
-              if (isMe) ...[
-
+              if (isMe)
                 const SizedBox(width: 8),
+
+              if (isMe)
                 CircleAvatar(
-                  radius: 14,
+                  radius: 16,
                   backgroundImage: NetworkImage(
-                      widget.role == 'TECNICO' ? chat.technical!.profileUrl :
-                      chat.consumer!.profileUrl)
+                    widget.role == 'TECNICO'
+                        ? chat.technical!.profileUrl
+                        : chat.consumer!.profileUrl
+                  )
                 )
-              ]
             ]
           )
         ]
