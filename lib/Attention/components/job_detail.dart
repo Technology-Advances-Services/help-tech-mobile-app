@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import '../models/job.dart';
 
 class JobDetail extends StatefulWidget {
@@ -44,6 +46,14 @@ class _JobDetailState extends State<JobDetail> {
                 children: [
                   const Icon(Icons.description, size: 60, color: Colors.indigo),
                   const SizedBox(height: 20),
+
+                  infoRow(
+                    'Fecha de trabajo',
+                    widget.job.workDate != null
+                        ? DateFormat('yyyy-MM-dd HH:mm')
+                        .format(widget.job.workDate!)
+                        : 'No disponible',
+                  ),
                   infoRow('Dirección', widget.job.address ??
                       'No disponible'),
                   infoRow('Descripción', widget.job.description ??
