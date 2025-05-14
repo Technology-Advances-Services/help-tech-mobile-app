@@ -20,126 +20,144 @@ class TermsAndConditions extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    children: [
 
-                    Text(
-                      'Términos y Condiciones de Uso',
-                      style: TextStyle(fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'Al acceder, descargar o utilizar la aplicación móvil '
-                      'HelpTech, usted declara que ha leído, comprendido y '
-                      'aceptado íntegramente los presentes Términos y '
-                      'Condiciones de Uso. El uso de la Aplicación constituye '
-                      'un acuerdo legalmente vinculante entre el usuario y'
-                      'la empresa Technology Advances Services titular y '
-                      'operadora de la misma. En caso de no estar de acuerdo '
-                      'con alguna de las disposiciones establecidas, le '
-                      'solicitamos abstenerse de utilizar la Aplicación.',
-                      textAlign: TextAlign.justify
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'La Aplicación tiene por objetivo facilitar la '
-                      'solicitud y oferta de servicios técnicos especializados, '
-                      'optimizando el tiempo destinado por los usuarios a la '
-                      'búsqueda de profesionales para resolver problemas '
-                      'técnicos de índole doméstica. Asimismo, la Aplicación '
-                      'promueve oportunidades laborales para especialistas '
-                      'mediante la publicación de sus servicios.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'El acceso a ciertas funcionalidades de la Aplicación '
-                      'requiere el registro del Usuario mediante la '
-                      'provisión de información personal veraz y '
-                      'actualizada, incluyendo dni, nombre completo, correo '
-                      'electrónico y número de teléfono móvil. '
-                      'Al registrarse, el Usuario autoriza el uso de dicha '
-                      'información exclusivamente para fines operativos '
-                      'relacionados con la prestación de los servicios, y se '
-                      'compromete a mantener la confidencialidad de sus '
-                      'credenciales de acceso.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'La Empresa se compromete a garantizar la privacidad y '
-                      'protección de los datos personales suministrados por '
-                      'los Usuarios. La información recopilada será tratada '
-                      'con estricta confidencialidad y resguardada mediante '
-                      'mecanismos de seguridad adecuados, incluyendo la '
-                      'implementación de tokens de autenticación en el '
-                      'backend para prevenir accesos no autorizados.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'El uso completo de la Aplicación está condicionado a la '
-                      'adquisición de planes de suscripción, cuyo pago se '
-                      'realizará exclusivamente mediante tarjeta de crédito '
-                      'o débito. Los precios, características y duraciones '
-                      'de los planes estarán claramente especificados '
-                      'dentro de la Aplicación.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'Todos los derechos de propiedad intelectual '
-                      'relacionados con la Aplicación, incluyendo su diseño, '
-                      'funcionalidades y contenido, son de exclusiva '
-                      'propiedad de Technology Advances Services.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'Para cualquier consulta, queja o solicitud relacionada '
-                      'con estos términos y condiciones, los usuarios pueden '
-                      'contactarnos mediante el correo electrónico '
-                      'technologyadvancesservices@gmail.com.',
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-
-                    Text(
-                      'Derechos de Autor y Propiedad Intelectual',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                      Text(
+                        'Términos y Condiciones de Uso',
+                        style: TextStyle(fontSize: 20,
+                            fontWeight: FontWeight.bold)
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 8),
+                      SizedBox(height: 16),
 
-                    Text(
-                      'Esta aplicación y la idea original del proyecto son '
-                      'propiedad del INGENIERO AARON ELIAS ACUÑA ALARCON, '
-                      'el cual es el único titular legal de todos los '
-                      'derechos de autor, propiedad intelectual y '
-                      'responsabilidad comercial vinculados a la presente '
-                      'plataforma. Cualquier uso no autorizado de su '
-                      'contenido, diseño o funcionalidades será considerado '
-                      'una violación a la ley de propiedad intelectual.',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red
+                      Text(
+                        'Al acceder, registrarse o utilizar la aplicación '
+                        'HelpTech, el Usuario declara que ha leído, '
+                        'comprendido y aceptado íntegramente el presente '
+                        'Acuerdo de Servicio. Este constituye un contrato '
+                        'legalmente vinculante entre el Usuario y '
+                        'Technology Advances Services, titular y operadora '
+                        'de la plataforma.',
+                        textAlign: TextAlign.justify
                       ),
-                    ),
-                    SizedBox(height: 16)
-                  ]
+                      SizedBox(height: 16),
+
+                      Text(
+                        'HelpTech es una plataforma provista bajo el modelo '
+                        'SaaS (Software como Servicio), que permite a los '
+                        'Usuarios acceder a herramientas digitales para la '
+                        'gestión, solicitud y oferta de servicios técnicos '
+                        'especializados. La Empresa otorga una licencia '
+                        'limitada, no exclusiva, intransferible y revocable '
+                        'para el uso de la plataforma conforme a este acuerdo.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'El uso completo de la plataforma requiere la '
+                        'creación de una cuenta mediante el registro de '
+                        'datos personales veraces y actualizados, incluyendo '
+                        'DNI, nombre completo, correo electrónico y número '
+                        'de teléfono móvil. El Usuario es responsable de '
+                        'mantener la confidencialidad de sus '
+                        'credenciales de acceso.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'El acceso a los servicios está condicionado a la '
+                        'suscripción de un plan de servicio. Los detalles '
+                        'de cada plan (precio, duración y características) '
+                        'estarán claramente especificados dentro de la '
+                        'aplicación. El pago se efectúa exclusivamente '
+                        'mediante tarjeta de crédito o débito a través de '
+                        'pasarelas de pago seguras.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'Todos los derechos de propiedad intelectual '
+                        'relacionados con la plataforma, incluyendo el '
+                        'código fuente, diseño, funcionalidades y contenido, '
+                        'son de exclusiva propiedad de '
+                        'Technology Advances Services. Nada en este acuerdo '
+                        'transfiere derechos de propiedad al Usuario.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'La aplicación y su concepto original son propiedad '
+                        'de la empresa Technology Advances Services, titular '
+                        'exclusivo de todos los derechos de autor, propiedad '
+                        'intelectual y responsabilidad comercial. Cualquier '
+                        'uso no autorizado de su contenido será considerado '
+                        'una infracción conforme a la legislación vigente.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'La Empresa se compromete a garantizar la privacidad y '
+                        'protección de los datos personales suministrados '
+                        'por los Usuarios. Esta información será tratada '
+                        'con estricta confidencialidad y protegida mediante '
+                        'mecanismos de seguridad adecuados, incluyendo la '
+                        'implementación de tokens de '
+                        'autenticación en el backend.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'Para consultas, quejas o solicitudes relacionadas con '
+                        'este Acuerdo de Servicio, los Usuarios pueden '
+                        'contactarnos a través del correo electrónico: '
+                        'technologyadvancesservices@gmail.com.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'Modificaciones y Terminación',
+                        style: TextStyle(fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center
+                      ),
+                      SizedBox(height: 8),
+
+                      Text(
+                        'La Empresa se reserva el derecho de modificar este '
+                        'Acuerdo en cualquier momento. Las modificaciones '
+                        'serán notificadas dentro de la aplicación. '
+                        'Asimismo, podrá suspender o cancelar el acceso del '
+                        'Usuario ante cualquier incumplimiento. '
+                        'El Usuario también podrá cancelar su cuenta en '
+                        'cualquier momento desde la configuración de perfil.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16),
+
+                      Text(
+                        'Limitación de Responsabilidad',
+                        style: TextStyle(fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center
+                      ),
+                      SizedBox(height: 8),
+
+                      Text(
+                        'La Empresa no será responsable por daños directos, '
+                        'indirectos, incidentales o consecuentes derivados '
+                        'del uso o la imposibilidad de uso de la plataforma. '
+                        'El Usuario acepta utilizar el servicio '
+                        'bajo su propio riesgo.',
+                        textAlign: TextAlign.justify
+                      ),
+                      SizedBox(height: 16)
+                    ]
                 )
               )
             )
