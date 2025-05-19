@@ -13,14 +13,17 @@ class ChatService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic username;
+  dynamic role;
+
   Future<bool> sendMessage(Chat chat) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
+    role = await _storage.read(key: 'role');
 
     token = token?.replaceAll('"', '');
-
-    var username = await _storage.read(key: 'username');
-    var role = await _storage.read(key: 'role');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}chats/send-message'),
@@ -41,7 +44,7 @@ class ChatService {
 
   Future<List<Chat>> chatsByChatRoom(int chatRoomId) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -57,7 +60,7 @@ class ChatService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Chat> chats = data.map((item) {
+      return data.map((item) {
 
         final technicalJson = item['technical'];
         final consumerJson = item['consumer'];
@@ -86,8 +89,6 @@ class ChatService {
           ) : null,
         );
       }).toList();
-
-      return chats;
     }
 
     return [];

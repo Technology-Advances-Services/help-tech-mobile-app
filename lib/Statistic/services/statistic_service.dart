@@ -11,10 +11,13 @@ class StatisticService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic username;
+
   Future<dynamic> generalTechnicalStatistic() async {
 
-    var token = await _storage.read(key: 'token');
-    final username = await _storage.read(key: 'username');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
 
@@ -35,15 +38,13 @@ class StatisticService {
 
       final data = dataList.first;
 
-      dynamic generalStatistic = (
+      return (
         agendasId: data['AgendasId'],
         totalIncome: data['TotalIncome'],
         totalConsumersServed: data['TotalConsumersServed'],
         totalWorkTime: data['TotalWorkTime'],
         totalPendingsJobs: data['TotalPendingsJobs']
       );
-
-      return generalStatistic;
     }
 
     return null;
@@ -52,8 +53,8 @@ class StatisticService {
   Future<dynamic> detailedTechnicalStatistic
       (String typeStatistic) async {
 
-    var token = await _storage.read(key: 'token');
-    final username = await _storage.read(key: 'username');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
 
@@ -75,7 +76,7 @@ class StatisticService {
 
       final data = dataList.first;
 
-      dynamic detailedStatistic = (
+      return (
         agendasId: data['AgendasId'],
         averageIncome: data['AverageIncome'],
         totalIncome: data['TotalIncome'],
@@ -85,8 +86,6 @@ class StatisticService {
         averageScore: data['AverageScore'],
         totalReviews: data['TotalReviews']
       );
-
-      return detailedStatistic;
     }
 
     return null;
@@ -94,8 +93,8 @@ class StatisticService {
 
   Future<List<ReviewStatistic>> reviewStatistic() async {
 
-    var token = await _storage.read(key: 'token');
-    final username = await _storage.read(key: 'username');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
 

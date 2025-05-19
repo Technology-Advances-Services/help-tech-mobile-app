@@ -52,12 +52,12 @@ class _JobDetailState extends State<JobDetail> {
                     widget.job.workDate != null
                         ? DateFormat('yyyy-MM-dd HH:mm')
                         .format(widget.job.workDate!)
-                        : 'No disponible',
+                        : 'No asignado',
                   ),
                   infoRow('Dirección', widget.job.address ??
-                      'No disponible'),
+                      'No asignado'),
                   infoRow('Descripción', widget.job.description ??
-                      'No disponible'),
+                      'No asignado'),
                   infoRow('Tiempo estimado', widget.job.time.toString() != '0.0' ?
                     '${widget.job.time.toString()} horas' : 'No asignado'),
                   infoRow(

@@ -45,14 +45,12 @@ class MembershipService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Membership> memberships = data.map((parameter) => Membership(
+      return data.map((parameter) => Membership(
         id: parameter['id'],
         name: parameter['name'],
         price: parameter['price'],
         policies: parameter['policies']
       )).toList();
-
-      return memberships;
     }
 
     return [];

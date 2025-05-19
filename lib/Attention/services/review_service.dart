@@ -11,13 +11,15 @@ class ReviewService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic username;
+
   Future<bool> addReviewToJob(Review review) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
-
-    var username = await _storage.read(key: 'username');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}reviews/add-review-to-job'),
@@ -38,7 +40,7 @@ class ReviewService {
 
   Future<List<Review>> reviewsByTechnical(String technicalId) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -56,12 +58,10 @@ class ReviewService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Review> reviews = data.map((parameter) => Review(
+      return data.map((parameter) => Review(
         score: parameter['score'],
         opinion: parameter['opinion']
       )).toList();
-
-      return reviews;
     }
 
     return [];

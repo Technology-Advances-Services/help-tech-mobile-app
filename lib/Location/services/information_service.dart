@@ -23,12 +23,10 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Department> departments = data.map((parameter) => Department(
+      return data.map((parameter) => Department(
         id: parameter['id'],
         name: parameter['name']
       )).toList();
-
-      return departments;
     }
 
     return [];
@@ -48,12 +46,10 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<District> districts = data.map((parameter) => District(
+      return data.map((parameter) => District(
         id: parameter['id'],
         name: parameter['name']
       )).toList();
-
-      return districts;
     }
 
     return [];
@@ -72,12 +68,10 @@ class InformationService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Specialty> specialties = data.map((parameter) => Specialty(
+      return data.map((parameter) => Specialty(
         id: parameter['id'],
         name: parameter['name']
       )).toList();
-
-      return specialties;
     }
 
     return [];

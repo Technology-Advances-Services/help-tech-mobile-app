@@ -13,13 +13,15 @@ class ChatMemberService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic username;
+
   Future<ChatMember?> chatsMembersByTechnical(String consumerId) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
-
-    final username = await _storage.read(key: 'username');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}chatsmembers/'
@@ -69,11 +71,10 @@ class ChatMemberService {
 
   Future<ChatMember?> chatsMembersByConsumer(String technicalId) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
-
-    final username = await _storage.read(key: 'username');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}chatsmembers/'

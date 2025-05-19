@@ -60,7 +60,8 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
     });
 
     if (department != null) {
-      final tmpDistricts = await _informationService.getDistrictsByDepartment(department.id);
+      final tmpDistricts = await _informationService
+          .getDistrictsByDepartment(department.id);
       setState(() => districts = tmpDistricts);
     }
   }

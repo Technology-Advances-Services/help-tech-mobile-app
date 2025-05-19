@@ -11,13 +11,15 @@ class ComplaintService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic role;
+
   Future<bool> registerComplaint(Complaint complaint) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    role = await _storage.read(key: 'role');
 
     token = token?.replaceAll('"', '');
-
-    var role = await _storage.read(key: 'role');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}reports/register-complaint'),

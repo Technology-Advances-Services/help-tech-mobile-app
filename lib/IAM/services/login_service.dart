@@ -28,7 +28,10 @@ class LoginService {
 
       String token = response.body;
 
+      DateTime dateTime = DateTime.now().add(const Duration(hours: 1));
+
       await _storage.write(key: 'token', value: token);
+      await _storage.write(key: 'expiration', value: dateTime.toString());
 
       final decodedToken = JwtDecoder.decode(token);
 
@@ -52,13 +55,25 @@ class LoginService {
   Future<bool> isAuthenticated() async {
 
     final token = await _storage.read(key: 'token');
+    final expiration = await _storage.read(key: 'expiration');
 
-    return token == null? false: true;
+    if (token == null || expiration == null) {
+      return false;
+    }
+
+    final expirationDate = DateTime.tryParse(expiration);
+
+    if (expirationDate == null || DateTime.now().isAfter(expirationDate)) {
+      return false;
+    }
+
+    return true;
   }
 
   Future<void> logout() async {
 
     await _storage.delete(key: 'token');
+    await _storage.delete(key: 'expiration');
     await _storage.delete(key: 'role');
     await _storage.delete(key: 'username');
   }

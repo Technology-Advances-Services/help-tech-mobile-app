@@ -21,12 +21,10 @@ class TypeComplaintService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<TypeComplaint> typeComplaints = data.map((parameter) => TypeComplaint(
+      return data.map((parameter) => TypeComplaint(
         id: parameter['id'],
         name: parameter['name']
       )).toList();
-
-      return typeComplaints;
     }
 
     return [];
