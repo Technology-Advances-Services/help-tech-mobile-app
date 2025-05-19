@@ -12,13 +12,15 @@ class JobService {
 
   final _storage = const FlutterSecureStorage();
 
+  dynamic token;
+  dynamic username;
+
   Future<bool> registerRequestJob(Job job) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
-
-    var username = await _storage.read(key: 'username');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}jobs/register-request-job'),
@@ -39,7 +41,7 @@ class JobService {
 
   Future<bool> assignJobDetail(Job job) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -81,7 +83,7 @@ class JobService {
 
   Future<bool> completeJob(Job job) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -102,7 +104,7 @@ class JobService {
 
   Future<int> getAgendaId(String technicalId) async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -130,8 +132,8 @@ class JobService {
 
   Future<List<Job>> jobsByTechnical() async {
 
-    var token = await _storage.read(key: 'token');
-    final username = await _storage.read(key: 'username');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
 
@@ -195,8 +197,8 @@ class JobService {
 
   Future<List<Job>> jobsByConsumer() async {
 
-    var token = await _storage.read(key: 'token');
-    final username = await _storage.read(key: 'username');
+    token = await _storage.read(key: 'token');
+    username = await _storage.read(key: 'username');
 
     token = token?.replaceAll('"', '');
 
@@ -260,7 +262,7 @@ class JobService {
 
   Future<List<Technical>> technicalsByAvailability() async {
 
-    var token = await _storage.read(key: 'token');
+    token = await _storage.read(key: 'token');
 
     token = token?.replaceAll('"', '');
 
@@ -277,7 +279,7 @@ class JobService {
 
       List<dynamic> data = json.decode(response.body);
 
-      List<Technical> technicals = data.map((parameter) => Technical(
+      return data.map((parameter) => Technical(
         id: parameter['id'],
         specialtyId: parameter['specialtyId'],
         districtId: parameter['districtId'],
@@ -290,8 +292,6 @@ class JobService {
         email: parameter['email'],
         availability: parameter['availability']
       )).toList();
-
-      return technicals;
     }
 
     return [];
