@@ -28,10 +28,10 @@ class LoginService {
 
       String token = response.body;
 
-      DateTime dateTime = DateTime.now().add(const Duration(hours: 1));
+      DateTime startDate = DateTime.now().add(const Duration(hours: 1));
 
       await _storage.write(key: 'token', value: token);
-      await _storage.write(key: 'expiration', value: dateTime.toString());
+      await _storage.write(key: 'expiration', value: startDate.toString());
 
       final decodedToken = JwtDecoder.decode(token);
 
