@@ -3,9 +3,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../Attention/views/job_of_consumer.dart';
 import '../../Attention/views/job_of_technical.dart';
+import '../../Consumer/views/account_consumer.dart';
 import '../../IAM/services/login_service.dart';
 import '../../IAM/views/login.dart';
 import '../../Statistic/views/statistical_graph.dart';
+import '../../Technical/views/account_technical.dart';
 
 class BaseLayout extends StatefulWidget {
 
@@ -30,11 +32,13 @@ class _BaseLayoutState extends State<BaseLayout> {
       const SizedBox(),
       const JobOfTechnical(),
       const StatisticalGraph(),
+      const AccountTechnical(),
       const Text('Logout')
     ],
     'CONSUMIDOR': [
       const SizedBox(),
       const JobOfConsumer(),
+      const AccountConsumer(),
       const Text('Logout')
     ],
   };
@@ -46,9 +50,11 @@ class _BaseLayoutState extends State<BaseLayout> {
         const BottomNavigationBarItem
           (icon: Icon(Icons.home), label: 'Inicio'),
         const BottomNavigationBarItem
-          (icon: Icon(Icons.assignment_ind), label: 'Atenciones'),
+          (icon: Icon(Icons.work), label: 'Atenciones'),
         const BottomNavigationBarItem
           (icon: Icon(Icons.bar_chart), label: 'Reportes'),
+        const BottomNavigationBarItem
+          (icon: Icon(Icons.account_circle), label: 'Cuenta'),
         const BottomNavigationBarItem
           (icon: Icon(Icons.logout), label: 'Salir')
       ];
@@ -58,9 +64,11 @@ class _BaseLayoutState extends State<BaseLayout> {
       const BottomNavigationBarItem
         (icon: Icon(Icons.home), label: 'Inicio'),
       const BottomNavigationBarItem
-        (icon: Icon(Icons.assignment_ind), label: 'Atenciones'),
+        (icon: Icon(Icons.work), label: 'Atenciones'),
       const BottomNavigationBarItem
-        (icon: Icon(Icons.logout), label: 'Salir'),
+        (icon: Icon(Icons.account_circle), label: 'Cuenta'),
+      const BottomNavigationBarItem
+        (icon: Icon(Icons.logout), label: 'Salir')
     ];
   }
 
@@ -115,8 +123,8 @@ class _BaseLayoutState extends State<BaseLayout> {
         unselectedItemColor: Colors.grey,
         onTap: (index) {
 
-          final isLogout = (role == 'TECNICO' && index == 3) ||
-              (role == 'CONSUMIDOR' && index == 2);
+          final isLogout = (role == 'TECNICO' && index == 4) ||
+              (role == 'CONSUMIDOR' && index == 3);
 
           if (isLogout) {
 
