@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../IAM/models/consumer.dart';
 import '../../IAM/services/profile_service.dart';
+import '../../Subscription/models/contract.dart';
+import '../../Subscription/services/contract_service.dart';
 
 class AccountConsumer extends StatefulWidget {
 
@@ -14,17 +17,21 @@ class AccountConsumer extends StatefulWidget {
 class _AccountConsumerState extends State<AccountConsumer> {
 
   final ProfileService _profileService = ProfileService();
+  final ContractService _contractService = ContractService();
 
   Consumer? consumer;
+  Contract? contract;
 
   bool isLoading = true;
 
   Future<void> loadProfile() async {
 
     final profile = await _profileService.profileConsumer();
+    final tmpContract = await _contractService.getContract();
 
     setState(() {
       consumer = profile;
+      contract = tmpContract;
       isLoading = false;
     });
   }
@@ -74,7 +81,21 @@ class _AccountConsumerState extends State<AccountConsumer> {
           buildProfileCard(
             Icons.cake, 'Edad', '${consumer!.age} años'),
           buildProfileCard(
-            Icons.person, 'Género', consumer!.genre)
+            Icons.person, 'Género', consumer!.genre),
+          buildProfileCard(
+            Icons.card_membership, 'Membresía', contract!.name),
+          buildProfileCard(
+            Icons.attach_money, 'Precio', 'S/ ${contract!.price.toString()}'),
+          buildProfileCard(
+            Icons.description, 'Políticas', contract!.policies),
+          buildProfileCard(
+            Icons.date_range, 'Fecha Inicio', contract!.startDate != null
+              ? DateFormat('yyyy-MM-dd HH:mm').format(contract!.startDate!)
+              : 'No asignado'),
+          buildProfileCard(
+            Icons.date_range, 'Fecha Fin', contract!.finalDate != null
+              ? DateFormat('yyyy-MM-dd HH:mm').format(contract!.finalDate!)
+              : 'No asignado')
         ]
       )
     );

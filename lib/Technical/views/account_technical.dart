@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../IAM/models/technical.dart';
 import '../../IAM/services/profile_service.dart';
 import '../../Location/models/specialty.dart';
 import '../../Location/services/information_service.dart';
+import '../../Subscription/models/contract.dart';
+import '../../Subscription/services/contract_service.dart';
 
 class AccountTechnical extends StatefulWidget {
 
@@ -17,10 +20,12 @@ class _AccountTechnicalState extends State<AccountTechnical> {
 
   final InformationService _informationService = InformationService();
   final ProfileService _profileService = ProfileService();
+  final ContractService _contractService = ContractService();
 
   List<Specialty> specialties = [];
 
   Technical? technical;
+  Contract? contract;
 
   bool isLoading = true;
 
@@ -28,10 +33,12 @@ class _AccountTechnicalState extends State<AccountTechnical> {
 
     final tmpSpecialties = await _informationService.getSpecialties();
     final profile = await _profileService.profileTechnical();
+    final tmpContract = await _contractService.getContract();
 
     setState(() {
-      technical = profile;
       specialties = tmpSpecialties;
+      technical = profile;
+      contract = tmpContract;
       isLoading = false;
     });
   }
@@ -77,15 +84,30 @@ class _AccountTechnicalState extends State<AccountTechnical> {
           ),
           const SizedBox(height: 16),
           buildProfileCard(
-              Icons.phone, 'Teléfono', technical!.phone.toString()),
+            Icons.phone, 'Teléfono', technical!.phone.toString()),
           buildProfileCard(
-              Icons.cake, 'Edad', '${technical!.age} años'),
+            Icons.cake, 'Edad', '${technical!.age} años'),
           buildProfileCard(
-              Icons.person, 'Género', technical!.genre),
-          buildProfileCard(Icons.engineering, 'Especialidad',
-            specialties.firstWhere((s) => s.id == technical!.specialtyId,
-              orElse: () => Specialty(name: 'Desconocido')).name
-          )
+            Icons.person, 'Género', technical!.genre),
+          buildProfileCard(
+            Icons.engineering, 'Especialidad',
+              specialties.firstWhere((s) => s.id == technical!.specialtyId,
+                orElse: () => Specialty(name: 'Desconocido')).name
+          ),
+          buildProfileCard(
+            Icons.card_membership, 'Membresía', contract!.name),
+          buildProfileCard(
+            Icons.attach_money, 'Precio', 'S/ ${contract!.price.toString()}'),
+          buildProfileCard(
+            Icons.description, 'Políticas', contract!.policies),
+          buildProfileCard(
+            Icons.date_range, 'Fecha Inicio', contract!.startDate != null
+              ? DateFormat('yyyy-MM-dd HH:mm').format(contract!.startDate!)
+              : 'No asignado'),
+          buildProfileCard(
+            Icons.date_range, 'Fecha Fin', contract!.finalDate != null
+              ? DateFormat('yyyy-MM-dd HH:mm').format(contract!.finalDate!)
+              : 'No asignado')
         ]
       )
     );

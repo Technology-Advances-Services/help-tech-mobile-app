@@ -52,7 +52,7 @@ class _JobDetailState extends State<JobDetail> {
                     widget.job.workDate != null
                         ? DateFormat('yyyy-MM-dd HH:mm')
                         .format(widget.job.workDate!)
-                        : 'No asignado',
+                        : 'No asignado'
                   ),
                   infoRow('Dirección', widget.job.address ??
                       'No asignado'),
@@ -63,18 +63,18 @@ class _JobDetailState extends State<JobDetail> {
                   infoRow(
                     'Mano de obra', widget.job.laborBudget != 0 ?
                     'S/ ${widget.job.laborBudget!
-                        .toStringAsFixed(2)}' : 'No asignado',
+                        .toStringAsFixed(2)}' : 'No asignado'
                   ),
                   infoRow(
                     'Materiales',
                     widget.job.materialBudget != 0 ?
                     'S/ ${widget.job.materialBudget!
-                        .toStringAsFixed(2)}' : 'No asignado',
+                        .toStringAsFixed(2)}' : 'No asignado'
                   ),
                   infoRow(
                     'Monto final',
                     widget.job.amountFinal != 0 ? 'S/ ${widget.job.amountFinal!
-                        .toStringAsFixed(2)}' : 'No asignado',
+                        .toStringAsFixed(2)}' : 'No asignado'
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
@@ -85,9 +85,11 @@ class _JobDetailState extends State<JobDetail> {
                       backgroundColor: Colors.teal,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
+                        horizontal: 24, vertical: 12
+                      ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))
+                        borderRadius: BorderRadius.circular(12)
+                      )
                     )
                   )
                 ]
