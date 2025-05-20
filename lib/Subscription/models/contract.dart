@@ -2,7 +2,7 @@ class Contract {
 
   int id;
   int membershipId;
-  String technicalId;
+  String personId;
   String name;
   double price;
   String policies;
@@ -12,9 +12,11 @@ class Contract {
   Contract({
     this.id = 0,
     this.membershipId = 0,
-    this.technicalId = '',
+    this.personId = '',
     this.name = '',
     this.price = 0,
-    this.policies = ''
+    this.policies = '',
+    this.startDate,
+    this.finalDate
   });
 }

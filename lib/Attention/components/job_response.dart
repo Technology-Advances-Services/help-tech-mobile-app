@@ -133,7 +133,8 @@ class _JobResponseState extends State<JobResponse> {
                           decoration: InputDecoration(
                             labelText: 'Fecha de trabajo',
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12))
+                              borderRadius: BorderRadius.circular(12)
+                            )
                           ),
                           child: Text(workDate != null
                                 ? DateFormat('dd/MM/yyyy HH:mm')
@@ -152,7 +153,8 @@ class _JobResponseState extends State<JobResponse> {
                         decoration: InputDecoration(
                           labelText: 'Tiempo estimado',
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12))
+                            borderRadius: BorderRadius.circular(12)
+                          )
                         ),
                         validator: (value) =>
                         value == null || value.isEmpty ?
@@ -167,7 +169,8 @@ class _JobResponseState extends State<JobResponse> {
                         decoration: InputDecoration(
                           labelText: 'Presupuesto Mano de Obra',
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12))
+                            borderRadius: BorderRadius.circular(12)
+                          )
                         ),
                         validator: (value) =>
                         value == null || value.isEmpty ?
@@ -182,7 +185,8 @@ class _JobResponseState extends State<JobResponse> {
                         decoration: InputDecoration(
                           labelText: 'Presupuesto Materiales',
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12))
+                            borderRadius: BorderRadius.circular(12)
+                          )
                         ),
                         validator: (value) =>
                         value == null || value.isEmpty ? 'Este campo es requerido' : null
@@ -194,7 +198,8 @@ class _JobResponseState extends State<JobResponse> {
                         decoration: InputDecoration(
                           labelText: 'Estado',
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12))
+                            borderRadius: BorderRadius.circular(12)
+                          )
                         ),
                         items: const [
                           DropdownMenuItem(value: 'PENDIENTE',

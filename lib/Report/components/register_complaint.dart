@@ -123,7 +123,8 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10)
+                          horizontal: 10, vertical: 10
+                        )
                       ),
                       isExpanded: true
                     );

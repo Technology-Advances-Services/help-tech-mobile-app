@@ -83,7 +83,8 @@ class _JobRequestState extends State<JobRequest> {
                   child: Text(
                     'Usted escogió el servicio de:\n${widget.specialtyName}',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)
+                      fontSize: 16, fontWeight: FontWeight.w600
+                    )
                   )
                 )
               ]
@@ -101,8 +102,9 @@ class _JobRequestState extends State<JobRequest> {
                       children: [
                         Icon(Icons.info_outline, color: Colors.orange),
                         SizedBox(width: 8),
-                        Text('Información general', style: TextStyle(
-                            fontWeight: FontWeight.bold))
+                        Text('Información general',
+                          style: TextStyle(fontWeight: FontWeight.bold)
+                        )
                       ]
                     ),
                     const SizedBox(height: 12),
@@ -124,7 +126,8 @@ class _JobRequestState extends State<JobRequest> {
                           icon: const Icon(Icons.person),
                           label: const Text("Ver Perfil"),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange)
+                            backgroundColor: Colors.orange
+                          )
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
@@ -140,7 +143,8 @@ class _JobRequestState extends State<JobRequest> {
                           icon: const Icon(Icons.reviews),
                           label: const Text("Ver Reseñas"),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue)
+                            backgroundColor: Colors.blue
+                          )
                         )
                       ]
                     )
@@ -163,7 +167,8 @@ class _JobRequestState extends State<JobRequest> {
                         Icon(Icons.build_circle_outlined, color: Colors.green),
                         SizedBox(width: 8),
                         Text('Solicitar servicio', style: TextStyle(
-                            fontWeight: FontWeight.bold))
+                          fontWeight: FontWeight.bold)
+                        )
                       ]
                     ),
                     const SizedBox(height: 16),
