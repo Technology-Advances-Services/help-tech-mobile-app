@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../models/review.dart';
@@ -26,10 +28,13 @@ class _AddReviewState extends State<AddReview> {
 
   Future<void> submitReview() async {
 
-    if (!_formKey.currentState!.validate() || selectedScore == 0 ||
+    if (!_formKey.currentState!.validate() ||
+        selectedScore == 0 ||
         _opinionController.text.isEmpty) {
 
       Navigator.of(context).pop(false);
+
+      return;
     }
 
     setState(() => isLoading = true);
@@ -37,7 +42,7 @@ class _AddReviewState extends State<AddReview> {
     final review = Review(
       technicalId: widget.technicalId,
       score: selectedScore,
-      opinion: _opinionController.text
+      opinion: _opinionController.text,
     );
 
     final result = await _reviewService.addReviewToJob(review);
@@ -55,64 +60,116 @@ class _AddReviewState extends State<AddReview> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Agregar Reseña'),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFC25252),
+            Color(0xFF944FA4),
+            Color(0xFF602D98),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Text(
-                'Califica al técnico',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
-              ),
-              const SizedBox(height: 12),
-              buildStarRating(),
-              const SizedBox(height: 24),
-              TextFormField(
-                controller: _opinionController,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: 'Escribe tu opinión',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12)
-                  )
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'La opinión es obligatoria.';
-                  }
-                  return null;
-                }
-              ),
-              const SizedBox(height: 30),
-              isLoading ? const CircularProgressIndicator() :
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.send),
-                  label: const Text('Enviar Reseña'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    textStyle: const TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    )
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text('Agregar Reseña'),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: Colors.white.withOpacity(0.3)),
                   ),
-                  onPressed: submitReview
-                )
-              )
-            ]
-          )
-        )
-      )
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Califica al técnico',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        buildStarRating(),
+                        const SizedBox(height: 24),
+
+                        TextFormField(
+                          controller: _opinionController,
+                          maxLines: 5,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: 'Escribe tu opinión...',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            filled: true,
+                            fillColor: Colors.white.withOpacity(0.1),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide
+                                (color: Colors.white.withOpacity(0.4)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'La opinión es obligatoria.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 30),
+
+                        isLoading ? const CircularProgressIndicator
+                          (color: Colors.white) :
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.send),
+                            label: const Text('Enviar Reseña'),
+                            onPressed: submitReview,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.tealAccent.shade700,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              textStyle: const TextStyle(fontSize: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              elevation: 6,
+                              shadowColor: Colors.tealAccent.shade200,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -120,17 +177,24 @@ class _AddReviewState extends State<AddReview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
-        return IconButton(
-          icon: Icon(
-            index < selectedScore ? Icons.star : Icons.star_border,
-            color: Colors.amber,
-            size: 32
-          ),
-          onPressed: () {
+        return GestureDetector(
+          onTap: () {
             setState(() {
               selectedScore = index + 1;
             });
-          }
+          },
+          child: Icon(
+            index < selectedScore ? Icons.star : Icons.star_border,
+            color: Colors.amber,
+            size: 36,
+            shadows: const [
+              Shadow(
+                color: Colors.black26,
+                offset: Offset(1, 1),
+                blurRadius: 4,
+              ),
+            ],
+          ),
         );
       }),
     );
