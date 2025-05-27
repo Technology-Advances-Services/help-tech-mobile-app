@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../models/complaint.dart';
@@ -23,7 +25,7 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
   List<TypeComplaint> typeComplaints = [];
   TypeComplaint? selectedType;
 
-  final TextEditingController _descriptionController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   bool isLoading = false;
 
@@ -32,6 +34,8 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
     if (selectedType == null || _descriptionController.text.isEmpty) {
 
       Navigator.of(context).pop(false);
+
+      return;
     }
 
     setState(() {
@@ -54,7 +58,6 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
   }
 
   Future<void> loadTypeComplaints() async {
-
     setState(() {
       isLoading = true;
     });
@@ -81,101 +84,152 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registrar Queja'),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white
-      ),
-      body: isLoading ? const Center(child: CircularProgressIndicator()) :
-      Padding(
-        padding: const EdgeInsets.all(20),
-        child: Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFC25252),
+                Color(0xFF944FA4),
+                Color(0xFF602D98),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text('Registrar Queja'),
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+          ),
+          body: isLoading ? const Center(child: CircularProgressIndicator()) :
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: Colors.white30),
+                    ),
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
 
-                const Text(
-                  'Tipo de Queja',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                        DropdownButtonFormField<TypeComplaint>(
+                          value: selectedType,
+                          isExpanded: true,
+                          dropdownColor: Colors.deepPurple.shade200
+                            .withOpacity(0.9),
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: 'Tipo de queja',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            filled: true,
+                            fillColor: Colors.white.withOpacity(0.15),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric
+                              (horizontal: 12, vertical: 14),
+                          ),
+                          items: typeComplaints.map((type) {
+                            return DropdownMenuItem<TypeComplaint>(
+                              value: type,
+                              child: Text(
+                                type.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) =>
+                            setState(() => selectedType = value),
+                        ),
+                        const SizedBox(height: 20),
+
+                        TextFormField(
+                          controller: _descriptionController,
+                          maxLines: 5,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: 'Describe tu queja...',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            filled: true,
+                            fillColor: Colors.white.withOpacity(0.1),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide
+                                (color: Colors.white.withOpacity(0.4)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'La queja es obligatoria.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 30),
+
+                        ElevatedButton.icon(
+                          onPressed: isLoading ? null : submitComplaint,
+                          icon: const Icon(Icons.report),
+                          label: isLoading ?
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                              AlwaysStoppedAnimation<Color>(
+                                Colors.white
+                              ),
+                            ),
+                          ) :
+                          const Text('Enviar Queja'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.tealAccent.shade700,
+                            foregroundColor: Colors.white,
+                            padding:
+                            const EdgeInsets.symmetric(vertical: 16),
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            shadowColor: Colors.tealAccent.shade200,
+                            elevation: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 10),
-
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    return DropdownButtonFormField<TypeComplaint>(
-                      value: selectedType,
-                      items: typeComplaints.map((type) {
-                        return DropdownMenuItem<TypeComplaint>(
-                          value: type,
-                          child: Text(
-                            type.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1
-                          )
-                        );
-                      }).toList(),
-                      onChanged: (value) => setState(() => selectedType = value),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10
-                        )
-                      ),
-                      isExpanded: true
-                    );
-                  }
-                ),
-                const SizedBox(height: 20),
-
-                const Text(
-                  'Descripción',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-                ),
-                const SizedBox(height: 10),
-
-                TextField(
-                  controller: _descriptionController,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    hintText: 'Describe tu queja...',
-                    border: OutlineInputBorder()
-                  )
-                ),
-                const SizedBox(height: 30),
-
-                ElevatedButton.icon(
-                  onPressed: isLoading ? null : submitComplaint,
-                  icon: const Icon(Icons.report),
-                  label: isLoading ?
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)
-                    )
-                  ) :
-                  const Text('Enviar Queja'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    textStyle: const TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    )
-                  )
-                )
-              ]
-            )
-          )
-        )
-      )
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
