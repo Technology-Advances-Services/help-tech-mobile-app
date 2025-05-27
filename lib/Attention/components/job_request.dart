@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:helptechmobileapp/Attention/components/review_of_technical.dart';
 
@@ -25,15 +27,15 @@ class _JobRequestState extends State<JobRequest> {
 
   final JobService _jobService = JobService();
 
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   bool isLoading = false;
 
   Future<void> submitRequest() async {
 
-    if (_addressController.text.isEmpty || _descriptionController.text.isEmpty) {
-
+    if (_addressController.text.isEmpty ||
+        _descriptionController.text.isEmpty) {
       Navigator.of(context).pop(false);
     }
 
@@ -61,162 +63,232 @@ class _JobRequestState extends State<JobRequest> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
-      appBar: AppBar(
-        title: const Text('Solicitar Servicio Técnico'),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFC25252),
+            Color(0xFF944FA4),
+            Color(0xFF602D98),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundImage: NetworkImage(widget.technical.profileUrl)
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Usted escogió el servicio de:\n${widget.specialtyName}',
-                    style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600
-                    )
-                  )
-                )
-              ]
-            ),
-            const SizedBox(height: 24),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text('Solicitar Servicio Técnico'),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 26,
+                    backgroundImage: NetworkImage(widget.technical.profileUrl),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Usted escogió el servicio de:\n${widget.specialtyName}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
 
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              glassCard(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
                         Icon(Icons.info_outline, color: Colors.orange),
                         SizedBox(width: 8),
-                        Text('Información general',
-                          style: TextStyle(fontWeight: FontWeight.bold)
-                        )
-                      ]
+                        Text(
+                          'Información general',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton.icon(
+                        roundedButton(
+                          color: Colors.orange,
+                          icon: Icons.person,
+                          label: "Ver Perfil",
                           onPressed: () {
-                            Navigator.push(
-                              context,
+                            Navigator.push(context,
                               MaterialPageRoute(
                                 builder: (context) => ProfileTechnical(
                                   specialtyName: widget.specialtyName,
-                                  technical: widget.technical
-                                )
-                              )
+                                  technical: widget.technical,
+                                ),
+                              ),
                             );
                           },
-                          icon: const Icon(Icons.person),
-                          label: const Text("Ver Perfil"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange
-                          )
                         ),
-                        ElevatedButton.icon(
+                        roundedButton(
+                          color: Colors.blue,
+                          icon: Icons.reviews,
+                          label: "Ver Reseñas",
                           onPressed: () {
-                            Navigator.push(
-                              context,
+                            Navigator.push(context,
                               MaterialPageRoute(
                                 builder: (context) => ReviewOfTechnical(
-                                  technical: widget.technical
-                                )
-                              )
+                                  technical: widget.technical,
+                                ),
+                              ),
                             );
                           },
-                          icon: const Icon(Icons.reviews),
-                          label: const Text("Ver Reseñas"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue
-                          )
-                        )
-                      ]
-                    )
-                  ]
-                )
-              )
-            ),
-            const SizedBox(height: 20),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
 
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              glassCard(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const Row(
                       children: [
                         Icon(Icons.build_circle_outlined, color: Colors.green),
                         SizedBox(width: 8),
-                        Text('Solicitar servicio', style: TextStyle(
-                          fontWeight: FontWeight.bold)
-                        )
-                      ]
+                        Text(
+                          'Solicitar servicio',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
-
-                    TextFormField(
+                    glassInput(
                       controller: _addressController,
-                      decoration: const InputDecoration(
-                        labelText: 'Domicilio',
-                        border: OutlineInputBorder()
-                      )
+                      label: 'Domicilio',
                     ),
                     const SizedBox(height: 16),
-
-                    TextFormField(
+                    glassInput(
                       controller: _descriptionController,
+                      label: 'Descripción',
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        labelText: 'Descripción',
-                        border: OutlineInputBorder()
-                      )
-                    )
-                  ]
-                )
-              )
-            ),
-            const SizedBox(height: 24),
-
-            isLoading ? const CircularProgressIndicator() :
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: submitRequest,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)
-                  )
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'Solicitar Servicio Técnico',
-                  style: TextStyle(fontSize: 16, color: Colors.white)
-                )
-              )
-            )
-          ]
-        )
-      )
+              ),
+              const SizedBox(height: 24),
+
+              isLoading ? const CircularProgressIndicator(color: Colors.white) :
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: submitRequest,
+                  icon: const Icon(Icons.send),
+                  label: const Text('Solicitar Servicio Técnico'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.tealAccent.shade700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget glassCard({required Widget child}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.25)),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Widget glassInput({
+    required TextEditingController controller,
+    required String label,
+    int maxLines = 1,
+  }) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget roundedButton({
+    required Color color,
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color.withOpacity(0.9),
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        elevation: 4,
+        shadowColor: Colors.tealAccent.shade200,
+      ),
     );
   }
 }
