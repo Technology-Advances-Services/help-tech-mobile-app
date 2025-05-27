@@ -185,9 +185,10 @@ class _LoginState extends State<Login> {
                                 onTap: () async {
                                   await handleLogin('TECNICO');
                                 },
-                                color: Colors.tealAccent,
+                                color: Colors.tealAccent.shade700,
                               ),
                               const SizedBox(height: 10),
+
                               GlassButton(
                                 text: 'Consumidor',
                                 onTap: () async {
