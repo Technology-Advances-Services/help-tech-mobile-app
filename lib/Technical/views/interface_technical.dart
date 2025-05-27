@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../Shared/widgets/base_layout.dart';
@@ -52,55 +54,121 @@ class _InterfaceTechnicalState extends State<InterfaceTechnical> {
   Widget build(BuildContext context) {
     return BaseLayout(
       child: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
           const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Estadístícas del mes',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
-            )
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Estadísticas del mes',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
-          buildCard('Ingresos', '\$$totalIncome',
-              Icons.attach_money, Colors.green),
-          buildCard('Consumidores Atendidos', '$totalConsumersServed',
-              Icons.person_outline, Colors.lightBlue),
-          buildCard('Tiempo de Trabajo', '$totalWorkTime h',
-              Icons.access_time, Colors.orange),
-          buildCard('Trabajos Pendientes', '$totalPendingsJobs',
-              Icons.assignment_late_outlined, Colors.redAccent)
-        ]
-      )
+          const SizedBox(height: 16),
+
+          GlassStatCard(
+            title: 'Ingresos',
+            value: '\$$totalIncome',
+            icon: Icons.attach_money,
+            color: Colors.greenAccent,
+          ),
+          GlassStatCard(
+            title: 'Consumidores Atendidos',
+            value: '$totalConsumersServed',
+            icon: Icons.person_outline,
+            color: Colors.lightBlueAccent,
+          ),
+          GlassStatCard(
+            title: 'Tiempo de Trabajo',
+            value: '$totalWorkTime h',
+            icon: Icons.access_time,
+            color: Colors.orangeAccent,
+          ),
+          GlassStatCard(
+            title: 'Trabajos Pendientes',
+            value: '$totalPendingsJobs',
+            icon: Icons.assignment_late_outlined,
+            color: Colors.redAccent,
+          ),
+        ],
+      ),
     );
   }
+}
 
-  Widget buildCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
+class GlassStatCard extends StatelessWidget {
 
-            Icon(icon, color: color, size: 40),
-            const SizedBox(width: 20),
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+  const GlassStatCard({super.key,
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color
+  });
 
-                  Text(title, style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.25), width: 1.5
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 40),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style:
+                        const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      ),
+                      const SizedBox(height: 6),
 
-                  Text(value, style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w500))
-                ]
-              )
-            )
-          ]
-        )
-      )
+                      Text(value, style:
+                        const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
