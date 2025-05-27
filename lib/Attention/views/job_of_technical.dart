@@ -24,6 +24,7 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
 
   List<Job> allJobs = [];
   List<Job> filteredJobs = [];
+
   DateTime selectedDate = DateTime.now();
   String selectedStatus = 'PENDIENTE';
   bool isLoading = true;
@@ -35,8 +36,10 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
   Future<void> loadJobs() async {
 
     setState(() => isLoading = true);
+
     allJobs = await _jobService.jobsByTechnical();
     applyFilters();
+
     setState(() => isLoading = false);
   }
 
@@ -74,6 +77,7 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
         return df.format(job.workDate!) == df.format(selectedDate);
       }
       else {
+
         if (job.registrationDate == null) return false;
 
         return df.format(job.registrationDate!) == df.format(selectedDate);
@@ -90,7 +94,7 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,41 +108,74 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
                   width: 200,
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14)
+                      backgroundColor: Colors.white.withOpacity(0.15),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      foregroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     onPressed: pickDate,
                     icon: const Icon(Icons.calendar_today, size: 18),
-                    label: Text(DateFormat('dd/MM/yyyy').format(selectedDate))
-                  )
+                    label: Text(DateFormat('dd/MM/yyyy').format(selectedDate)),
+                  ),
                 ),
                 SizedBox(
                   width: 200,
                   child: DropdownButtonFormField<String>(
                     value: selectedStatus,
+                    dropdownColor: Colors.deepPurple.shade200
+                      .withOpacity(0.9),
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Estado',
+                      labelStyle: const TextStyle(color: Colors.white),
                       isDense: true,
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.15),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.white54),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.white54),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide
+                          (color: Colors.blue.shade400, width: 2),
+                      ),
                     ),
-                    items: _statuses.map((s) =>
-                        DropdownMenuItem(value: s, child: Text(s))
-                    ).toList(),
+                    items: _statuses
+                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                      .toList(),
                     onChanged: (v) => setState(() {
                       selectedStatus = v!;
                       applyFilters();
-                    })
-                  )
-                )
-              ]
-            )
+                    }),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           if (isLoading)
-            const Center(child: CircularProgressIndicator())
+            const Center(child: CircularProgressIndicator(color: Colors.white))
           else if (filteredJobs.isEmpty)
-            const Center(child: Text('No hay trabajos en esta fecha.'))
+            const Center(
+              child: Text(
+                'No hay trabajos en esta fecha.',
+                style: TextStyle(
+                  color: Colors.white,        // Color blanco
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
           else
             PaginatedDataTable(
               header: const Text(
@@ -150,10 +187,11 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
               rowsPerPage: 6,
               columnSpacing: 24,
               headingRowColor: WidgetStateColor.resolveWith(
-                      (states) => Colors.blue.shade50)
-            )
-        ]
-      )
+                (states) => Colors.blue.shade50,
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -181,7 +219,8 @@ class _JobOfTechnicalState extends State<JobOfTechnical> {
 
     if (state == 'PENDIENTE') {
       cols.add(const DataColumn(label: Text('Completar')));
-    } else if (state != 'COMPLETADO') {
+    }
+    else if (state != 'COMPLETADO') {
       cols.add(const DataColumn(label: Text('Responder')));
     }
 
@@ -196,6 +235,7 @@ class JobDataSource extends DataTableSource {
 
   final List<Job> _jobs;
   final BuildContext context;
+
   final DateFormat _fmt = DateFormat('dd/MM/yyyy HH:mm');
 
   JobDataSource(this._jobs, this.context);
@@ -233,7 +273,7 @@ class JobDataSource extends DataTableSource {
         onPressed: () async {
 
           final chatMember = await _chatMemberService
-              .chatsMembersByTechnical(job.personId);
+            .chatsMembersByTechnical(job.personId);
 
           Navigator.push(context,
             MaterialPageRoute(builder: (context) =>
@@ -241,7 +281,7 @@ class JobDataSource extends DataTableSource {
             )
           );
         }
-      ))
+      )),
     ]);
 
     if (job.jobState == 'PENDIENTE') {
@@ -258,7 +298,8 @@ class JobDataSource extends DataTableSource {
             const SuccessDialog(message: 'Trabajo completado.'));
 
             if (context.mounted) {
-              final state = context.findAncestorStateOfType<_JobOfTechnicalState>();
+              final state = context
+                .findAncestorStateOfType<_JobOfTechnicalState>();
               state?.loadJobs();
             }
           }
@@ -277,8 +318,8 @@ class JobDataSource extends DataTableSource {
         onPressed: () async {
 
           final result = await Navigator.push(context,
-            MaterialPageRoute(
-              builder: (context) => JobResponse(jobId: job.id)
+            MaterialPageRoute(builder: (context) =>
+              JobResponse(jobId: job.id)
             )
           );
 
@@ -288,7 +329,8 @@ class JobDataSource extends DataTableSource {
             const SuccessDialog(message: 'Respuesta registrada.'));
 
             if (context.mounted) {
-              final state = context.findAncestorStateOfType<_JobOfTechnicalState>();
+              final state = context
+                .findAncestorStateOfType<_JobOfTechnicalState>();
               state?.loadJobs();
             }
           }
