@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../Attention/components/job_request.dart';
@@ -61,17 +63,18 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
     if (department != null) {
       final tmpDistricts = await _informationService
-          .getDistrictsByDepartment(department.id);
+        .getDistrictsByDepartment(department.id);
       setState(() => districts = tmpDistricts);
     }
   }
 
   void onDistrictOrSpecialtyChanged() {
-
     setState(() {
       filteredTechnicals = allTechnicals.where((tech) {
-        final matchesDistrict = tech.districtId == selectedDistrict!.id;
-        final matchesSpecialty = tech.specialtyId == selectedSpecialty!.id;
+        final matchesDistrict = selectedDistrict != null &&
+          tech.districtId == selectedDistrict!.id;
+        final matchesSpecialty = selectedSpecialty != null &&
+          tech.specialtyId == selectedSpecialty!.id;
         return matchesDistrict && matchesSpecialty;
       }).toList();
     });
@@ -86,122 +89,169 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-      child: isLoading ?
-      const Center(child: CircularProgressIndicator()) :
+      child: isLoading ? const Center(child: CircularProgressIndicator
+        (color: Colors.white)) :
       Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
         child: Column(
           children: [
-
             DropdownButtonFormField<Department>(
-              decoration: const InputDecoration(labelText: 'Departamento'),
               value: selectedDepartment,
+              dropdownColor: Colors.deepPurple.shade200.withOpacity(0.9),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Departamento',
+                labelStyle: TextStyle(color: Colors.white),
+              ),
               items: departments.map((d) {
                 return DropdownMenuItem(
                   value: d,
-                  child: Text(d.name)
+                  child: Text(d.name),
                 );
               }).toList(),
-              onChanged: onDepartmentSelected
+              onChanged: onDepartmentSelected,
             ),
             const SizedBox(height: 10),
 
             DropdownButtonFormField<District>(
-              decoration: const InputDecoration(labelText: 'Distrito'),
               value: selectedDistrict,
+              dropdownColor: Colors.deepPurple.shade200.withOpacity(0.9),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Distrito',
+                labelStyle: TextStyle(color: Colors.white),
+              ),
               items: districts.map((d) {
                 return DropdownMenuItem(
                   value: d,
-                  child: Text(d.name)
+                  child: Text(d.name),
                 );
               }).toList(),
               onChanged: (val) {
                 setState(() => selectedDistrict = val);
                 onDistrictOrSpecialtyChanged();
-              }
+              },
             ),
             const SizedBox(height: 10),
 
             DropdownButtonFormField<Specialty>(
-              decoration: const InputDecoration(labelText: 'Especialidad'),
               value: selectedSpecialty,
+              dropdownColor: Colors.deepPurple.shade200.withOpacity(0.9),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Especialidad',
+                labelStyle: TextStyle(color: Colors.white),
+              ),
               items: specialties.map((s) {
                 return DropdownMenuItem(
                   value: s,
-                  child: Text(s.name)
+                  child: Text(s.name),
                 );
               }).toList(),
               onChanged: (val) {
                 setState(() => selectedSpecialty = val);
                 onDistrictOrSpecialtyChanged();
-              }
+              },
             ),
             const SizedBox(height: 20),
 
-            Expanded(
-              child: filteredTechnicals.isEmpty ?
-              const Center(child: Text("No hay técnicos disponibles.")) :
+            Expanded(child: filteredTechnicals.isEmpty ?
+              const Center(child: Text(
+                'No hay técnicos disponibles.',
+                  style: TextStyle(
+                    color: Colors.white,        // Color blanco
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ) :
               ListView.builder(
                 itemCount: filteredTechnicals.length,
                 itemBuilder: (context, index) {
-
                   final tech = filteredTechnicals[index];
-
                   return InkWell(
                     onTap: () async {
-
-                      final result = await Navigator.push(context,
+                      final result = await Navigator.push(
+                        context,
                         MaterialPageRoute(
                           builder: (context) => JobRequest(
                             specialtyName: selectedSpecialty?.name ?? '',
-                            technical: tech
-                          )
-                        )
+                            technical: tech,
+                          ),
+                        ),
                       );
 
-                      if (result == true){
-
-                        showDialog(context: context, builder: (context) =>
-                        const SuccessDialog(message: 'Solicitud registrada.'));
-                      }
-                      else {
-
-                        showDialog(context: context, builder: (context) =>
-                        const ErrorDialog(
-                            message: 'No se registro su solicitud.')
-                        );
-                      }
+                      showDialog(context: context,
+                        builder: (context) => result == true
+                          ? const SuccessDialog
+                            (message: 'Solicitud registrada.')
+                          : const ErrorDialog
+                            (message: 'No se registró su solicitud.'),
+                      );
                     },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(tech.profileUrl),
-                          child: const Icon(Icons.person)
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.symmetric
+                            (horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.2)
+                            ),
+                          ),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(tech.profileUrl),
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              '${tech.firstname} ${tech.lastname}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Especialidad: '
+                                  '${selectedSpecialty?.name ?? "N/A"}',
+                                  style: const TextStyle(color: Colors.white70),
+                                ),
+                                Text(
+                                  'Contacto: ${tech.phone}',
+                                  style: const TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                            trailing: Icon(
+                              Icons.circle,
+                              color: tech.availability == 'DISPONIBLE'
+                                ? Colors.green
+                                : Colors.red,
+                              size: 12,
+                            ),
+                          ),
                         ),
-                        title: Text('${tech.firstname} ${tech.lastname}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Especialidad: ${selectedSpecialty?.name ??
-                                "N/A"}'),
-                            Text('Contacto: ${tech.phone}')
-                          ]
-                        ),
-                        trailing: tech.availability == 'DISPONIBLE'
-                            ? const Icon(Icons.circle,
-                            color:Colors.green, size: 12)
-                            : const Icon(Icons.circle,
-                            color: Colors.red, size: 12)
-                      )
-                    )
+                      ),
+                    ),
                   );
-                }
-              )
-            )
-          ]
-        )
-      )
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
