@@ -236,9 +236,6 @@ class _JobResponseState extends State<JobResponse> {
                               selectedStatus = value;
                             });
                           },
-                          validator: (value) =>
-                          value == null || value.isEmpty
-                            ? 'Seleccione un estado' : null,
                         ),
                         const SizedBox(height: 24),
 
@@ -296,9 +293,6 @@ class _JobResponseState extends State<JobResponse> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         style: const TextStyle(color: Colors.white),
-        validator: (value) => value == null || value.isEmpty
-          ? 'Este campo es requerido'
-          : null,
       ),
     );
   }
