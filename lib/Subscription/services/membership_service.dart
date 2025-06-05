@@ -11,8 +11,27 @@ class MembershipService {
   Future<bool> registerMembership
       (Membership membership, String personId, String role) async {
 
-    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract' :
-    'contracts/create-consumer-contract';
+    if (membership.id < 0) {
+      return false;
+    }
+    if (membership.name.trim().isEmpty) {
+      return false;
+    }
+    if (membership.price < 0.0) {
+      return false;
+    }
+    if (membership.policies.trim().isEmpty) {
+      return false;
+    }
+    if (personId.trim().isEmpty) {
+      return false;
+    }
+    if (role.trim().isEmpty) {
+      return false;
+    }
+
+    String endpoint = role == 'TECNICO' ? 'contracts/create-technical-contract'
+      : 'contracts/create-consumer-contract';
 
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
