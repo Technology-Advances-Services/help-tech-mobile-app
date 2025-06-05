@@ -19,7 +19,7 @@ class StatisticService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    //token = token?.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'
