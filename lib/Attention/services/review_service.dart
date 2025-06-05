@@ -16,6 +16,14 @@ class ReviewService {
 
   Future<bool> addReviewToJob(Review review) async {
 
+    if (review.score < 1 || review.score > 5) {
+      return false;
+    }
+
+    if (review.opinion.isEmpty) {
+      return false;
+    }
+
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
