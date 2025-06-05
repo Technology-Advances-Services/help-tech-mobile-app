@@ -17,6 +17,52 @@ class RegisterService {
   Future<bool> registerTechnical
       (Technical technical, File imageFile) async {
 
+    final bytes = await imageFile.length();
+    final ext = imageFile.path.split('.').last.toLowerCase();
+
+    if (bytes > 5 * 1024 * 1024) {
+      return false;
+    }
+    if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'png')) {
+      return false;
+    }
+    if (technical.id.trim().isEmpty) {
+      return false;
+    }
+    if (technical.id.trim().length < 8 || technical.id.trim().length > 8) {
+      return false;
+    }
+    if (technical.specialtyId < 1) {
+      return false;
+    }
+    if (technical.districtId < 1) {
+      return false;
+    }
+    if (technical.profileUrl.trim().isEmpty) {
+      return false;
+    }
+    if (technical.firstname.trim().isEmpty) {
+      return false;
+    }
+    if (technical.lastname.trim().isEmpty) {
+      return false;
+    }
+    if (technical.age < 18 || technical.age > 70) {
+      return false;
+    }
+    if (technical.genre.trim().isEmpty) {
+      return false;
+    }
+    if (technical.phone < 900000000 || technical.phone > 999999999) {
+      return false;
+    }
+    if (technical.email.trim().isEmpty) {
+      return false;
+    }
+    if (technical.code.trim().isEmpty) {
+      return false;
+    }
+
     try {
 
       technical.profileUrl = (await uploadProfileTechnical
@@ -51,6 +97,49 @@ class RegisterService {
 
   Future<bool> registerConsumer
       (Consumer consumer, File imageFile) async {
+
+    final bytes = await imageFile.length();
+    final ext = imageFile.path.split('.').last.toLowerCase();
+
+    if (bytes > 5 * 1024 * 1024) {
+      return false;
+    }
+    if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'png')) {
+      return false;
+    }
+    if (consumer.id.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.id.trim().length < 8 || consumer.id.trim().length > 8) {
+      return false;
+    }
+    if (consumer.districtId < 1) {
+      return false;
+    }
+    if (consumer.profileUrl.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.firstname.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.lastname.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.age < 18 || consumer.age > 70) {
+      return false;
+    }
+    if (consumer.genre.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.phone < 900000000 || consumer.phone > 999999999) {
+      return false;
+    }
+    if (consumer.email.trim().isEmpty) {
+      return false;
+    }
+    if (consumer.code.trim().isEmpty) {
+      return false;
+    }
 
     try {
 
