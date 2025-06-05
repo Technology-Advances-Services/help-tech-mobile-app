@@ -131,12 +131,6 @@ class _AddReviewState extends State<AddReview> {
                               borderSide: const BorderSide(color: Colors.white),
                             ),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'La opinión es obligatoria.';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 30),
 
