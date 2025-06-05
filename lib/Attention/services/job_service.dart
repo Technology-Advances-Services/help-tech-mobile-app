@@ -17,6 +17,16 @@ class JobService {
 
   Future<bool> registerRequestJob(Job job) async {
 
+    if (job.agendaId < 1) {
+      return false;
+    }
+    if (job.address.trim().isEmpty) {
+      return false;
+    }
+    if (job.description.trim().isEmpty) {
+      return false;
+    }
+
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
@@ -40,6 +50,22 @@ class JobService {
   }
 
   Future<bool> assignJobDetail(Job job) async {
+
+    if (job.id < 1) {
+      return false;
+    }
+    if (job.workDate == null) {
+      return false;
+    }
+    if (job.time! < 0.0) {
+      return false;
+    }
+    if (job.laborBudget! < 0.0) {
+      return false;
+    }
+    if (job.materialBudget! < 0.0) {
+      return false;
+    }
 
     token = await _storage.read(key: 'token');
 
@@ -82,6 +108,10 @@ class JobService {
   }
 
   Future<bool> completeJob(Job job) async {
+
+    if (job.id < 1) {
+      return false;
+    }
 
     token = await _storage.read(key: 'token');
 
