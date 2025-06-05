@@ -10,7 +10,18 @@ class LoginService {
 
   final _storage = const FlutterSecureStorage();
 
-  Future<bool> accessToApp(String username, String password, String role) async {
+  Future<bool> accessToApp
+      (String username, String password, String role) async {
+
+    if (username.trim().isEmpty){
+      return false;
+    }
+    if (password.trim().isEmpty){
+      return false;
+    }
+    if (role.trim().isEmpty){
+      return false;
+    }
 
     final response = await http.post(
       Uri.parse('${_baseUrl}access/login'),
@@ -30,21 +41,24 @@ class LoginService {
 
       DateTime startDate = DateTime.now().add(const Duration(hours: 1));
 
-      await _storage.write(key: 'token', value: token);
-      await _storage.write(key: 'expiration', value: startDate.toString());
+      await _storage.write(key: 'token', value: token.trim());
+      await _storage.write(
+        key: 'expiration',
+        value: startDate.toString().trim()
+      );
 
       final decodedToken = JwtDecoder.decode(token);
 
       String role = decodedToken
       ['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-          .toString();
+        .toString();
 
       String username =decodedToken
       ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid']
-          .toString();
+        .toString();
 
-      await _storage.write(key: 'role', value: role);
-      await _storage.write(key: 'username', value: username);
+      await _storage.write(key: 'role', value: role.trim());
+      await _storage.write(key: 'username', value: username.trim());
 
       return true;
     }
