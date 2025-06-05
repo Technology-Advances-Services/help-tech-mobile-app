@@ -24,8 +24,8 @@ class ContractService {
     token = token?.replaceAll('"', '');
 
     String endpoint = role == 'TECNICO'
-        ? 'contracts/contract-by-technical?technicalId=$username'
-        : 'contracts/contract-by-consumer?consumerId=$username';
+      ? 'contracts/contract-by-technical?technicalId=$username'
+      : 'contracts/contract-by-consumer?consumerId=$username';
 
     final response = await http.get(
       Uri.parse('$_baseUrl$endpoint'),
