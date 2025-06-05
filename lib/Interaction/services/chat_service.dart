@@ -19,6 +19,13 @@ class ChatService {
 
   Future<bool> sendMessage(Chat chat) async {
 
+    if (chat.chatRoomId < 1) {
+      return false;
+    }
+    if (chat.message.trim().isEmpty) {
+      return false;
+    }
+
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
     role = await _storage.read(key: 'role');
@@ -70,8 +77,8 @@ class ChatService {
           technicalId: item['technicalId'] ?? '',
           consumerId: item['consumerId'] ?? '',
           shippingDate: item['shippingDate'] != null
-              ? DateTime.parse(item['shippingDate'])
-              : null,
+            ? DateTime.parse(item['shippingDate'])
+            : null,
           message: item['message'] ?? '',
           technical: technicalJson != null ?
           Technical(
