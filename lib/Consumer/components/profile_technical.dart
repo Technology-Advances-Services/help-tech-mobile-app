@@ -35,9 +35,9 @@ class _ProfileTechnicalState extends State<ProfileTechnical> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF602D98),
-              Color(0xFF944FA4),
               Color(0xFFC25252),
+              Color(0xFF944FA4),
+              Color(0xFF602D98),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
