@@ -11,15 +11,15 @@ class StatisticService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
+  dynamic token = '';
+  dynamic username = '';
 
   Future<dynamic> generalTechnicalStatistic() async {
 
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    //token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'
@@ -56,7 +56,7 @@ class StatisticService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'
@@ -96,7 +96,7 @@ class StatisticService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}statistics/'

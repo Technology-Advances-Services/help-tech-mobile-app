@@ -13,9 +13,9 @@ class ChatService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
-  dynamic role;
+  dynamic token = '';
+  dynamic username = '';
+  dynamic role = '';
 
   Future<bool> sendMessage(Chat chat) async {
 
@@ -30,7 +30,7 @@ class ChatService {
     username = await _storage.read(key: 'username');
     role = await _storage.read(key: 'role');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}chats/send-message'),
@@ -53,7 +53,7 @@ class ChatService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}chats/chats-by-chat-room?chatRoomId=$chatRoomId'),

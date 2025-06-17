@@ -12,8 +12,8 @@ class JobService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
+  dynamic token = '';
+  dynamic username = '';
 
   Future<bool> registerRequestJob(Job job) async {
 
@@ -30,7 +30,7 @@ class JobService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}jobs/register-request-job'),
@@ -69,7 +69,7 @@ class JobService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     var response = await http.post(
       Uri.parse('${_baseUrl}jobs/assign-job-detail'),
@@ -115,7 +115,7 @@ class JobService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}jobs/update-job-state'),
@@ -136,7 +136,7 @@ class JobService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}agendas/agenda-by-technical?'
@@ -165,7 +165,7 @@ class JobService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}jobs/'
@@ -230,7 +230,7 @@ class JobService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}jobs/'
@@ -294,7 +294,7 @@ class JobService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}informations/technicals-by-availability?'

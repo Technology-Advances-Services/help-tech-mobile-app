@@ -11,9 +11,9 @@ class ContractService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
-  dynamic role;
+  dynamic token = '';
+  dynamic username = '';
+  dynamic role = '';
 
   Future<Contract?> getContract() async {
 
@@ -21,7 +21,7 @@ class ContractService {
     username = await _storage.read(key: 'username');
     role = await _storage.read(key: 'role');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     String endpoint = role == 'TECNICO'
       ? 'contracts/contract-by-technical?technicalId=$username'

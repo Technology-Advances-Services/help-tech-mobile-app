@@ -12,15 +12,15 @@ class ProfileService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
+  dynamic token = '';
+  dynamic username = '';
 
   Future<Technical?> profileTechnical() async {
 
     username = await _storage.read(key: 'username');
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}informations/'
@@ -58,7 +58,7 @@ class ProfileService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}informations/'

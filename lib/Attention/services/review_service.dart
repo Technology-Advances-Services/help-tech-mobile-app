@@ -11,8 +11,8 @@ class ReviewService {
 
   final _storage = const FlutterSecureStorage();
 
-  dynamic token;
-  dynamic username;
+  dynamic token = '';
+  dynamic username = '';
 
   Future<bool> addReviewToJob(Review review) async {
 
@@ -27,7 +27,7 @@ class ReviewService {
     token = await _storage.read(key: 'token');
     username = await _storage.read(key: 'username');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.post(
       Uri.parse('${_baseUrl}reviews/add-review-to-job'),
@@ -50,7 +50,7 @@ class ReviewService {
 
     token = await _storage.read(key: 'token');
 
-    token = token?.replaceAll('"', '');
+    token = token.replaceAll('"', '');
 
     final response = await http.get(
       Uri.parse('${_baseUrl}reviews/reviews-by-technical?'
