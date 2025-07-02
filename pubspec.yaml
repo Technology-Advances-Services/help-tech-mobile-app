@@ -29,6 +29,7 @@ dependencies:
   fl_chart: ^0.69.0
   intl: ^0.17.0
   web_socket_channel: ^2.2.0
+  table_calendar: ^3.0.8
 
 dev_dependencies:
   flutter_test:
