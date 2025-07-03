@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../IAM/models/technical.dart';
+import 'attention_history.dart';
 
 class ProfileTechnical extends StatefulWidget {
 
@@ -102,6 +103,37 @@ class _ProfileTechnicalState extends State<ProfileTechnical> {
                           ],
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              GlassCard(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.tealAccent.shade400.withOpacity(0.8),
+                        foregroundColor: Colors.black87,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      icon: const Icon(Icons.picture_as_pdf),
+                      label: const Text(
+                        'Ver historial y exportar',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AttentionHistory(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
