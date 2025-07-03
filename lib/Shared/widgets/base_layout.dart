@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:helptechmobileapp/Consumer/views/attention_calendar.dart';
+import 'package:helptechmobileapp/Technical/views/work_calendar.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../Attention/views/job_of_consumer.dart';
@@ -35,12 +37,14 @@ class _BaseLayoutState extends State<BaseLayout> {
       const SizedBox(),
       const JobOfTechnical(),
       const StatisticalGraph(),
+      const AttentionCalendar(),
       const AccountTechnical(),
       const Text('Logout'),
     ],
     'CONSUMIDOR': [
       const SizedBox(),
       const JobOfConsumer(),
+      const WorkCalendar(),
       const AccountConsumer(),
       const Text('Logout'),
     ],
@@ -177,8 +181,8 @@ class _BaseLayoutState extends State<BaseLayout> {
                   currentIndex: selectedIndex,
                   onTap: (index) {
 
-                    final isLogout = (role == 'TECNICO' && index == 4) ||
-                      (role == 'CONSUMIDOR' && index == 3);
+                    final isLogout = (role == 'TECNICO' && index == 5) ||
+                      (role == 'CONSUMIDOR' && index == 4);
 
                     if (isLogout) {
 
