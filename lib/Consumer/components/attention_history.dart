@@ -1,24 +1,43 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:printing/printing.dart';
 
 import '../../Attention/models/job.dart';
+import '../../Attention/services/job_service.dart';
 
 class AttentionHistory extends StatefulWidget {
 
-  final List<Job> jobs = [];
-
-  AttentionHistory({super.key});
+  const AttentionHistory({super.key});
 
   @override
-  State<AttentionHistory> createState() => _AttentionHistoryState();
+  _AttentionHistoryState createState() => _AttentionHistoryState();
 }
 
 class _AttentionHistoryState extends State<AttentionHistory> {
+
+  final JobService _jobService = JobService();
+
+  List<Job> allJobs = [];
+  List<Job> filteredJobs = [];
+  bool isLoading = true;
+
+  Future<void> loadJobs() async {
+
+    setState(() => isLoading = true);
+
+    allJobs = await _jobService.jobsByConsumer();
+    filteredJobs = allJobs.where((job) {
+      return job.jobState == 'COMPLETADO';
+    }).toList();
+
+    setState(() => isLoading = false);
+  }
 
   Future<pw.Document> buildJobHistoryPdf(List<Job> jobs) async {
 
@@ -117,6 +136,44 @@ class _AttentionHistoryState extends State<AttentionHistory> {
     return pdf;
   }
 
+  Future<void> savePdfToDownloads
+      (pw.Document pdf, String fileName, BuildContext context) async {
+
+    final status = await Permission.storage.request();
+
+    if (!status.isGranted) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Permiso de almacenamiento denegado')),
+      );
+
+      return;
+    }
+
+    try {
+
+      final directory = Directory('/storage/emulated/0/Download');
+      final filePath = '${directory.path}/$fileName';
+      final file = File(filePath);
+      await file.writeAsBytes(await pdf.save());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('PDF guardado en: $filePath')),
+      );
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar el PDF: $e')),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadJobs();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,12 +188,12 @@ class _AttentionHistoryState extends State<AttentionHistory> {
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: () async {
 
-              final pdf = await buildJobHistoryPdf(widget.jobs);
+              if (isLoading || filteredJobs.isEmpty) return;
 
-              await Printing.layoutPdf(
-                onLayout: (PdfPageFormat format) async => pdf.save(),
-              );
-            }
+              final pdf = await buildJobHistoryPdf(filteredJobs);
+
+              await savePdfToDownloads(pdf, 'Historial_Trabajos.pdf', context);
+            },
           )
         ],
       ),
@@ -152,35 +209,58 @@ class _AttentionHistoryState extends State<AttentionHistory> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: ListView.builder(
+        child: isLoading ?
+        const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ) :
+        filteredJobs.isEmpty ?
+        const Center(
+          child: Text(
+            'No hay trabajos completados.',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ) :
+        SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 100, 16, 32),
-          itemCount: widget.jobs.length,
-          itemBuilder: (context, index) {
+          child: Column(
+            children: filteredJobs.map((job) {
+              return GlassCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-            final job = widget.jobs[index];
-
-            return GlassCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    job.description,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    Text(
+                      job.description,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  infoRow('Precio Material:', 'S/ ${job.materialBudget?.toStringAsFixed(2) ?? '0.00'}'),
-                  infoRow('Precio Mano de Obra:', 'S/ ${job.laborBudget?.toStringAsFixed(2) ?? '0.00'}'),
-                  infoRow('Monto Final:', 'S/ ${job.amountFinal?.toStringAsFixed(2) ?? '0.00'}'),
-                  if (job.workDate != null)
-                    infoRow('Fecha Trabajo:', DateFormat('yyyy-MM-dd – kk:mm').format(job.workDate!)),
-                ],
-              ),
-            );
-          },
+                    const SizedBox(height: 6),
+
+                    infoRow('Precio Mano de Obra:',
+                        'S/ ${job.laborBudget?.toStringAsFixed(2) ?? '0.00'}'),
+
+                    infoRow('Precio Materiales:',
+                        'S/ ${job.materialBudget?.toStringAsFixed(2)
+                          ?? '0.00'}'),
+
+                    infoRow('Monto Final:',
+                        'S/ ${job.amountFinal?.toStringAsFixed(2) ?? '0.00'}'),
+
+                    if (job.workDate != null)
+                      infoRow('Fecha Trabajo:', DateFormat
+                        ('yyyy-MM-dd – kk:mm').format(job.workDate!)),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -207,6 +287,7 @@ class _AttentionHistoryState extends State<AttentionHistory> {
 }
 
 class GlassCard extends StatelessWidget {
+
   final Widget child;
 
   const GlassCard({super.key, required this.child});
