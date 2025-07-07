@@ -37,14 +37,14 @@ class _BaseLayoutState extends State<BaseLayout> {
       const SizedBox(),
       const JobOfTechnical(),
       const StatisticalGraph(),
-      const AttentionCalendar(),
+      const WorkCalendar(),
       const AccountTechnical(),
       const Text('Logout'),
     ],
     'CONSUMIDOR': [
       const SizedBox(),
       const JobOfConsumer(),
-      const WorkCalendar(),
+      const AttentionCalendar(),
       const AccountConsumer(),
       const Text('Logout'),
     ],
@@ -70,6 +70,11 @@ class _BaseLayoutState extends State<BaseLayout> {
           selectedColor: Colors.tealAccent.shade400,
         ),
         SalomonBottomBarItem(
+          icon: const Icon(Icons.calendar_month),
+          title: const Text('Calendario'),
+          selectedColor: Colors.tealAccent.shade400,
+        ),
+        SalomonBottomBarItem(
           icon: const Icon(Icons.account_circle),
           title: const Text('Cuenta'),
           selectedColor: Colors.tealAccent.shade400,
@@ -91,6 +96,11 @@ class _BaseLayoutState extends State<BaseLayout> {
       SalomonBottomBarItem(
         icon: const Icon(Icons.work),
         title: const Text('Atenciones'),
+        selectedColor: Colors.tealAccent.shade400,
+      ),
+      SalomonBottomBarItem(
+        icon: const Icon(Icons.calendar_month),
+        title: const Text('Calendario'),
         selectedColor: Colors.tealAccent.shade400,
       ),
       SalomonBottomBarItem(
@@ -177,27 +187,32 @@ class _BaseLayoutState extends State<BaseLayout> {
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: Colors.white.withOpacity(0.2)),
                 ),
-                child: SalomonBottomBar(
-                  currentIndex: selectedIndex,
-                  onTap: (index) {
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SalomonBottomBar(
+                    currentIndex: selectedIndex,
+                    onTap: (index) {
 
-                    final isLogout = (role == 'TECNICO' && index == 5) ||
-                      (role == 'CONSUMIDOR' && index == 4);
+                      final isLogout = (role == 'TECNICO' && index == 5) ||
+                          (role == 'CONSUMIDOR' && index == 4);
 
-                    if (isLogout) {
+                      if (isLogout) {
 
-                      _loginService.logout();
+                        _loginService.logout();
 
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Login()),
-                          (route) => false,
-                      );
-                    } else {
-                      setState(() => selectedIndex = index);
-                    }
-                  },
-                  items: salomonItems,
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder:
+                            (context) => const Login()),
+                            (route) => false,
+                        );
+                      }
+                      else {
+                        setState(() => selectedIndex = index);
+                      }
+                    },
+                    items: salomonItems,
+                  ),
                 ),
               ),
             ),
