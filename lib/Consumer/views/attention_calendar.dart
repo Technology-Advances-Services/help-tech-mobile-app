@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../Attention/models/job.dart';
+import '../../Attention/services/job_service.dart';
 
 class AttentionCalendar extends StatefulWidget {
 
@@ -16,32 +17,28 @@ class AttentionCalendar extends StatefulWidget {
 
 class _AttentionCalendarState extends State<AttentionCalendar> {
 
+  final JobService _jobService = JobService();
+
+  List<Job> allJobs = [];
+  List<Job> filteredJobs = [];
+  bool isLoading = true;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  final List<Job> _jobs = [
-    Job(
-      id: 1,
-      firstName: 'Luis',
-      lastName: 'Ramirez',
-      address: 'Av. Perú 123',
-      description: 'Reparación de enchufe',
-      workDate: DateTime.now(),
-      jobState: 'COMPLETADO',
-    ),
-    Job(
-      id: 2,
-      firstName: 'Ana',
-      lastName: 'Suárez',
-      address: 'Jr. Lima 456',
-      description: 'Instalación de lámpara',
-      workDate: DateTime.now().add(const Duration(days: 1)),
-      jobState: 'PENDIENTE',
-    ),
-  ];
+  Future<void> loadJobs() async {
 
-  List<Job> _getJobsForDay(DateTime day) {
-    return _jobs.where((job) {
+    setState(() => isLoading = true);
+
+    allJobs = await _jobService.jobsByConsumer();
+    filteredJobs = allJobs.where((job) {
+      return job.jobState == 'COMPLETADO';
+    }).toList();
+
+    setState(() => isLoading = false);
+  }
+
+  List<Job> getJobsForDay(DateTime day) {
+    return filteredJobs.where((job) {
       final date = job.workDate;
       return date != null &&
           date.year == day.year &&
@@ -51,9 +48,21 @@ class _AttentionCalendarState extends State<AttentionCalendar> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadJobs();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
-    final events = _getJobsForDay(_selectedDay ?? _focusedDay);
+    final events = getJobsForDay(_selectedDay ?? _focusedDay);
+
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      );
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
