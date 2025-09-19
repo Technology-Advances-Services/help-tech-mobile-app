@@ -7,6 +7,7 @@ import '../../IAM/models/technical.dart';
 import '../../IAM/services/profile_service.dart';
 import '../../Location/models/specialty.dart';
 import '../../Location/services/information_service.dart';
+import '../../Payment/components/payment_page.dart';
 import '../../Subscription/models/contract.dart';
 import '../../Subscription/services/contract_service.dart';
 
@@ -146,6 +147,33 @@ class _AccountTechnicalState extends State<AccountTechnical> {
             contract!.finalDate != null
               ? DateFormat('yyyy-MM-dd HH:mm').format(contract!.finalDate!)
               : 'No asignado',
+          ),
+
+          const SizedBox(height: 20),
+
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => const PaymentPage()
+              ));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.tealAccent.shade700,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 28),
+              shadowColor: Colors.tealAccent.shade200,
+            ),
+            icon: const Icon(Icons.qr_code, size: 24),
+            label: const Text(
+              "YAPE",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
           ),
         ],
       ),
