@@ -8,6 +8,7 @@ import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
 import '../components/add_review.dart';
 import '../components/job_detail.dart';
+import '../components/suggestion_care.dart';
 import '../models/job.dart';
 import '../services/job_service.dart';
 
@@ -221,6 +222,7 @@ class _JobOfConsumerState extends State<JobOfConsumer> {
     if (state == 'COMPLETADO') {
       cols.add(const DataColumn(label: Text('Calificar')));
       cols.add(const DataColumn(label: Text('Queja')));
+      cols.add(const DataColumn(label: Text('Sugerencia')));
     }
 
     return cols;
@@ -328,6 +330,15 @@ class JobDataSource extends DataTableSource {
             const ErrorDialog(message: 'No se registró la queja.'));
           }
         }
+      )));
+      cells.add(DataCell(IconButton(
+          icon: const Icon(Icons.favorite, color: Colors.greenAccent),
+          tooltip: 'Sugerencia',
+          onPressed: () async {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              SuggestionCare(suggestionText: job.description))
+            );
+          }
       )));
     }
 
