@@ -326,4 +326,39 @@ class JobService {
 
     return [];
   }
+
+  Future<String> getGeminiResponse(String prompt) async {
+
+    const String geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/'
+        'models/gemini-2.5-flash:generateContent';
+    const String apiKey = 'AIzaSyApVlTsNLKDRn7TIgHn5UJ-71raRgnhsL8';
+
+    final response = await http.post(
+      Uri.parse(geminiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: jsonEncode({
+        "contents": [
+          {
+            "parts": [
+              {"text": prompt}
+            ]
+          }
+        ]
+      }),
+    );
+
+    if (response.statusCode == 200) {
+
+      final data = jsonDecode(response.body);
+
+      final text = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
+
+      return text ?? 'Sin respuesta generada.';
+    }
+
+    return 'Error: No se pudo obtener respuesta del modelo.';
+  }
 }
