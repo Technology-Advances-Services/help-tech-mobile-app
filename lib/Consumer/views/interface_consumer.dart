@@ -91,6 +91,9 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
   void filterTechnicalsByResponseML(int specialtyId) {
     setState(() {
+
+      filteredTechnicals.clear();
+
       filteredTechnicalsML = allTechnicals.where((tech) {
         return tech.specialtyId == specialtyId;
       }).toList();
