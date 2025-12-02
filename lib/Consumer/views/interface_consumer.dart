@@ -12,6 +12,7 @@ import '../../Location/services/information_service.dart';
 import '../../Shared/widgets/base_layout.dart';
 import '../../Shared/widgets/error_dialog.dart';
 import '../../Shared/widgets/success_dialog.dart';
+import '../services/chatbot_service.dart';
 
 class InterfaceConsumer extends StatefulWidget {
 
@@ -25,6 +26,9 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
   final InformationService _informationService = InformationService();
   final JobService _jobService = JobService();
+  final ChatBotService _chatBotService = ChatBotService();
+
+  final TextEditingController _chatController = TextEditingController();
 
   List<Department> departments = [];
   List<District> districts = [];
@@ -36,7 +40,9 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
   List<Technical> allTechnicals = [];
   List<Technical> filteredTechnicals = [];
+  List<Technical> filteredTechnicalsML = [];
 
+  bool sending = false;
   bool isLoading = true;
 
   Future<void> loadInitialData() async {
@@ -70,6 +76,9 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
 
   void onDistrictOrSpecialtyChanged() {
     setState(() {
+
+      filteredTechnicalsML.clear();
+
       filteredTechnicals = allTechnicals.where((tech) {
         final matchesDistrict = selectedDistrict != null &&
           tech.districtId == selectedDistrict!.id;
@@ -80,10 +89,176 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
     });
   }
 
+  void filterTechnicalsByResponseML(int specialtyId) {
+    setState(() {
+      filteredTechnicalsML = allTechnicals.where((tech) {
+        return tech.specialtyId == specialtyId;
+      }).toList();
+    });
+  }
+
+  void openChatbotModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.55,
+            maxChildSize: 0.90,
+            minChildSize: 0.40,
+            expand: false,
+            builder: (context, scrollController) {
+              return ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                  child: Scaffold(
+                    backgroundColor: Colors.white.withOpacity(0.15),
+                    resizeToAvoidBottomInset: true,
+                    body: Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.smart_toy_rounded,
+                                  color: Colors.tealAccent, size: 36),
+                              SizedBox(width: 10),
+                              Text(
+                                "Asistente IA",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              child: const Text(
+                                "Hola 👋, soy tu asistente inteligente.\n"
+                                    "Describe tu problema y te recomendaré un técnico.",
+                                style: TextStyle(color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.10),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.white24),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _chatController,
+                                    style: const TextStyle(color: Colors.white),
+                                    textInputAction: TextInputAction.send,
+                                    onSubmitted: (_) async {
+                                      await handleSendFromModal(context);
+                                    },
+                                    decoration: const InputDecoration(
+                                      hintText: "Describe tu problema...",
+                                      hintStyle: TextStyle(color: Colors.white54),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+
+                                sending
+                                    ? const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.tealAccent,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                )
+                                    : IconButton(
+                                  icon: const Icon(Icons.send,
+                                      color: Colors.tealAccent),
+                                  onPressed: () async {
+                                    await handleSendFromModal(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> handleSendFromModal(BuildContext context) async {
+
+    final text = _chatController.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() => sending = true);
+
+    try {
+
+      final int specialtyId = (await _chatBotService
+          .getMachineLearningResponse(text)) as int;
+
+      if (specialtyId <= 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se obtuvo una recomendación válida.')),
+        );
+      } else {
+        filterTechnicalsByResponseML(specialtyId);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Técnicos filtrados según la recomendación.')),
+        );
+
+        Navigator.pop(context);
+        _chatController.clear();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al consultar la IA: $e')),
+      );
+    } finally {
+      setState(() => sending = false);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     loadInitialData();
+  }
+
+  @override
+  void dispose() {
+    _chatController.dispose();
+    super.dispose();
   }
 
   @override
@@ -161,20 +336,27 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
             ),
             const SizedBox(height: 20),
 
-            Expanded(child: filteredTechnicals.isEmpty ?
-              const Center(child: Text(
-                'No hay técnicos disponibles.',
+            Expanded(
+              child: (filteredTechnicalsML.isNotEmpty
+                  ? filteredTechnicalsML
+                  : filteredTechnicals).isEmpty ?
+              const Center(
+                child: Text(
+                  'No hay técnicos disponibles.',
                   style: TextStyle(
-                    color: Colors.white,        // Color blanco
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ) :
               ListView.builder(
-                itemCount: filteredTechnicals.length,
+                itemCount: (filteredTechnicalsML.isNotEmpty
+                  ? filteredTechnicalsML
+                  : filteredTechnicals).length,
                 itemBuilder: (context, index) {
-                  final tech = filteredTechnicals[index];
+                  final tech = (filteredTechnicalsML.isNotEmpty
+                      ? filteredTechnicalsML : filteredTechnicals)[index];
                   return InkWell(
                     onTap: () async {
                       final result = await Navigator.push(
@@ -247,6 +429,17 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
                     ),
                   );
                 },
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: FloatingActionButton(
+                backgroundColor: Colors.tealAccent.shade700,
+                foregroundColor: Colors.white,
+                elevation: 6,
+                child: const Icon(Icons.smart_toy_rounded),
+                onPressed: () => openChatbotModal(context),
               ),
             ),
           ],
