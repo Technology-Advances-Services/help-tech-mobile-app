@@ -225,20 +225,20 @@ class _InterfaceConsumerState extends State<InterfaceConsumer> {
     setState(() => sending = true);
 
     try {
+      final response = await _chatBotService
+         .getMachineLearningResponse(text);
+      int? specialtyId = int.tryParse(response);
 
-      final int specialtyId = (await _chatBotService
-          .getMachineLearningResponse(text)) as int;
-
-      if (specialtyId <= 0) {
+      if (specialtyId! <= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se obtuvo una recomendación válida.')),
+         const SnackBar(content: Text('No se obtuvo una recomendación válida.')),
         );
       } else {
         filterTechnicalsByResponseML(specialtyId);
 
-        ScaffoldMessenger.of(context).showSnackBar(
+       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Técnicos filtrados según la recomendación.')),
-        );
+       );
 
         Navigator.pop(context);
         _chatController.clear();

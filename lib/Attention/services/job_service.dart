@@ -331,7 +331,7 @@ class JobService {
 
     const String geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/'
         'models/gemini-2.5-flash:generateContent';
-    const String apiKey = 'AIzaSyApVlTsNLKDRn7TIgHn5UJ-71raRgnhsL8';
+    const String apiKey = 'AIzaSyBY4lp-mCnKgvjqNO_fUbxyhfprtKl1c6k';
 
     final response = await http.post(
       Uri.parse(geminiUrl),

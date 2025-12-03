@@ -8,7 +8,7 @@ class ChatBotService {
 
     const String geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/'
         'models/gemini-2.5-flash:generateContent';
-    const String apiKey = 'AIzaSyCcyY4UyaZ-d4PnrxHY4XQTvtISf4XZ2jo';
+    const String apiKey = 'AIzaSyBY4lp-mCnKgvjqNO_fUbxyhfprtKl1c6k';
 
     var prompt = "Eres un asistente que cumplira el rol de un ChatBot. Para que "
         "tengas contexto, la aplicacion es una plataforma donde los tecnicos "
@@ -55,6 +55,6 @@ class ChatBotService {
       return text ?? 'Sin respuesta generada.';
     }
 
-    return 'Error: No se pudo obtener respuesta del modelo.';
+    return 'Error: No se pudo obtener respuesta del modelo.' + response.reasonPhrase!;
   }
 }
